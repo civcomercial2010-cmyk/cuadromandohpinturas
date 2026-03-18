@@ -273,7 +273,7 @@ tbody tr:hover:not(.tot):not(.grp) td{background:#f5f7ff}
   <div class="sb-i" onclick="nav('datos')"><span class="ic">⊕</span>Cargar Datos ERP</div>
   <div class="sb-i" onclick="nav('presupuesto')"><span class="ic">⊞</span>Presupuesto</div>
   <div class="sb-foot">
-    <div class="sb-dt" id="sb-dt">Auto · 18/03/2026 08:18</div>
+    <div class="sb-dt" id="sb-dt">Auto · 18/03/2026 14:47</div>
     <div id="sb-carga-box" style="font-size:9px;color:var(--muted);text-align:center;padding:6px 8px 2px;border-top:1px solid rgba(255,255,255,0.07);margin-top:4px">
       <div style="font-size:8px;text-transform:uppercase;letter-spacing:.5px;opacity:.5;margin-bottom:2px">Última carga ERP</div>
       <div id="sb-ultima-carga" style="color:#a0aec0;font-weight:500;font-size:10px">Sin datos ERP</div>
@@ -288,117 +288,91 @@ tbody tr:hover:not(.tot):not(.grp) td{background:#f5f7ff}
 <!-- ─── RESUMEN ─── -->
 <div class="pg on" id="pg-resumen">
   <div class="ph"><div class="ph-l"><h2>Resumen Ejecutivo</h2><p id="ph-sub">Carga los datos del ERP para comenzar</p></div><div class="ph-b" id="ph-b">Sin datos</div></div>
-  <div id="alert-box" class="alerts" style="grid-template-columns:1fr 1fr 1fr">
-    <div class="alert ai" style="grid-column:1/-1"><div class="aic">ℹ</div><div><strong>Sin datos cargados</strong>Ve a "Cargar Datos ERP" para activar el cuadro.</div></div>
-  </div>
-  <div class="kr" id="kpi-row"></div>
-  <div class="g21">
-    <div class="card"><div class="chead"><h3>Ventas 2026 — Real vs Presupuesto vs 2025</h3><span id="ch-mes-l">—</span></div><div class="cbody"><div class="cw-md"><canvas id="ch-men"></canvas></div></div></div>
-    <div class="card"><div class="chead"><h3>Mix segmentos · Mes actual</h3><span style="font-size:9px;color:var(--faint)">PVP = PIN + DECO separados</span></div><div class="cbody"><div class="cw-md"><canvas id="ch-dnt"></canvas></div></div></div>
-  </div>
-  <div class="g6" id="cc-grid"></div>
-  <div class="g3" id="seg-grid"></div>
+  <div id="res-main"></div>
 </div>
 
-<!-- ─── MENSUAL ─── -->
 <div class="pg" id="pg-mensual">
   <div class="ph"><div class="ph-l"><h2>Seguimiento Mensual 2026</h2><p>Real vs Presupuesto · Proyección para meses en curso</p></div><div class="ph-b" id="pa-b">Pres. anual: —</div></div>
   <div class="card">
     <div class="chead"><h3>Mes a mes · Real, Proyección y Presupuesto</h3><span style="font-size:9px;color:var(--amber)">★ Proyección = Real ÷ Días × Total días mes</span></div>
-    <table><thead><tr>
-      <th class="l">Mes</th><th>Presupuesto</th><th>Real</th><th>Proyección</th><th>Desv. Real%</th><th>Desv. Proy%</th><th>vs 2025</th><th>vs 2024</th><th class="l" style="min-width:160px;padding-left:18px">Cumpl. / Proy.</th>
+    <div style="overflow-x:auto">
+    <table style="min-width:680px"><thead><tr>
+      <th class="l" style="padding:9px 18px">Mes</th>
+      <th style="text-align:right;padding:9px 14px">Presupuesto</th>
+      <th style="text-align:right;padding:9px 14px">Real</th>
+      <th style="text-align:right;padding:9px 14px">Proyección</th>
+      <th style="text-align:right;padding:9px 14px">vs 2025</th>
+      <th style="text-align:center;padding:9px 14px">% Pres.</th>
     </tr></thead><tbody id="tb-men"></tbody></table>
+    </div>
+    <div style="padding:10px 18px;border-top:1px solid var(--border);display:flex;gap:20px;flex-wrap:wrap" id="men-leyenda"></div>
   </div>
-  <div class="card"><div class="chead"><h3>Acumulado YTD</h3></div><div class="cbody"><div class="cw-lg"><canvas id="ch-ytd"></canvas></div></div></div>
 </div>
 
-<!-- ─── CENTROS ─── -->
 <div class="pg" id="pg-centros">
-  <div class="ph"><div class="ph-l"><h2>Centros de Venta</h2><p>PIN (Pintura) y DECO (Instalaciones/Decoración) · Mes actual + Proyección</p></div></div>
-  <div class="g2">
-    <div class="card"><div class="chead"><h3>Distribución real · Mes actual</h3></div><div class="cbody"><div class="cw-md"><canvas id="ch-cp"></canvas></div></div></div>
-    <div class="card"><div class="chead"><h3>Real vs Presupuesto por subcentro</h3></div><div class="cbody"><div class="cw-md"><canvas id="ch-cb"></canvas></div></div></div>
-  </div>
-  <div class="card">
-    <div class="chead"><h3>Detalle mensual · Con proyección y subtotales</h3></div>
-    <table><thead><tr><th class="l">Centro</th><th>Tipo</th><th>Pres. Mes</th><th>Real Mes</th><th>Proyección</th><th>Desv.Real%</th><th>Desv.Proy%</th><th>Acum.YTD</th><th>Pres.YTD</th><th class="l" style="padding-left:16px;min-width:120px">Cumpl.</th></tr></thead>
-    <tbody id="tb-cen"></tbody></table>
-  </div>
+  <div class="ph"><div class="ph-l"><h2>Centros de Venta</h2><p>Pintura e Instalaciones/Decoración · Mes actual + Proyección</p></div></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px" id="cen-grid"></div>
 </div>
 
-<!-- ─── COMERCIALES ─── -->
 <div class="pg" id="pg-comerciales">
-  <div class="ph"><div class="ph-l"><h2>Equipo Comercial</h2><p>Antonio Cavero · Úrsula Moreno · Seguimiento mensual, trimestral y tendencia</p></div></div>
-
-  <!-- Resumen rápido mes actual -->
-  <div class="card">
-    <div class="chead"><h3>Resumen mes actual · Proyección incluida</h3></div>
-    <table><thead><tr><th class="l">Comercial</th><th>Ventas Mes</th><th>Proyección</th><th>Obj. Mes</th><th>vs Obj. Mes</th><th>Acum. 2026</th><th>Obj. Anual</th><th>% Obj. Anual</th><th class="l" style="padding-left:16px;min-width:120px">Progreso anual</th></tr></thead>
-    <tbody id="tb-com"></tbody></table>
-  </div>
-
-  <!-- ANTONIO CAVERO -->
-  <div class="ph" style="margin-top:20px;margin-bottom:8px"><div class="ph-l"><h2 style="font-size:15px;color:#1a56e8">Antonio Cavero</h2><p>Mensual · Trimestral · Tendencia anualizada</p></div></div>
-  <div class="g2">
-    <div class="card">
-      <div class="chead"><h3>Mensual y trimestral 2026 vs 2025 vs Presupuesto</h3><span id="cav-q-label" style="font-size:10px;color:var(--amber);font-weight:700"></span></div>
-      <div class="cbody"><div class="cw-lg"><canvas id="ch-cav-mens"></canvas></div></div>
-      <div style="padding:0 16px 12px">
-        <div id="cav-q-detail" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px"></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="chead"><h3>Tendencia anualizada (rolling 12m)</h3></div>
-      <div class="cbody"><div class="cw-lg"><canvas id="ch-cav-roll"></canvas></div></div>
+  <div class="ph"><div class="ph-l"><h2>Equipo Comercial</h2><p>Antonio Cavero · Úrsula Moreno · Mes actual, trimestre y tendencia</p></div></div>
+  <div class="card" style="margin-bottom:12px">
+    <div class="chead"><h3>Resumen mes actual + Trimestre</h3><span id="com-q-label">Q1 Ene–Mar</span></div>
+    <div style="overflow-x:auto">
+    <table style="min-width:720px"><thead><tr>
+      <th class="l" style="padding:9px 18px">Comercial</th>
+      <th style="text-align:right;padding:9px 14px">Real mes</th>
+      <th style="text-align:right;padding:9px 14px">Proyección</th>
+      <th style="text-align:right;padding:9px 14px">Obj. mes</th>
+      <th style="text-align:right;padding:9px 14px">Diferencia</th>
+      <th style="text-align:right;padding:9px 14px">Acum. Q</th>
+      <th style="text-align:right;padding:9px 14px">Obj. Q</th>
+      <th style="text-align:center;padding:9px 14px">% Q</th>
+    </tr></thead><tbody id="com-table"></tbody></table>
     </div>
   </div>
-
-  <!-- ÚRSULA MORENO -->
-  <div class="ph" style="margin-top:4px;margin-bottom:8px"><div class="ph-l"><h2 style="font-size:15px;color:#0d9f6e">Úrsula Moreno</h2><p>Mensual · Trimestral · Tendencia anualizada</p></div></div>
+  <div class="g2" style="margin-bottom:12px">
+    <div class="card"><div class="chead"><h3>Antonio Cavero · Real mensual vs objetivo</h3></div><div class="cbody"><div class="cw-md"><canvas id="ch-com-cavero"></canvas></div></div></div>
+    <div class="card"><div class="chead"><h3>Úrsula Moreno · Real mensual vs objetivo</h3></div><div class="cbody"><div class="cw-md"><canvas id="ch-com-ursula"></canvas></div></div></div>
+  </div>
   <div class="g2">
-    <div class="card">
-      <div class="chead"><h3>Mensual y trimestral 2026 vs 2025 vs Presupuesto</h3><span id="urs-q-label" style="font-size:10px;color:var(--amber);font-weight:700"></span></div>
-      <div class="cbody"><div class="cw-lg"><canvas id="ch-urs-mens"></canvas></div></div>
-      <div style="padding:0 16px 12px">
-        <div id="urs-q-detail" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px"></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="chead"><h3>Tendencia anualizada (rolling 12m)</h3></div>
-      <div class="cbody"><div class="cw-lg"><canvas id="ch-urs-roll"></canvas></div></div>
-    </div>
+    <div class="card"><div class="chead"><h3>Cavero · Tendencia anualizada rolling 12m</h3></div><div class="cbody"><div id="roll-diff-cavero" style="margin-bottom:8px;padding:8px 12px;background:var(--blue-l);border-radius:8px;font-size:11px"></div><div class="cw-md"><canvas id="ch-roll-cavero"></canvas></div></div></div>
+    <div class="card"><div class="chead"><h3>Úrsula · Tendencia anualizada rolling 12m</h3></div><div class="cbody"><div id="roll-diff-ursula" style="margin-bottom:8px;padding:8px 12px;background:var(--purple-l);border-radius:8px;font-size:11px"></div><div class="cw-md"><canvas id="ch-roll-ursula"></canvas></div></div></div>
   </div>
 </div>
 
-<!-- ─── HISTÓRICO ─── -->
 <div class="pg" id="pg-historico">
   <div class="ph"><div class="ph-l"><h2>Histórico</h2><p>Empresa total y desglose por centros · 2019–2026</p></div></div>
-
-  <!-- EMPRESA TOTAL -->
-  <div class="card"><div class="chead"><h3>Totales anuales empresa</h3></div>
-    <table><thead><tr><th class="l">Año</th><th>Total</th><th>vs Ant.</th><th>Media mensual</th><th>Mejor mes</th><th>Peor mes</th></tr></thead>
-    <tbody id="tb-hist-tot"></tbody></table>
+  <div class="card" style="margin-bottom:12px">
+    <div class="chead"><h3>Totales anuales empresa</h3><span style="font-size:10px;color:var(--muted)">Pulsa un año para ver el detalle mensual</span></div>
+    <div style="overflow-x:auto"><table style="min-width:580px"><thead><tr>
+      <th style="width:30px;border-bottom:2px solid var(--border2)"></th>
+      <th class="l" style="padding:9px 12px;border-bottom:2px solid var(--border2)">Año</th>
+      <th style="text-align:right;padding:9px 12px;border-bottom:2px solid var(--border2)">Total</th>
+      <th style="text-align:right;padding:9px 12px;border-bottom:2px solid var(--border2)">vs Año ant.</th>
+      <th style="text-align:right;padding:9px 12px;border-bottom:2px solid var(--border2)">Media mensual</th>
+      <th style="text-align:right;padding:9px 12px;border-bottom:2px solid var(--border2)">Mejor mes</th>
+      <th style="text-align:right;padding:9px 12px;border-bottom:2px solid var(--border2)">Peor mes</th>
+    </tr></thead><tbody id="tb-hist-tot"></tbody></table></div>
   </div>
-  <div class="card"><div class="chead"><h3>Evolución mensual comparada · 2021–2026</h3></div><div class="cbody"><div class="cw-lg"><canvas id="ch-hl"></canvas></div></div></div>
-  <div class="card"><div class="chead"><h3>Tendencia anualizada empresa (rolling 12m)</h3></div><div class="cbody"><div class="cw-lg"><canvas id="ch-roll"></canvas></div></div></div>
-
-  <!-- ROLLING POR SUBCENTRO -->
-  <div class="ph" style="margin-top:24px"><div class="ph-l"><h2 style="font-size:15px">Rolling 12 meses por Centro y Línea de Negocio</h2><p>Cada gráfico muestra la tendencia anualizada (suma de los últimos 12 meses) · Elimina estacionalidad</p></div></div>
-  <div class="g2">
-    <div class="card"><div class="chead"><h3 style="color:#1a56e8">San José · Pintura (PIN)</h3></div><div class="cbody"><div class="cw-md"><canvas id="ch-r-sjp"></canvas></div></div></div>
-    <div class="card"><div class="chead"><h3 style="color:#7c3aed">San José · Deco / Instalaciones</h3></div><div class="cbody"><div class="cw-md"><canvas id="ch-r-sjd"></canvas></div></div></div>
+  <div class="card" style="margin-bottom:12px">
+    <div class="chead"><h3>Evolución mensual · comparar años</h3><div style="display:flex;gap:6px;flex-wrap:wrap" id="hist-yr-btns"></div></div>
+    <div class="cbody"><div class="cw-lg"><canvas id="ch-hist-evo"></canvas></div></div>
+  </div>
+  <div class="card" style="margin-bottom:12px">
+    <div class="chead"><h3>Rolling 12 meses · Empresa total</h3><span style="font-size:10px;color:var(--muted)">Solo meses cerrados</span></div>
+    <div class="cbody"><div class="cw-md"><canvas id="ch-hist-roll"></canvas></div></div>
   </div>
   <div class="g2">
-    <div class="card"><div class="chead"><h3 style="color:#4f7ef5">Gargallo · Pintura (PIN)</h3></div><div class="cbody"><div class="cw-md"><canvas id="ch-r-garp"></canvas></div></div></div>
-    <div class="card"><div class="chead"><h3 style="color:#a78bfa">Gargallo · Deco / Instalaciones</h3></div><div class="cbody"><div class="cw-md"><canvas id="ch-r-gard"></canvas></div></div></div>
-  </div>
-  <div class="g2">
-    <div class="card"><div class="chead"><h3 style="color:#0d9f6e">Almacén</h3></div><div class="cbody"><div class="cw-md"><canvas id="ch-r-alm"></canvas></div></div></div>
-    <div class="card"><div class="chead"><h3 style="color:#c47a0a">Avd. Madrid</h3></div><div class="cbody"><div class="cw-md"><canvas id="ch-r-avd"></canvas></div></div></div>
+    <div class="card"><div class="chead"><h3>SJ Pintura · Rolling 12m</h3></div><div class="cbody"><div class="cw-sm"><canvas id="ch-roll-sjp"></canvas></div></div></div>
+    <div class="card"><div class="chead"><h3>SJ Deco · Rolling 12m</h3></div><div class="cbody"><div class="cw-sm"><canvas id="ch-roll-sjd"></canvas></div></div></div>
+    <div class="card"><div class="chead"><h3>Gargallo Pintura · Rolling 12m</h3></div><div class="cbody"><div class="cw-sm"><canvas id="ch-roll-garp"></canvas></div></div></div>
+    <div class="card"><div class="chead"><h3>Gargallo Deco · Rolling 12m</h3></div><div class="cbody"><div class="cw-sm"><canvas id="ch-roll-gard"></canvas></div></div></div>
+    <div class="card"><div class="chead"><h3>Almacén · Rolling 12m</h3></div><div class="cbody"><div class="cw-sm"><canvas id="ch-roll-alm"></canvas></div></div></div>
+    <div class="card"><div class="chead"><h3>Avd. Madrid · Rolling 12m</h3></div><div class="cbody"><div class="cw-sm"><canvas id="ch-roll-avd"></canvas></div></div></div>
   </div>
 </div>
 
-<!-- ─── DATOS ─── -->
 <div class="pg" id="pg-datos">
   <div class="ph"><div class="ph-l"><h2>Cargar Datos ERP</h2><p>Pega el informe mensual. El cuadro se actualiza automáticamente.</p></div></div>
   <div class="datos-hero">
@@ -634,6 +608,18 @@ function mkC(id,type,data,opts){
 const defOpts={scales:{x:{grid:{display:false}},y:{grid:{color:'#eef0f6'},ticks:{callback:v=>fK(v)}}},plugins:{legend:{position:'top',labels:{usePointStyle:true,padding:12}},tooltip:{mode:'index',intersect:false,callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.raw)} €`}},datalabels:{display:false}}};
 
 // ═══════ NAV ═══════
+
+function diffLbl(real, obj){
+  const d = real - obj;
+  if(d >= 0) return `<span style="color:var(--green);font-weight:700">Superado en +${fmt(d)} €</span>`;
+  return `<span style="color:var(--red);font-weight:700">Le queda ${fmt(Math.abs(d))} €</span>`;
+}
+function diffLblS(real, obj){
+  // Short version for tables
+  const d = real - obj;
+  if(d >= 0) return `<span class="pos">+${fmt(d)} €</span>`;
+  return `<span class="neg">${fmt(d)} € </span>`;
+}
 const PAGE_NAMES={resumen:'Resumen Ejecutivo',mensual:'Seguimiento Mensual',centros:'Centros de Venta',comerciales:'Equipo Comercial',historico:'Histórico',datos:'Cargar Datos',presupuesto:'Presupuesto'};
 function nav(p){
   document.querySelectorAll('.sb-i').forEach(i=>i.classList.remove('on'));
@@ -748,200 +734,282 @@ function renderPout(d){
 }
 
 // ═══════ RESUMEN ═══════
+
 function rResumen(){
   if(!MA)return;
   actualizarDiasMesActivo();
   const {ano,mes}=MA,d=DM[ano]?.[mes];if(!d)return;
-  const p=PRES.total[mes-1],y25=HT[2025]?.[mes-1],y24=HT[2024]?.[mes-1];
+  const p=PRES.total[mes-1],y25=HT[2025]?.[mes-1]||0;
   const pr=proy(d.total,d.dias,d.diasT);
   const isClosed=!d.dias||!d.diasT||d.dias>=d.diasT;
-  const phLabel=isClosed?MF[mes-1]+' '+ano+' (Cerrado)':MF[mes-1]+' '+ano+` · ${d.dias}/${d.diasT} días · Proyección: ${fmt(pr)} €`;
-  document.getElementById('ph-sub').textContent=phLabel;
-  document.getElementById('ph-b').textContent=MF[mes-1]+' '+ano;
-  document.getElementById('ch-mes-l').textContent=ano;
+  const pct25=y25?pct(d.total,y25):null;
 
-  let ytdR=0,ytdP=0,ytdY25=0;
-  // YTD: solo meses comerciales CERRADOS (hoy > día 25 del mes)
-  const hoyYTD=new Date(); hoyYTD.setHours(0,0,0,0);
+  // YTD
+  const hoyYTD=new Date();hoyYTD.setHours(0,0,0,0);
+  let ytdR=0,ytdP=0;
   for(let m=1;m<=mes;m++){
-    const finMes=new Date(ano,m-1,25); finMes.setHours(0,0,0,0);
-    const mCerrado = hoyYTD > finMes;
-    if(mCerrado){
-      const dm=DM[ano]?.[m];
-      ytdR+=dm?.total||0;
-      ytdP+=PRES.total[m-1]||0;
-      ytdY25+=HT[ano===2026?2025:ano-1]?.[m-1]||0;
-    }
+    const finMes=new Date(ano,m-1,25);finMes.setHours(0,0,0,0);
+    if(hoyYTD>finMes){const dm=DM[ano]?.[m];ytdR+=dm?.total||0;ytdP+=PRES.total[m-1]||0;}
   }
+  const ytdPct=ytdP>0?Math.min(100,Math.round(ytdR/ytdP*100)):0;
 
-  const devP=pct(d.total,p),devPr=pr?pct(pr,p):null,vsY=pct(d.total,y25),ytdD=pct(ytdR,ytdP);
-  const ytdC=ytdP>0?Math.min(100,Math.round(ytdR/ytdP*100)):0;
-  const fill1=p>0?Math.min(100,Math.round(d.total/p*100)):0;
+  // Proy %
+  const prPct=p>0?Math.min(100,Math.round((pr||d.total)/p*100)):0;
+  const realPct=p>0?Math.min(100,Math.round(d.total/p*100)):0;
   const fc=v=>v>=100?'var(--green)':v>=80?'var(--amber)':'var(--red)';
+  const devP=pct(d.total,p);
 
-  document.getElementById('kpi-row').innerHTML=`
-    <div class="kpi a">
-      <div class="kl">★ Proyección cierre ${MN[mes-1]}</div>
-      <div class="kv" style="color:var(--amber)">${pr?fK(pr):'= Real'}</div>
-      <div class="ks">${pr?'Sobre '+fmt(d.dias)+'/'+(d.diasT)+' días':'Mes cerrado'}</div>
-      ${pr&&!isClosed?`<span class="badge nt">vs Pres: ${pS(devPr)}</span><div class="proy-row"><span class="proy-lbl">${fmt(pr-p)} € sobre presupuesto</span></div>`:`<span class="badge up">Mes cerrado</span>`}
-      <div class="kbar"><div class="kfill" style="width:${pr?Math.min(100,Math.round(pr/p*100)):fill1}%;background:var(--amber)"></div></div>
-    </div>
-    <div class="kpi${devP!=null&&devP>=0?' g':' r'}">
-      <div class="kl">Real acumulado ${MN[mes-1]}</div>
-      <div class="kv">${fK(d.total)}</div>
-      <div class="ks">Pres. mes: ${fmt(p)} €</div>
-      <span class="badge ${devP!=null&&devP>=0?'up':'dn'}">${pS(devP)} vs presupuesto</span>
-      <div class="kbar"><div class="kfill" style="width:${fill1}%;background:${fc(fill1)}"></div></div>
-    </div>
-    <div class="kpi${devP!=null&&devP>=0?' g':' r'}">
-      <div class="kl">vs ${ano-1} (mismo mes)</div>
-      <div class="kv ${cls(vsY)}">${pS(vsY)}</div>
-      <div class="ks">${ano-1}: ${fmt(y25)} €</div>
-      ${pr&&!isClosed?`<div class="proy-row"><span class="proy-lbl">★ Proy vs ${ano-1}: ${pS(pct(pr,y25))}</span></div>`:''}
-    </div>
-    <div class="kpi p">
-      <div class="kl">Acumulado YTD</div>
-      <div class="kv">${fK(ytdR)}</div>
-      <div class="ks">Pres: ${fmt(ytdP)} € · <span class="${cls(ytdD)}">${pS(ytdD)}</span></div>
-      <div class="kbar"><div class="kfill" style="width:${ytdC}%;background:var(--purple)"></div></div>
-    </div>
-    <div class="kpi c">
-      <div class="kl">% Pres. YTD</div>
-      <div class="kv">${ytdC}%</div>
-      <div class="ks">${fmt(ytdR)} / ${fmt(ytdP)} €</div>
-      <div class="kbar"><div class="kfill" style="width:${ytdC}%;background:var(--cyan)"></div></div>
-    </div>`;
+  // Cavero & Ursula
+  const cavReal=d.cavero||0,ursReal=d.ursula||0;
+  const cavObj=PRES.cavero?.[mes-1]||0,ursObj=PRES.ursula?.[mes-1]||0;
+  const cavPr=proy(cavReal,d.dias,d.diasT),ursPr=proy(ursReal,d.dias,d.diasT);
+  const cavPct=cavObj>0?Math.min(100,Math.round(cavReal/cavObj*100)):0;
+  const ursPct=ursObj>0?Math.min(100,Math.round(ursReal/ursObj*100)):0;
 
-  // Alerts
-  let al='';const nc=pr&&!isClosed?3:2;
-  if(devP!=null){
-    if(devP<=-15)al+=`<div class="alert aw"><div class="aic">⚠</div><div><strong>Real por debajo del presupuesto (${pS(devP)})</strong>${fmt(d.total-p)} €. ${pr?`Proyección al cierre: ${fmt(pr)} € (${pS(devPr)} vs pres)`:''}</div></div>`;
-    else if(devP>=10)al+=`<div class="alert ao"><div class="aic">✓</div><div><strong>Supera presupuesto (${pS(devP)})</strong>+${fmt(d.total-p)} €${pr&&!isClosed?` · Proyección: ${fmt(pr)} € (${pS(devPr)})`:''}</div></div>`;
-    else al+=`<div class="alert ai"><div class="aic">≈</div><div><strong>En línea con presupuesto (${pS(devP)})</strong>${fmt(d.total-p)} €${pr&&!isClosed?` · Proyección: ${fmt(pr)} €`:''}</div></div>`;
-  }
-  al+=`<div class="alert ai"><div class="aic">ℹ</div><div><strong>YTD: ${fmt(ytdR)} € (${ytdC}% del presupuesto acumulado)</strong>${pS(ytdD)} vs objetivo · Pres. anual: ${fmt(PRES.total.reduce((a,b)=>a+b,0))} €</div></div>`;
-  if(pr&&!isClosed)al+=`<div class="alert ap"><div class="aic">★</div><div><strong>Proyección de cierre: ${fmt(pr)} €</strong>Con ${d.dias} días facturados de ${d.diasT} totales. La métrica real no es comparable con el pres. completo hasta cierre del mes.</div></div>`;
-  const ab=document.getElementById('alert-box');ab.innerHTML=al;ab.style.gridTemplateColumns='1fr 1fr '+(al.split('<div class="alert').length>3?'1fr':'');
+  document.getElementById('ph-sub').textContent=
+    isClosed?`${MF[mes-1]} ${ano} · Cerrado`:`${MF[mes-1]} ${ano} · ${d.dias}/${d.diasT} días laborables`;
+  document.getElementById('ph-b').textContent=MF[mes-1]+' '+ano;
 
-  // Chart mensual
-  const realArr=MN.map((_,i)=>DM[ano]?.[i+1]?.total||null);
-  const proyArr=MN.map((_,i)=>{const dm=DM[ano]?.[i+1];return dm?.dias&&dm?.diasT&&dm.dias<dm.diasT?proy(dm.total,dm.dias,dm.diasT):null;});
+  document.getElementById('res-main').innerHTML=`
+  <!-- Zona principal -->
+  <div style="display:grid;grid-template-columns:340px 1fr;gap:12px;margin-bottom:12px">
+
+    <!-- Panel métricas -->
+    <div style="display:flex;flex-direction:column;gap:10px">
+
+      <!-- Proyección protagonista -->
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;border-left:6px solid var(--amber)">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">★ Proyección cierre</div>
+        <div style="font-size:44px;font-weight:700;font-family:var(--mono);color:var(--amber);line-height:1;margin-bottom:8px">${pr?fK(pr):fK(d.total)}</div>
+        <div style="font-size:13px;color:var(--sub)">Pres: ${fmt(p)} € · <span style="color:${devP>=0?'var(--green)':'var(--red)'};font-weight:600">${pS(devP)}</span></div>
+        <div style="font-size:12px;color:var(--muted);margin-top:3px">${d.dias} de ${d.diasT} días · real: ${fmt(d.total)} €</div>
+        <div style="margin-top:10px;height:6px;background:var(--border);border-radius:3px;overflow:hidden">
+          <div style="height:100%;width:${prPct}%;background:var(--amber);border-radius:3px"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px">
+          <span>0</span><span style="color:var(--amber);font-weight:600">${prPct}%</span><span>${fmt(p)} €</span>
+        </div>
+      </div>
+
+      <!-- Real + YTD -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;border-left:6px solid var(--blue)">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Real acumulado</div>
+          <div style="font-size:28px;font-weight:700;font-family:var(--mono);color:var(--tx);line-height:1;margin-bottom:6px">${fK(d.total)}</div>
+          <div style="font-size:12px;color:var(--sub)">vs ${ano-1}: <span style="color:${pct25>=0?'var(--green)':'var(--red)'};font-weight:600">${pS(pct25)}</span></div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;border-left:6px solid var(--green)">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">YTD ${ano}</div>
+          <div style="font-size:28px;font-weight:700;font-family:var(--mono);color:var(--tx);line-height:1;margin-bottom:6px">${fK(ytdR)}</div>
+          <div style="font-size:12px;color:var(--amber);font-weight:600">${ytdPct}% pres. acum.</div>
+        </div>
+      </div>
+
+      <!-- Comerciales -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;border-left:6px solid var(--blue)">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Cavero</div>
+          <div style="font-size:26px;font-weight:700;font-family:var(--mono);color:var(--tx);line-height:1;margin-bottom:7px">${fmt(cavReal)} €</div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span style="color:var(--muted)">Presupuesto</span><span style="font-family:var(--mono);color:var(--sub);font-weight:600">${fmt(cavObj)} €</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span style="color:var(--muted)">Proyección</span><span style="font-family:var(--mono);color:var(--amber);font-weight:600">★ ${fmt(cavPr)} €</span></div>
+          <div style="font-size:11px;margin-bottom:7px">${diffLbl(cavReal,cavObj)}</div>
+          <div style="height:5px;background:var(--border);border-radius:2px"><div style="height:100%;width:${cavPct}%;background:var(--blue);border-radius:2px"></div></div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;border-left:6px solid ${ursPct>=100?'var(--green)':'var(--red)'}">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Úrsula</div>
+          <div style="font-size:26px;font-weight:700;font-family:var(--mono);color:var(--tx);line-height:1;margin-bottom:7px">${fmt(ursReal)} €</div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span style="color:var(--muted)">Presupuesto</span><span style="font-family:var(--mono);color:var(--sub);font-weight:600">${fmt(ursObj)} €</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span style="color:var(--muted)">Proyección</span><span style="font-family:var(--mono);color:var(--amber);font-weight:600">★ ${fmt(ursPr)} €</span></div>
+          <div style="font-size:11px;margin-bottom:7px">${diffLbl(ursReal,ursObj)}</div>
+          <div style="height:5px;background:var(--border);border-radius:2px"><div style="height:100%;width:${ursPct}%;background:${ursPct>=100?'var(--green)':'var(--red)'};border-radius:2px"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfico principal -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sub)">Real vs Presupuesto · ${ano-1} vs ${ano}</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--sub)"><span style="width:12px;height:12px;border-radius:2px;background:var(--blue);display:inline-block"></span>Real ${ano}</span>
+          <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--sub)"><span style="width:12px;height:12px;border-radius:2px;background:rgba(196,122,10,.55);display:inline-block"></span>Proyección</span>
+          <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--sub)"><span style="width:12px;height:12px;border-radius:2px;background:#b0b8d0;display:inline-block"></span>Real ${ano-1}</span>
+          <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--sub)"><span style="width:22px;height:2px;border-top:2px dashed var(--amber);display:inline-block"></span>Pres.</span>
+        </div>
+      </div>
+      <div style="flex:1;position:relative;min-height:260px"><canvas id="ch-men"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Centros mini -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 18px">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sub);margin-bottom:12px">Centros · real → proyección · % vs presupuesto</div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px" id="cc-grid"></div>
+  </div>`;
+
+  // Build chart data
+  const real2026 = MN.map((_,i)=>DM[ano]?.[i+1]?.total||null);
+  const proy2026 = MN.map((_,i)=>{const dm=DM[ano]?.[i+1];return dm?.dias&&dm?.diasT&&dm.dias<dm.diasT?Math.round(proy(dm.total,dm.dias,dm.diasT)):null;});
+  const pres2026 = PRES.total;
+  const real_prev = HT[ano-1]||[];
+  // 2025 only up to current month
+  const real2025m = real_prev.map((v,i)=>i<mes?v:null);
+
   mkC('ch-men','bar',{labels:MN,datasets:[
-    {label:'Real '+ano,data:realArr,backgroundColor:'#1a56e8',borderRadius:4,order:1},
-    {label:'Proyección',data:proyArr,backgroundColor:'rgba(196,122,10,0.5)',borderRadius:4,order:1,borderWidth:2,borderColor:'#c47a0a'},
-    {label:'Pres. '+ano,data:PRES.total,type:'line',borderColor:'#c47a0a',borderWidth:2,borderDash:[5,4],pointRadius:3,pointBackgroundColor:'#c47a0a',fill:false,tension:.3,order:0},
-    {label:'Real '+(ano-1),data:HT[ano-1]||[],type:'line',borderColor:'#0d9f6e',borderWidth:1.5,pointRadius:0,fill:false,tension:.3,order:0},
-  ]},defOpts);
-
-  // Donut — PVP split into PIN+INS
-  const prof=d.prof||0,pvpP=d.pvp_pin||0,pvpI=d.pvp_ins||0,ind=d.ind||0,dist=d.distrib||0;
-  mkC('ch-dnt','doughnut',{
-    labels:['PROF','PVP Pintura','PVP Deco/Inst','Industria','Distrib'],
-    datasets:[{data:[prof,pvpP,pvpI,ind,dist].map(v=>Math.max(0,v)),
-      backgroundColor:['#1a56e8','#4f7ef5','#7c3aed','#c47a0a','#0d9f6e'],
-      borderWidth:3,borderColor:'#fff',hoverOffset:6}]
-  },{cutout:'60%',plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:12,font:{size:11}}},tooltip:{callbacks:{label:c=>{const tot=c.chart.data.datasets[0].data.reduce((a,b)=>a+(b||0),0);const pct=tot>0?(c.raw/tot*100).toFixed(1):'0';return ` ${c.label}: ${fmt(c.raw)} € (${pct}%)`;}}}}});
+    {label:`Real ${ano-1}`,data:real2025m,backgroundColor:'#b0b8d0',borderRadius:4,order:3,barPercentage:.85,categoryPercentage:.75},
+    {label:`Real ${ano}`,data:real2026,backgroundColor:'var(--blue)',borderRadius:4,order:2,barPercentage:.85,categoryPercentage:.75},
+    {label:'Proyección',data:proy2026,backgroundColor:'rgba(196,122,10,.55)',borderRadius:4,order:2,barPercentage:.85,categoryPercentage:.75},
+    {label:`Presupuesto ${ano}`,data:pres2026,type:'line',borderColor:'var(--amber)',borderWidth:2.5,borderDash:[6,4],pointRadius:3,pointBackgroundColor:'var(--amber)',fill:false,tension:.3,order:0},
+  ]},{...defOpts,plugins:{...defOpts.plugins,tooltip:{mode:'index',intersect:false,filter:c=>c.parsed.y!==null,callbacks:{label:c=>c.parsed.y===null?null:` ${c.dataset.label}: ${fmt(c.parsed.y)} €`}}}});
 
   // Centre cards
-  const ytdC6={};CTRS.forEach(c=>{ytdC6[c.id]=0;for(let m=1;m<=mes;m++)ytdC6[c.id]+=(DM[ano]?.[m]?.[c.id]||0);});
+  const isCl=isClosed;
   document.getElementById('cc-grid').innerHTML=CTRS.map(c=>{
     const rv=d[c.id]||0,pv=PRES[c.id]?.[mes-1]||0,pr2=proy(rv,d.dias,d.diasT);
-    const dp=pct(rv,pv),dpPr=pr2?pct(pr2,pv):null,fill=pv>0?Math.min(100,Math.round(rv/pv*100)):0;
+    const fill=pv>0?Math.min(100,Math.round(rv/pv*100)):0;
     const fc2=fill>=100?'var(--green)':fill>=80?'var(--amber)':'var(--red)';
-    return `<div class="cmc">
-      <div class="cmc-tag"><div class="cdot" style="background:${c.col}"></div><span class="cmc-nm">${c.nm}</span>${c.tp?`<span class="cmc-ty">${c.tp}</span>`:''}</div>
-      <div class="cmc-v">${fmt(rv)} €</div>
-      <div class="cmc-s">Pres: ${fmt(pv)} € · <span class="${cls(dp)}">${pS(dp)}</span></div>
-      <div class="cmc-bar"><div class="cmc-f" style="width:${fill}%;background:${fc2}"></div></div>
-      ${pr2&&!isClosed?`<div class="cmc-proy">★ Proy: ${fmt(pr2)} € (${pS(dpPr)})</div>`:''}
-      <div style="font-size:9px;color:var(--muted);margin-top:3px">YTD: ${fmt(ytdC6[c.id])} €</div>
+    const tp=c.tp==='PIN'?'Pintura':c.tp==='DECO'?'Instalaciones':c.tp||'';
+    return `<div style="padding:12px 10px;background:${c.cl};border-radius:10px;text-align:center;border-top:3px solid ${c.col}">
+      <div style="font-size:11px;font-weight:700;color:var(--tx);margin-bottom:3px">${c.nm}</div>
+      ${tp?`<div style="font-size:9px;color:var(--muted);margin-bottom:5px">${tp}</div>`:''}
+      <div style="font-size:20px;font-weight:700;font-family:var(--mono);color:var(--tx)">${fK(rv)}</div>
+      ${!isCl&&pr2?`<div style="font-size:12px;color:var(--amber);font-weight:600;margin-top:2px">→ ${fK(pr2)}</div>`:''}
+      <div style="font-size:11px;color:${fill>=100?'var(--green)':fill>=80?'var(--amber)':'var(--red)'};font-weight:600;margin-top:2px">${fill}% pres.</div>
     </div>`;
   }).join('');
-
-  // Seg grid (5 segments)
-  const tot=d.total||1;
-  const segs=[['PROF',prof,'#1a56e8'],['PVP Pin.',pvpP,'#4f7ef5'],['PVP Deco/Inst',pvpI,'#7c3aed'],['Industria',ind,'#c47a0a'],['Distrib',dist,'#0d9f6e']];
-  document.getElementById('seg-grid').innerHTML=segs.map(([nm,v,col])=>`<div class="seg"><div class="seg-nm">${nm}</div><div class="seg-v">${fmt(v)} €</div><div class="seg-p">${(v/tot*100).toFixed(1)}%</div><div class="seg-bar"><div class="seg-f" style="width:${Math.min(100,v/tot*100)}%;background:${col}"></div></div></div>`).join('');
 }
 
+
 // ═══════ MENSUAL ═══════
+
 function rMen(){
   const ano=MA?.ano||2026;
   document.getElementById('pa-b').textContent='Pres. anual: '+fmt(PRES.total.reduce((a,b)=>a+b,0))+' €';
-  const _hoyMen=new Date(); _hoyMen.setHours(0,0,0,0);
-  let rows='',ytdR=0,ytdP=0,ytdY25=0,ytdY24=0;
-  MF.forEach((m,i)=>{
-    const mes=i+1,d=DM[ano]?.[mes],real=d?.total||null,p=PRES.total[i],y25=HT[2025]?.[i],y24=HT[2024]?.[i];
-    const _finMesMen=new Date(ano,mes-1,25); _finMesMen.setHours(0,0,0,0);
-    const _mesCerrado = _hoyMen > _finMesMen;
-    const pr=d?proy(real,d.dias,d.diasT):null;
-    const isClosed=!d?.dias||!d?.diasT||d.dias>=d.diasT;
-    if(real!=null&&_mesCerrado){ytdR+=real;ytdP+=p;ytdY25+=y25;ytdY24+=y24;}
-    const dP=pct(real,p),dPr=pr?pct(pr,p):null,vY25=pct(real,y25),vY24=pct(real,y24);
-    const fill=real!=null?Math.min(100,Math.round(real/p*100)):0;
-    const fc=fill>=100?'pb-g':fill>=80?'pb-a':'pb-r';
-    // Only show (d/dt) if partial month (not closed)
-    const partLabel=d&&!isClosed?`<span style="color:var(--amber);font-size:9px;font-weight:700"> (${d.dias}/${d.diasT}d)</span>`:'';
-    rows+=`<tr>
-      <td class="l">${m}${partLabel}</td>
-      <td class="num">${fmt(p)} €</td>
-      <td class="num ${real!=null?'hi':'dim'}">${real!=null?fmt(real)+' €':'—'}</td>
-      <td class="num ${pr?'nt':'dim'}">${pr?fmt(pr)+' €':'—'}</td>
-      <td class="num ${cls(dP)}">${pS(dP)}</td>
-      <td class="num ${pr?cls(dPr):'dim'}">${pr?pS(dPr):'—'}</td>
-      <td class="num ${cls(vY25)}">${pS(vY25)}</td>
-      <td class="num ${cls(vY24)}">${pS(vY24)}</td>
-      <td style="padding-left:18px">${real!=null?`<div class="pbw"><div class="pb" style="min-width:50px"><div class="pbf ${fc}" style="width:${fill}%"></div></div><span class="pbp" style="color:${fill>=100?'var(--green)':fill>=80?'var(--amber)':'var(--red)'}">${fill}%</span>${pr&&!isClosed?`<span style="font-size:12px;color:var(--amber);font-weight:700;background:var(--amber-l);padding:1px 5px;border-radius:3px;margin-left:4px">★${Math.min(100,Math.round(pr/p*100))}%</span>`:''}</div>`:'<span class="dim" style="font-size:10px">Pendiente</span>'}</td>
+  const hoyMen=new Date();hoyMen.setHours(0,0,0,0);
+  let rows='',totalR=0,totalPr=0,totalP=0,totalY25=0;
+
+  MF.forEach((mnm,i)=>{
+    const mes=i+1,d=DM[ano]?.[m=mes];
+    const pv=PRES.total[i]||0;
+    const hy25=HT[ano-1]?.[i]||0;
+    let rv=0,pr=null,estado='';
+    if(d&&d.total){
+      rv=d.total;
+      const isCl=!d.dias||!d.diasT||d.dias>=d.diasT;
+      if(!isCl&&d.dias&&d.diasT) pr=proy(rv,d.dias,d.diasT);
+      estado=isCl?'cerrado':'curso';
+    } else {
+      estado='futuro';
+    }
+    const vs25=hy25?pct(rv||pr||0,hy25):null;
+    const pctP=pv>0?Math.round((pr||rv||0)/pv*100):0;
+    const pctBadge=estado==='futuro'?'—':pctP+'%'+(pr&&estado==='curso'?'★':'');
+    const badgeBg=estado==='futuro'?'var(--bg3)':pctP>=100?'var(--green-l)':pctP>=80?'var(--amber-l)':'var(--red-l)';
+    const badgeCl=estado==='futuro'?'var(--muted)':pctP>=100?'var(--green)':pctP>=80?'var(--amber)':'var(--red)';
+
+    // Mes name color
+    const mesColor=estado==='futuro'?'var(--faint)':estado==='curso'?'var(--amber)':rv>=pv?'var(--green)':'var(--red)';
+    const rowBg=estado==='curso'?'rgba(196,122,10,.04)':estado==='futuro'?'':'';
+    const opacity=estado==='futuro'?'opacity:.45':'';
+
+    totalR+=rv; totalPr+=pr||rv||pv; totalP+=pv; totalY25+=hy25;
+
+    rows+=`<tr style="border-bottom:1px solid var(--border);${rowBg?'background:'+rowBg+';':''}${opacity}">
+      <td class="l" style="padding:11px 18px;font-weight:700;font-size:14px;color:${mesColor}">
+        ${mnm}${estado==='curso'?` <span style="font-size:9px;background:var(--amber-l);color:var(--amber);padding:1px 6px;border-radius:6px;font-weight:600">En curso</span>`:''}
+      </td>
+      <td class="num" style="padding:11px 14px;text-align:right;color:var(--sub);font-size:13px">${pv?fmt(pv)+'&nbsp;€':'—'}</td>
+      <td class="num" style="padding:11px 14px;text-align:right;font-weight:700;color:var(--tx);font-size:13px">${rv?fmt(rv)+'&nbsp;€':'—'}</td>
+      <td class="num" style="padding:11px 14px;text-align:right;font-weight:${pr?700:400};color:${pr?'var(--amber)':'var(--faint)'};font-size:13px">${pr?'★ '+fmt(pr)+'&nbsp;€':'—'}</td>
+      <td class="num" style="padding:11px 14px;text-align:right;font-size:13px;color:${vs25==null?'var(--faint)':vs25>=0?'var(--green)':'var(--red)'};font-weight:600">${vs25!=null?pS(vs25):'—'}</td>
+      <td style="padding:11px 14px;text-align:center">
+        <span style="background:${badgeBg};color:${badgeCl};font-family:var(--mono);font-weight:700;font-size:13px;padding:4px 12px;border-radius:6px">${pctBadge}</span>
+      </td>
     </tr>`;
   });
-  if(ytdR>0)rows+=`<tr class="tot"><td class="l">Acumulado YTD</td><td class="num">${fmt(ytdP)} €</td><td class="num hi">${fmt(ytdR)} €</td><td class="num dim">—</td><td class="num ${cls(pct(ytdR,ytdP))}">${pS(pct(ytdR,ytdP))}</td><td class="num dim">—</td><td class="num ${cls(pct(ytdR,ytdY25))}">${pS(pct(ytdR,ytdY25))}</td><td class="num ${cls(pct(ytdR,ytdY24))}">${pS(pct(ytdR,ytdY24))}</td><td></td></tr>`;
+
+  // Total row
+  const totPctP=totalP>0?Math.round(totalPr/totalP*100):0;
+  const totBadgeBg=totPctP>=100?'var(--green-l)':totPctP>=80?'var(--amber-l)':'var(--red-l)';
+  const totBadgeCl=totPctP>=100?'var(--green)':totPctP>=80?'var(--amber)':'var(--red)';
+  rows+=`<tr style="background:var(--bg3);border-top:2px solid var(--border2)">
+    <td class="l" style="padding:12px 18px;font-weight:700;font-size:14px;color:var(--blue)">TOTAL ${ano}</td>
+    <td class="num" style="padding:12px 14px;text-align:right;font-weight:700;color:var(--tx);font-size:13px">${fmt(totalP)}&nbsp;€</td>
+    <td class="num" style="padding:12px 14px;text-align:right;font-weight:700;color:var(--tx);font-size:13px">${fmt(totalR)}&nbsp;€</td>
+    <td class="num" style="padding:12px 14px;text-align:right;font-weight:700;color:var(--amber);font-size:13px">★ ${fmt(totalPr)}&nbsp;€</td>
+    <td class="num" style="padding:12px 14px;text-align:right;font-size:13px;color:${pct(totalR,totalY25)>=0?'var(--green)':'var(--red)'};font-weight:700">${pS(pct(totalR,totalY25))}</td>
+    <td style="padding:12px 14px;text-align:center">
+      <span style="background:${totBadgeBg};color:${totBadgeCl};font-family:var(--mono);font-weight:700;font-size:13px;padding:4px 12px;border-radius:6px">${totPctP}%★</span>
+    </td>
+  </tr>`;
+
   document.getElementById('tb-men').innerHTML=rows;
-  const ytdL=[],ytdR2=[],ytdP2=[],ytdA=[];let cr=0,cp=0,ca=0;
-  MN.forEach((_,i)=>{const d=DM[ano]?.[i+1];if(d){cr+=d.total;cp+=PRES.total[i];ca+=HT[ano-1]?.[i]||0;ytdL.push(MN[i]);ytdR2.push(cr);ytdP2.push(cp);ytdA.push(ca);}});
-  mkC('ch-ytd','line',{labels:ytdL,datasets:[{label:'YTD Real',data:ytdR2,borderColor:'#1a56e8',borderWidth:2.5,pointRadius:4,pointBackgroundColor:'#1a56e8',fill:false,tension:.3},{label:'YTD Pres.',data:ytdP2,borderColor:'#c47a0a',borderWidth:2,borderDash:[5,4],pointRadius:0,fill:false,tension:.3},{label:'YTD '+(ano-1),data:ytdA,borderColor:'#0d9f6e',borderWidth:1.5,pointRadius:0,fill:false,tension:.3}]},{...defOpts,plugins:{...defOpts.plugins,datalabels:{display:false}}});
+  // Leyenda
+  const leyEl=document.getElementById('men-leyenda');
+  if(leyEl) leyEl.innerHTML=
+    `<span style="color:var(--red);font-weight:700">● Por debajo del presupuesto</span>
+     <span style="color:var(--green);font-weight:700">● Supera el presupuesto</span>
+     <span style="color:var(--amber);font-weight:700">★ Mes en curso (proyección)</span>
+     <span style="color:var(--faint);font-weight:600">● Meses futuros</span>`;
 }
+
 
 // ═══════ CENTROS ═══════
-function rCen(){
-  if(!MA)return;const{ano,mes}=MA,d=DM[ano]?.[mes];if(!d)return;
-  const isClosed=!d.dias||!d.diasT||d.dias>=d.diasT;
-  const ytdC={},ytdP={};CTRS.forEach(c=>{ytdC[c.id]=0;ytdP[c.id]=0;});
-  for(let m=1;m<=mes;m++){const dm=DM[ano]?.[m]||{};CTRS.forEach(c=>{ytdC[c.id]+=(dm[c.id]||0);ytdP[c.id]+=(PRES[c.id]?.[m-1]||0);});}
-  mkC('ch-cp','doughnut',{labels:CTRS.map(c=>c.tp?c.nm+' '+c.tp:c.nm),datasets:[{data:CTRS.map(c=>Math.max(0,d[c.id]||0)),backgroundColor:CTRS.map(c=>c.col),borderWidth:3,borderColor:'#fff',hoverOffset:5}]},{cutout:'48%',plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:9,font:{size:10}}},tooltip:{callbacks:{label:c=>{const tot=c.chart.data.datasets[0].data.reduce((a,b)=>a+(b||0),0);return ` ${c.label}: ${fmt(c.raw)} € (${tot>0?(c.raw/tot*100).toFixed(1):0}%)`}}},datalabels:{display:true,color:'#fff',font:{weight:'700',size:12},formatter:(value,ctx)=>{const tot=ctx.chart.data.datasets[0].data.reduce((a,b)=>a+(b||0),0);const pct=tot>0?(value/tot*100):0;return pct>4?pct.toFixed(1)+'%':'';},anchor:'center'}}});
-  mkC('ch-cb','bar',{labels:CTRS.map(c=>c.tp?c.nm+' '+c.tp:c.nm),datasets:[{label:'Real',data:CTRS.map(c=>d[c.id]||0),backgroundColor:CTRS.map(c=>c.col),borderRadius:4},{label:'Presupuesto',data:CTRS.map(c=>PRES[c.id]?.[mes-1]||0),backgroundColor:'#dde1ec',borderRadius:4}]},{scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{grid:{color:'#eef0f6'},ticks:{callback:v=>fK(v)}}},plugins:{legend:{position:'top',labels:{usePointStyle:true,padding:12}},tooltip:{mode:'index',intersect:false,callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.raw)} €`}}}});
 
-  let rows='';
-  const groups=[{lbl:'SAN JOSÉ',ids:['sjp','sjd'],sub:true},{lbl:'GARGALLO',ids:['garp','gard'],sub:true},{lbl:null,ids:['alm','avd'],sub:false}];
-  groups.forEach(g=>{
-    if(g.lbl)rows+=`<tr class="grp"><td class="l" colspan="10">${g.lbl}</td></tr>`;
-    g.ids.forEach(id=>{
-      const c=CTRS.find(x=>x.id===id),rv=d[id]||0,pv=PRES[id]?.[mes-1]||0,pr2=proy(rv,d.dias,d.diasT);
-      const dp=pct(rv,pv),dpPr=pr2?pct(pr2,pv):null,fill=pv>0?Math.min(100,Math.round(rv/pv*100)):0;
-      const fc=fill>=100?'pb-g':fill>=80?'pb-a':'pb-r';
-      rows+=`<tr>
-        <td class="sub">${c.nm}${c.tp?' '+c.tp:''}</td>
-        <td><span style="font-size:8px;background:${c.cl};color:${c.col};padding:1px 5px;border-radius:8px;font-weight:700">${c.tp||'—'}</span></td>
-        <td class="num">${fmt(pv)} €</td><td class="num hi">${fmt(rv)} €</td>
-        <td class="num ${pr2&&!isClosed?'nt':'dim'}">${pr2&&!isClosed?fmt(pr2)+' €':'—'}</td>
-        <td class="num ${cls(dp)}">${pS(dp)}</td>
-        <td class="num ${pr2&&!isClosed?cls(dpPr):'dim'}">${pr2&&!isClosed?pS(dpPr):'—'}</td>
-        <td class="num">${fmt(ytdC[id])} €</td><td class="num">${fmt(ytdP[id])} €</td>
-        <td style="padding-left:16px"><div class="pbw"><div class="pb" style="min-width:45px"><div class="pbf ${fc}" style="width:${fill}%"></div></div><span class="pbp" style="color:${fill>=100?'var(--green)':fill>=80?'var(--amber)':'var(--red)'}">${fill}%</span></div></td>
-      </tr>`;
-    });
-    if(g.sub){
-      const totR=g.ids.reduce((s,id)=>s+(d[id]||0),0),totP=g.ids.reduce((s,id)=>s+(PRES[id]?.[mes-1]||0),0);
-      const ytdTR=g.ids.reduce((s,id)=>s+(ytdC[id]||0),0),ytdTP=g.ids.reduce((s,id)=>s+(ytdP[id]||0),0);
-      const totPr=proy(totR,d.dias,d.diasT),dp=pct(totR,totP),fill=totP>0?Math.min(100,Math.round(totR/totP*100)):0;
-      const fc=fill>=100?'pb-g':fill>=80?'pb-a':'pb-r';
-      rows+=`<tr class="tot"><td class="l">Total ${g.lbl}</td><td></td><td class="num">${fmt(totP)} €</td><td class="num">${fmt(totR)} €</td><td class="num ${totPr&&!isClosed?'nt':'dim'}">${totPr&&!isClosed?fmt(totPr)+' €':'—'}</td><td class="num ${cls(dp)}">${pS(dp)}</td><td class="num ${totPr&&!isClosed?cls(pct(totPr,totP)):'dim'}">${totPr&&!isClosed?pS(pct(totPr,totP)):'—'}</td><td class="num">${fmt(ytdTR)} €</td><td class="num">${fmt(ytdTP)} €</td><td style="padding-left:16px"><div class="pbw"><div class="pb" style="min-width:45px"><div class="pbf ${fc}" style="width:${fill}%"></div></div><span class="pbp">${fill}%</span></div></td></tr>`;
-    }
-  });
-  const allR=CTRS.reduce((s,c)=>s+(d[c.id]||0),0),allP=CTRS.reduce((s,c)=>s+(PRES[c.id]?.[mes-1]||0),0);
-  rows+=`<tr class="tot"><td class="l">TOTAL EMPRESA</td><td></td><td class="num">${fmt(allP)} €</td><td class="num">${fmt(allR)} €</td><td class="num dim">—</td><td class="num ${cls(pct(allR,allP))}">${pS(pct(allR,allP))}</td><td class="num dim">—</td><td class="num">${fmt(CTRS.reduce((s,c)=>s+(ytdC[c.id]||0),0))} €</td><td class="num">${fmt(CTRS.reduce((s,c)=>s+(ytdP[c.id]||0),0))} €</td><td></td></tr>`;
-  document.getElementById('tb-cen').innerHTML=rows;
+function rCen(){
+  if(!MA)return;
+  const{ano,mes}=MA,d=DM[ano]?.[mes];if(!d)return;
+  actualizarDiasMesActivo();
+  const isClosed=!d.dias||!d.diasT||d.dias>=d.diasT;
+
+  const CTRS_EXT=[
+    {id:'sjp', nm:'SJ Pintura',     tp:'Pintura',       col:'#1a56e8',cl:'#e8eefb'},
+    {id:'sjd', nm:'SJ Deco',        tp:'Instalaciones', col:'#7c3aed',cl:'#f3e8ff'},
+    {id:'garp',nm:'Gargallo Pin.',  tp:'Pintura',       col:'#4f7ef5',cl:'#e8eefb'},
+    {id:'gard',nm:'Gargallo Deco',  tp:'Instalaciones', col:'#a78bfa',cl:'#ede9fe'},
+    {id:'alm', nm:'Almacén',        tp:'Central',       col:'#0d9f6e',cl:'#e6f7f2'},
+    {id:'avd', nm:'Avd. Madrid',    tp:'Mixto',         col:'#c47a0a',cl:'#fef3e2'},
+  ];
+
+  document.getElementById('cen-grid').innerHTML=CTRS_EXT.map(c=>{
+    const rv=d[c.id]||0,pv=PRES[c.id]?.[mes-1]||0;
+    const pr=!isClosed&&d.dias&&d.diasT?proy(rv,d.dias,d.diasT):null;
+    const hy25=(HT[ano-1]||[])[mes-1]||0; // company-level fallback
+    const fill=pv>0?Math.min(100,Math.round(rv/pv*100)):0;
+    const prFill=pr&&pv>0?Math.min(100,Math.round(pr/pv*100)):fill;
+    const fc=fill>=100?'var(--green)':fill>=80?'var(--amber)':'var(--red)';
+    const diff=rv-pv;
+    const diffHtml=diff>=0
+      ?`<span style="color:var(--green);font-weight:700;font-size:11px">Superado en +${fmt(diff)} €</span>`
+      :`<span style="color:var(--red);font-weight:700;font-size:11px">Le queda ${fmt(Math.abs(diff))} €</span>`;
+
+    return `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden">
+      <div style="background:${c.col};padding:10px 16px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:13px;font-weight:700;color:#fff">${c.nm}</span>
+        <span style="font-size:10px;background:rgba(255,255,255,.2);color:#fff;padding:2px 8px;border-radius:8px">${c.tp}</span>
+      </div>
+      <div style="padding:14px 16px">
+        <div style="font-size:32px;font-weight:700;font-family:var(--mono);color:var(--tx);line-height:1;margin-bottom:4px">${fmt(rv)} €</div>
+        ${pr?`<div style="font-size:13px;color:var(--amber);font-weight:700;margin-bottom:10px">★ Proy: ${fmt(pr)} €</div>`:'<div style="margin-bottom:10px"></div>'}
+        <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;font-size:12px">
+            <span style="color:var(--muted)">Presupuesto mes</span>
+            <span style="font-family:var(--mono);color:var(--sub);font-weight:600">${fmt(pv)} €</span>
+          </div>
+          <div style="font-size:12px">${diffHtml}</div>
+        </div>
+        <div style="height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:4px">
+          <div style="height:100%;width:${fill}%;background:${fc};border-radius:3px"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px">
+          <span style="color:${fc};font-weight:700">${fill}% pres.</span>
+          ${pr?`<span style="color:var(--amber);font-weight:600">proy: ${prFill}%</span>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
 }
+
 
 // ═══════ COMERCIALES ═══════
 // Trimestres comerciales: Q1=Ene-Mar, Q2=Abr-Jun, Q3=Jul-Sep, Q4=Oct-Dic
@@ -1103,103 +1171,368 @@ function buildComercialCharts(vId, vNm, vColor, presArr, hist25, chartMensId, ch
   });
 }
 
+
 function rCom(){
   if(!MA)return;
   const{ano,mes}=MA,d=DM[ano]?.[mes];if(!d)return;
   actualizarDiasMesActivo();
   const isClosed=!d.dias||!d.diasT||d.dias>=d.diasT;
 
-  // Hist 2025 mensual por comercial
-  const cav25=[40118,65146,68093,64989,69148,93969,90198,68654,97134,59863,74993,93577];
-  const urs25=[17499,15793,23216,27718,20708,24316,36622,20820,36654,25591,27938,20828];
-
-  // Tabla resumen
-  let rows='';
-  rows+=buildComercialCard('cavero','Antonio Cavero','#1a56e8',PRES.cavero,cav25,'ch-cav-mens','ch-cav-roll','cav-q-detail','cav-q-label',d,ano,mes);
-  rows+=buildComercialCard('ursula','Úrsula Moreno','#0d9f6e',PRES.ursula,urs25,'ch-urs-mens','ch-urs-roll','urs-q-detail','urs-q-label',d,ano,mes);
-  document.getElementById('tb-com').innerHTML=rows;
-
-  // Gráficos
-  buildComercialCharts('cavero','Antonio Cavero','#1a56e8',PRES.cavero,cav25,'ch-cav-mens','ch-cav-roll','cav-q-detail',ano,mes);
-  buildComercialCharts('ursula','Úrsula Moreno','#0d9f6e',PRES.ursula,urs25,'ch-urs-mens','ch-urs-roll','urs-q-detail',ano,mes);
-}
-
-// ═══════ HISTÓRICO ═══════
-function rHist(){
-  // ── Tabla totales anuales ──
-  const yrs=Object.keys(HT).map(Number).sort((a,b)=>a-b);
-  let rows='';
-  yrs.forEach((y,i)=>{
-    const v=HT[y],tot=v.reduce((a,b)=>a+b,0),prev=i>0?HT[yrs[i-1]].reduce((a,b)=>a+b,0):null;
-    const g=pct(tot,prev),mx=Math.max(...v),mn=Math.min(...v);
-    rows+=`<tr><td class="l" style="font-weight:700">${y}</td><td class="num hi">${fmt(tot)} €</td><td class="num ${cls(g)}">${pS(g)}</td><td class="num">${fmt(Math.round(tot/12))} €</td><td class="num pos">${MN[v.indexOf(mx)]} · ${fmt(mx)} €</td><td class="num neg">${MN[v.indexOf(mn)]} · ${fmt(mn)} €</td></tr>`;
-  });
-  document.getElementById('tb-hist-tot').innerHTML=rows;
-
-  // ── Gráfico líneas históricas ──
-  const sy=[2021,2022,2023,2024,2025],yc=['#1a56e8','#7c3aed','#0d9f6e','#c47a0a','#d93025'];
-  mkC('ch-hl','line',{
-    labels:MN,
-    datasets:sy.map((y,i)=>({label:String(y),data:HT[y],borderColor:yc[i],borderWidth:y===2025?3:1.5,pointRadius:y===2025?4:0,pointBackgroundColor:yc[i],fill:false,tension:.3}))
-  },{scales:{x:{grid:{display:false}},y:{grid:{color:'#eef0f6'},ticks:{callback:v=>fK(v)}}},plugins:{legend:{position:'top',labels:{usePointStyle:true,padding:12}},tooltip:{mode:'index',intersect:false,callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.raw)} €`}},datalabels:{display:false}}});
-
-  // ── Rolling 12m empresa ──
-  const allY=[2018,2019,2020,2021,2022,2023,2024,2025];
-  const fL=[],fD=[];
-  allY.forEach(y=>MN.forEach((_,mi)=>{
-    fL.push(MN[mi]+' '+String(y).slice(2));
-    let sum=0,cnt=0,ok=true;
-    for(let b=0;b<12;b++){
-      const ti=allY.indexOf(y)*12+mi-b;
-      if(ti<0){ok=false;break;}
-      const yr=allY[Math.floor(ti/12)],mo=ti%12;
-      if(HT[yr]){sum+=HT[yr][mo];cnt++;}
-    }
-    fD.push(ok&&cnt===12?Math.round(sum):null);
-  }));
-  mkC('ch-roll','line',{
-    labels:fL,
-    datasets:[{label:'Rolling 12m',data:fD,borderColor:'#1a56e8',borderWidth:2.5,pointRadius:0,fill:{target:'origin',above:'rgba(26,86,232,0.07)'},tension:.4}]
-  },{scales:{x:{grid:{display:false},ticks:{maxTicksLimit:12,font:{size:10}}},y:{min:1600000,grid:{color:'#eef0f6'},ticks:{callback:v=>(v/1e6).toFixed(2)+'M'}}},plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${fmt(c.raw)} €`}},datalabels:{display:false}}});
-
-  // ── Rolling 12m por subcentro ──
-  // HC[key] = [sjp, sji, avdp, avdi, almp, almi, garp, gari]
-  const hcKeys=Object.keys(HC).sort((a,b)=>{
-    const [ay,am]=a.split('-').map(Number);
-    const [by,bm]=b.split('-').map(Number);
-    return ay!==by?ay-by:am-bm;
-  });
-  const hcArr=hcKeys.map(k=>HC[k]);
-
-  const subCentres=[
-    {id:'ch-r-sjp', lbl:'SJ Pintura',      col:'#1a56e8', ix:[0]},
-    {id:'ch-r-sjd', lbl:'SJ Deco',    col:'#7c3aed', ix:[1]},
-    {id:'ch-r-garp',lbl:'Gargallo Pintura',   col:'#4f7ef5', ix:[6]},
-    {id:'ch-r-gard',lbl:'Gargallo Deco',col:'#a78bfa',ix:[7]},
-    {id:'ch-r-alm', lbl:'Almacen',          col:'#0d9f6e', ix:[3]},
-    {id:'ch-r-avd', lbl:'Avd. Madrid',      col:'#c47a0a', ix:[2]},
+  const COM=[
+    {id:'cavero',nm:'Antonio Cavero',col:'#1a56e8',presKey:'cavero'},
+    {id:'ursula',nm:'Úrsula Moreno', col:'#7c3aed',presKey:'ursula'},
   ];
 
-  subCentres.forEach(sc=>{
-    const rollData=hcArr.map((_,i)=>{
-      if(i<11)return null;
-      let sum=0;
-      for(let b=0;b<12;b++){
-        const row=hcArr[i-b];
-        if(!row)return null;
-        sc.ix.forEach(x=>{sum+=(row[x]||0);});
+  // Q1 months
+  const qMeses=[[1,2,3],[4,5,6],[7,8,9],[10,11,12]];
+  const qIdx=Math.floor((mes-1)/3);
+  const qMes=qMeses[qIdx];
+
+  // Build table
+  let tableRows=COM.map(c=>{
+    const rv=d[c.id]||0,obj=PRES[c.presKey]?.[mes-1]||0;
+    const pr=proy(rv,d.dias,d.diasT);
+    const ytdQ=qMes.reduce((s,m)=>s+(DM[ano]?.[m]?.[c.id]||0),0);
+    const objQ=qMes.reduce((s,m)=>s+(PRES[c.presKey]?.[m-1]||0),0);
+    const pctQ=objQ>0?Math.round(ytdQ/objQ*100):0;
+    const badgeBg=pctQ>=100?'var(--green-l)':pctQ>=80?'var(--amber-l)':'var(--red-l)';
+    const badgeCl=pctQ>=100?'var(--green)':pctQ>=80?'var(--amber)':'var(--red)';
+    const diff=rv-obj;
+    const diffHtml=diff>=0
+      ?`<span style="color:var(--green);font-weight:700">Superado en +${fmt(diff)} €</span>`
+      :`<span style="color:var(--red);font-weight:700">Le queda ${fmt(Math.abs(diff))} €</span>`;
+    return `<tr style="border-bottom:1px solid var(--border)">
+      <td class="l" style="padding:12px 18px;font-weight:700;font-size:14px;color:${c.col}">${c.nm}</td>
+      <td class="num" style="padding:12px 14px;text-align:right;font-weight:700;font-family:var(--mono);font-size:13px">${fmt(rv)} €</td>
+      <td class="num" style="padding:12px 14px;text-align:right;font-family:var(--mono);color:var(--amber);font-weight:700;font-size:13px">★ ${fmt(pr)} €</td>
+      <td class="num" style="padding:12px 14px;text-align:right;font-family:var(--mono);color:var(--sub);font-size:13px">${fmt(obj)} €</td>
+      <td style="padding:12px 14px;text-align:right;font-size:12px">${diffHtml}</td>
+      <td class="num" style="padding:12px 14px;text-align:right;font-weight:700;font-family:var(--mono);font-size:13px">${fmt(ytdQ)} €</td>
+      <td class="num" style="padding:12px 14px;text-align:right;font-family:var(--mono);color:var(--sub);font-size:13px">${fmt(objQ)} €</td>
+      <td style="padding:12px 14px;text-align:center">
+        <span style="background:${badgeBg};color:${badgeCl};font-family:var(--mono);font-weight:700;font-size:13px;padding:3px 10px;border-radius:6px">${pctQ}%</span>
+      </td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('com-table').innerHTML=tableRows;
+
+  // Monthly charts per comercial
+  COM.forEach(c=>{
+    const realData=MN.map((_,i)=>DM[ano]?.[i+1]?.[c.id]||null);
+    const objData=PRES[c.presKey]||[];
+    mkC('ch-com-'+c.id,'bar',{labels:MN,datasets:[
+      {label:'Real',data:realData,backgroundColor:c.col,borderRadius:5},
+      {label:'Objetivo',data:objData,type:'line',borderColor:'var(--amber)',borderWidth:2,borderDash:[5,4],pointRadius:3,pointBackgroundColor:'var(--amber)',fill:false},
+    ]},{
+      ...defOpts,
+      plugins:{...defOpts.plugins,legend:{display:false},
+        tooltip:{mode:'index',intersect:false,callbacks:{
+          title:()=>'',
+          label:c=>c.parsed.y===null?null:` ${Math.round(c.parsed.y).toLocaleString('es-ES')} €`
+        }}
       }
-      return Math.round(sum);
     });
-    mkC(sc.id,'line',{
-      labels:hcKeys,
-      datasets:[{label:sc.lbl,data:rollData,borderColor:sc.col,borderWidth:2.5,pointRadius:0,fill:false,tension:.4}]
+  });
+
+  // Rolling 12m — last 12 CLOSED months
+  _buildComRolling(ano, mes);
+}
+
+function _buildComRolling(ano, mes){
+  // Determine last closed month
+  const lastClosed=mes>1?mes-1:12;
+  const lastClosedAno=mes>1?ano:ano-1;
+
+  // Build 12 months of rolling data per comercial
+  // For now use monthly data from DM and HT-equivalent
+  const COM2=[
+    {id:'cavero',col:'#1a56e8',nm:'Antonio Cavero',
+     hist25:[40118,65146,68093,64989,69148,93969,90198,68654,97134,59863,74993,93577]},
+    {id:'ursula',col:'#7c3aed',nm:'Úrsula Moreno',
+     hist25:[15470,19999,19811,0,0,0,0,0,0,0,0,0]},
+  ];
+
+  COM2.forEach(c=>{
+    // Build 24-month series: 12 from 2025 + closed months 2026
+    const series24=[];
+    const labels24=[];
+    const MN_short=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+    // 2025 months
+    c.hist25.forEach((v,i)=>{labels24.push(MN_short[i]+' 25');series24.push(v);});
+    // 2026 closed months only
+    for(let m=1;m<=lastClosed;m++){
+      labels24.push(MN_short[m-1]+' 26');
+      series24.push(DM[ano]?.[m]?.[c.id]||0);
+    }
+
+    // Compute rolling 12m at each point (only from index 11 onward)
+    const rollData=[],rollLabels=[];
+    for(let i=11;i<series24.length;i++){
+      let sum=0;
+      for(let b=0;b<12;b++) sum+=series24[i-b]||0;
+      rollData.push(Math.round(sum/1000)); // in K
+      rollLabels.push(labels24[i]);
+    }
+
+    if(rollData.length<2){rollData.push(0);rollLabels.push('—');}
+
+    const mn=Math.min(...rollData),mx=Math.max(...rollData);
+    const pad=Math.round((mx-mn)*.35)||10;
+
+    // Last closed month KPI vs same month prev year
+    const lastVal=rollData[rollData.length-1]||0;
+    const prevVal=rollData.length>=13?rollData[rollData.length-13]:rollData[0];
+    const diffK=lastVal-prevVal;
+    const diffEl=document.getElementById('roll-diff-'+c.id);
+    if(diffEl) diffEl.innerHTML=
+      `<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">${rollLabels[rollLabels.length-1]} vs ${rollLabels.length>=13?rollLabels[rollLabels.length-13]:rollLabels[0]}</div>`+
+      `<div style="font-size:22px;font-weight:700;font-family:var(--mono);color:${diffK>=0?'var(--green)':'var(--red)'}">${diffK>=0?'+':''}${diffK}K€</div>`;
+
+    mkC('ch-roll-'+c.id,'line',{
+      labels:rollLabels,
+      datasets:[
+        {data:rollData,borderColor:'transparent',backgroundColor:c.col+'15',fill:true,tension:.4,pointRadius:0},
+        {label:c.nm,data:rollData,borderColor:c.col,borderWidth:2.5,
+         pointRadius:3,pointBackgroundColor:rollData.map((v,i)=>i===0?c.col:v>=rollData[i-1]?'#0d9f6e':'#d93025'),
+         pointBorderColor:'#fff',pointBorderWidth:2,fill:false,tension:.4}
+      ]
     },{
-      scales:{x:{grid:{display:false},ticks:{maxTicksLimit:14,font:{size:10}}},y:{grid:{color:'#eef0f6'},ticks:{callback:v=>fK(v)}}},
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` Rolling 12m: ${fmt(c.raw)} €`}},datalabels:{display:false}}
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{
+        filter:item=>item.datasetIndex===1,
+        callbacks:{title:()=>'',label:c=>` ${c.parsed.y}K€`}
+      }},
+      scales:{
+        x:{grid:{display:false},ticks:{font:{size:10},color:'var(--muted)',maxTicksLimit:8,maxRotation:30}},
+        y:{min:mn-pad,max:mx+pad,ticks:{callback:v=>v+'K',font:{size:10},color:'var(--muted)',maxTicksLimit:4},grid:{color:'rgba(0,0,0,.04)'}}
+      }
     });
   });
 }
+
+
+// ═══════ HISTÓRICO ═══════
+
+// Historic year detail state
+let _histOpen=null;
+
+function rHist(){
+  const yrs=Object.keys(HT).map(Number).sort((a,b)=>a-b);
+
+  // Build annual totals table with expandable rows
+  _buildHistTable(yrs);
+
+  // Year selector chart
+  _buildHistEvoChart(yrs);
+
+  // Rolling total
+  _buildHistRolling();
+
+  // Rolling per centre
+  ['sjp','sjd','garp','gard','alm','avd'].forEach(id=>_buildCentreRolling(id));
+}
+
+function _buildHistTable(yrs){
+  const tbody=document.getElementById('tb-hist-tot');
+  if(!tbody)return;
+  let html='';
+  const MN_s=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+  yrs.forEach((y,i)=>{
+    const v=HT[y]||[];
+    const tot=v.reduce((a,b)=>a+(b||0),0);
+    const prev=i>0?HT[yrs[i-1]]?.reduce((a,b)=>a+(b||0),0):null;
+    const g=prev?pct(tot,prev):null;
+    const med=Math.round(tot/v.filter(x=>x>0).length)||0;
+    const mx=Math.max(...v.filter(x=>x>0));
+    const mn2=Math.min(...v.filter(x=>x>0));
+    const mxM=MN_s[v.indexOf(mx)];
+    const mnM=MN_s[v.indexOf(mn2)];
+    const isOpen=_histOpen===y;
+    const isCurso=y===2026;
+    const yCol=isCurso?'var(--amber)':'var(--tx)';
+    const rowBg=isCurso?'rgba(196,122,10,.04)':'';
+
+    html+=`<tr onclick="_toggleHistYear(${y})" style="border-bottom:${isOpen?'none':'1px solid var(--border)'};cursor:pointer;background:${rowBg}${isOpen?';background:var(--blue-l)':''}" onmouseenter="this.style.background='var(--bg3)'" onmouseleave="this.style.background='${isOpen?'var(--blue-l)':rowBg}'">
+      <td style="padding:10px 14px;text-align:center;font-size:12px;color:var(--muted);width:30px">${isOpen?'▼':'▶'}</td>
+      <td style="padding:10px 12px;font-weight:700;font-size:14px;color:${yCol}">
+        ${y}${isCurso?` <span style="font-size:9px;background:var(--amber-l);color:var(--amber);padding:1px 6px;border-radius:6px;font-weight:600">En curso</span>`:''}
+      </td>
+      <td class="num hi" style="padding:10px 12px;text-align:right;font-size:13px">${fmt(tot)} €</td>
+      <td class="num" style="padding:10px 12px;text-align:right;font-size:13px;color:${g==null?'var(--muted)':g>=0?'var(--green)':'var(--red)'};font-weight:600">${g!=null?pS(g):'—'}</td>
+      <td class="num" style="padding:10px 12px;text-align:right;font-size:13px">${fmt(med)} €</td>
+      <td class="num pos" style="padding:10px 12px;text-align:right;font-size:12px">${mxM} · ${fK(mx)}</td>
+      <td class="num neg" style="padding:10px 12px;text-align:right;font-size:12px">${mnM} · ${fK(mn2)}</td>
+    </tr>`;
+
+    if(isOpen){
+      const maxV=Math.max(...v.filter(x=>x>0));
+      const cells=MN_s.map((m,mi)=>{
+        const val=v[mi];
+        const pct2=val?Math.round(val/maxV*100):0;
+        const barCol=val&&val===maxV?'var(--green)':val&&val===Math.min(...v.filter(x=>x>0))?'var(--red)':'var(--blue)';
+        return `<td style="text-align:center;padding:8px 4px">
+          <div style="font-size:10px;color:var(--muted);font-weight:600;margin-bottom:4px">${m}</div>
+          <div style="height:40px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:3px">
+            <div style="width:20px;background:${val?barCol:'var(--border)'};border-radius:3px 3px 0 0;height:${val?pct2:3}%;min-height:3px;opacity:${val?1:.3}"></div>
+          </div>
+          <div style="font-family:var(--mono);font-weight:700;color:${val?barCol:'var(--faint)'};font-size:11px">${val?fK(val):'—'}</div>
+        </td>`;
+      }).join('');
+      html+=`<tr style="background:var(--bg3);border-bottom:2px solid var(--border2)">
+        <td colspan="2" style="padding:10px 14px;font-size:11px;color:var(--sub);font-weight:600;vertical-align:top">Detalle mensual ${y}</td>
+        <td colspan="5" style="padding:6px 8px"><table style="width:100%;border-collapse:collapse"><tr>${cells}</tr></table></td>
+      </tr>`;
+    }
+  });
+  tbody.innerHTML=html;
+}
+
+function _toggleHistYear(y){
+  _histOpen = _histOpen===y ? null : y;
+  const yrs=Object.keys(HT).map(Number).sort((a,b)=>a-b);
+  _buildHistTable(yrs);
+}
+
+function _buildHistEvoChart(yrs){
+  if(!window._histYrActive) window._histYrActive=new Set([2024,2025,2026]);
+  const yc={2021:'#b0b8d0',2022:'#7a85a3',2023:'#4a5270',2024:'#1a56e8',2025:'#0d9f6e',2026:'#c47a0a'};
+
+  // Build buttons
+  const btnEl=document.getElementById('hist-yr-btns');
+  if(btnEl){
+    btnEl.innerHTML=[2021,2022,2023,2024,2025,2026].map(y=>{
+      const on=window._histYrActive.has(y);
+      const col=yc[y];
+      return `<button onclick="_toggleHistYr(${y})" id="hbtn-${y}" style="padding:4px 12px;border-radius:12px;border:${on?'1.5px':'1px'} solid ${on?col:'var(--border2)'};background:${on?col+'22':'transparent'};color:${on?col:'var(--muted)'};font-size:11px;font-weight:600;cursor:pointer">${y}</button>`;
+    }).join('');
+  }
+
+  const datasets=[...window._histYrActive].sort().map(y=>({
+    label:String(y),data:HT[y]||[],
+    borderColor:yc[y],borderWidth:y===2026?3:1.8,
+    pointRadius:y===2026?4:2,pointBackgroundColor:yc[y],
+    fill:false,tension:.3
+  }));
+
+  mkC('ch-hist-evo','line',{labels:MN,datasets},{
+    ...defOpts,
+    plugins:{...defOpts.plugins,
+      legend:{display:false},
+      tooltip:{mode:'index',intersect:false,callbacks:{
+        title:()=>'',
+        label:c=>c.parsed.y===null?null:` ${c.dataset.label}: ${fmt(c.parsed.y*1000)} €`
+      }}
+    },
+    scales:{
+      x:{grid:{display:false},ticks:{font:{size:12},color:'var(--muted)'}},
+      y:{ticks:{callback:v=>v+'K',font:{size:12},color:'var(--muted)'},grid:{color:'rgba(0,0,0,.05)'}}
+    }
+  });
+}
+
+function _toggleHistYr(y){
+  if(!window._histYrActive) window._histYrActive=new Set([2024,2025,2026]);
+  if(window._histYrActive.has(y)) window._histYrActive.delete(y);
+  else window._histYrActive.add(y);
+  const yrs=Object.keys(HT).map(Number).sort((a,b)=>a-b);
+  _buildHistEvoChart(yrs);
+}
+
+function _buildHistRolling(){
+  // Use HT data to build rolling 12m
+  const allYrs=[2017,2018,2019,2020,2021,2022,2023,2024,2025];
+  const series=[],labels=[];
+  allYrs.forEach(y=>MN.forEach((_,mi)=>{
+    labels.push(MN[mi]+' '+String(y).slice(2));
+    series.push(HT[y]?.[mi]||0);
+  }));
+  // Add 2026 closed months
+  if(MA){
+    const lastClosed=MA.mes>1?MA.mes-1:0;
+    for(let m=1;m<=lastClosed;m++){
+      labels.push(MN[m-1]+' 26');
+      series.push((HT[2026]?.[m-1])||(DM[2026]?.[m]?.total/1000||0));
+    }
+  }
+
+  const rollData=[],rollLabels=[];
+  for(let i=11;i<series.length;i++){
+    let sum=0;for(let b=0;b<12;b++) sum+=series[i-b]||0;
+    rollData.push(Math.round(sum));
+    rollLabels.push(labels[i]);
+  }
+
+  const mn=Math.min(...rollData),mx=Math.max(...rollData);
+  const pad=Math.round((mx-mn)*.2)||50000;
+
+  mkC('ch-hist-roll','line',{labels:rollLabels,datasets:[
+    {data:rollData,borderColor:'transparent',backgroundColor:'rgba(26,86,232,.07)',fill:true,tension:.4,pointRadius:0},
+    {label:'Rolling 12m',data:rollData,borderColor:'#1a56e8',borderWidth:2.5,pointRadius:2,pointBackgroundColor:'#1a56e8',fill:false,tension:.4}
+  ]},{
+    responsive:true,maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},tooltip:{
+      filter:item=>item.datasetIndex===1,
+      callbacks:{title:()=>'',label:c=>` ${fmt(c.parsed.y)} €`}
+    }},
+    scales:{
+      x:{grid:{display:false},ticks:{font:{size:10},color:'var(--muted)',maxTicksLimit:14,maxRotation:30}},
+      y:{min:mn-pad,max:mx+pad,ticks:{callback:v=>fK(v),font:{size:10},color:'var(--muted)',maxTicksLimit:5},grid:{color:'rgba(0,0,0,.04)'}}
+    }
+  });
+}
+
+function _buildCentreRolling(centreId){
+  // Use HC data
+  const hcKeys=Object.keys(HC).sort((a,b)=>{
+    const[ay,am]=a.split('-').map(Number);const[by,bm]=b.split('-').map(Number);
+    return ay!==by?ay-by:am-bm;
+  });
+  const IX={sjp:0,sjd:1,avd:2,alm:3,garp:6,gard:7};
+  const ix=IX[centreId];
+  if(ix===undefined)return;
+
+  const series=hcKeys.map(k=>(HC[k]?.[ix]||0)/1000);
+  const labels=hcKeys.map(k=>{const[y,m]=k.split('-');return MN[parseInt(m)-1]+' '+String(y).slice(2);});
+
+  // Exclude current open month
+  const closedN=MA?((MA.mes-1)+((MA.ano-2019)*12)):series.length;
+  const sSeries=series.slice(0,closedN);
+  const sLabels=labels.slice(0,closedN);
+
+  const rollData=[],rollLabels=[];
+  for(let i=11;i<sSeries.length;i++){
+    let sum=0;for(let b=0;b<12;b++) sum+=sSeries[i-b]||0;
+    rollData.push(Math.round(sum));
+    rollLabels.push(sLabels[i]);
+  }
+  if(!rollData.length)return;
+
+  const mn=Math.min(...rollData),mx=Math.max(...rollData);
+  const pad=Math.round((mx-mn)*.35)||5;
+  const col={sjp:'#1a56e8',sjd:'#7c3aed',garp:'#4f7ef5',gard:'#a78bfa',alm:'#0d9f6e',avd:'#c47a0a'}[centreId];
+
+  mkC('ch-roll-'+centreId,'line',{labels:rollLabels,datasets:[
+    {data:rollData,borderColor:'transparent',backgroundColor:col+'15',fill:true,tension:.4,pointRadius:0},
+    {label:centreId,data:rollData,borderColor:col,borderWidth:2,pointRadius:2,pointBackgroundColor:col,fill:false,tension:.4}
+  ]},{
+    responsive:true,maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},tooltip:{
+      filter:item=>item.datasetIndex===1,
+      callbacks:{title:()=>'',label:c=>` ${c.parsed.y}K€`}
+    }},
+    scales:{
+      x:{grid:{display:false},ticks:{font:{size:9},color:'var(--muted)',maxTicksLimit:8,maxRotation:30}},
+      y:{min:mn-pad,max:mx+pad,ticks:{callback:v=>v+'K',font:{size:9},color:'var(--muted)',maxTicksLimit:4},grid:{color:'rgba(0,0,0,.04)'}}
+    }
+  });
+}
+
 
 // ═══════ PRESUPUESTO ═══════
 function rPres(){
@@ -1221,9 +1554,9 @@ function updP(el){const k=el.dataset.k,i=parseInt(el.dataset.i),v=parseFloat(el.
 function guardarPres(){rResumen();alert('✓ Presupuesto actualizado.');}
 
 /* AUTO_DATA_INJECT */
-// Datos inyectados automaticamente 18/03/2026 08:18
+// Datos inyectados automaticamente 18/03/2026 14:47
 (function autoLoad(){
-  const d = {"total": 136796.88, "sjp": 41262.5, "sjd": 16769.93, "garp": 10931.09, "gard": 23888.98, "alm": 31863.42, "avd": 12080.95, "cavero": 60440.34, "ursula": 19811.46, "prof": 72834.1, "pvp_pin": 13124.71, "pvp_ins": 42442.02, "distrib": 738.62, "ind": 7657.43, "dias": 13, "diasT": 19, "mes": 3, "ano": 2026, "actualizado": "18/03/2026 08:18", "fechaERP": "ERP 17/03/26 20:00"};
+  const d = {"total": 136796.88, "sjp": 41262.5, "sjd": 16769.93, "garp": 10931.09, "gard": 23888.98, "alm": 31863.42, "avd": 12080.95, "cavero": 60440.34, "ursula": 19811.46, "prof": 72834.1, "pvp_pin": 13124.71, "pvp_ins": 42442.02, "distrib": 738.62, "ind": 7657.43, "dias": 13, "diasT": 19, "mes": 3, "ano": 2026, "actualizado": "18/03/2026 14:47", "fechaERP": "ERP 17/03/26 20:00"};
   if(!window._autoLoaded){
     window._autoLoaded=true;
     window.addEventListener('load',function(){
@@ -1255,6 +1588,9 @@ const FESTIVOS = {
   2026: ['2026-01-01','2026-01-06','2026-03-05','2026-04-02','2026-04-03',
          '2026-04-23','2026-05-01','2026-10-12','2026-11-01','2026-12-06',
          '2026-12-08','2026-12-25'],
+  2027: ['2027-01-01','2027-01-06','2027-03-05','2027-03-26','2027-03-29',
+         '2027-04-23','2027-05-01','2027-10-12','2027-11-01','2027-12-06',
+         '2027-12-08','2027-12-25'],
 };
 
 function esFestivo(fecha, ano) {
