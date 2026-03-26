@@ -273,7 +273,7 @@ tbody tr:hover:not(.tot):not(.grp) td{background:#f5f7ff}
   <div class="sb-i" onclick="nav('datos')"><span class="ic">⊕</span>Cargar Datos ERP</div>
   <div class="sb-i" onclick="nav('presupuesto')"><span class="ic">⊞</span>Presupuesto</div>
   <div class="sb-foot">
-    <div class="sb-dt" id="sb-dt">Auto · 26/03/2026 10:30</div>
+    <div class="sb-dt" id="sb-dt">Auto · 26/03/2026 10:36</div>
     <div id="sb-carga-box" style="font-size:9px;color:var(--muted);text-align:center;padding:6px 8px 2px;border-top:1px solid rgba(255,255,255,0.07);margin-top:4px">
       <div style="font-size:8px;text-transform:uppercase;letter-spacing:.5px;opacity:.5;margin-bottom:2px">Última carga ERP</div>
       <div id="sb-ultima-carga" style="color:#a0aec0;font-weight:500;font-size:10px">Sin datos ERP</div>
@@ -419,7 +419,7 @@ tbody tr:hover:not(.tot):not(.grp) td{background:#f5f7ff}
       <div class="cbody">
         <div class="frow">
           <div class="ff"><label>Mes comercial</label>
-            <select id="s-mes"><option value="1">Enero</option><option value="2">Febrero</option><option value="3" selected>Marzo</option><option value="4">Abril</option><option value="5">Mayo</option><option value="6">Junio</option><option value="7">Julio</option><option value="8">Agosto</option><option value="9">Septiembre</option><option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option></select>
+            <select id="s-mes"><option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option><option value="4">Abril</option><option value="5">Mayo</option><option value="6">Junio</option><option value="7">Julio</option><option value="8">Agosto</option><option value="9">Septiembre</option><option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option></select>
           </div>
           <div class="ff"><label>Año</label><select id="s-ano"><option>2026</option><option>2025</option></select></div>
           <div class="ff"><label>Días facturados</label><input id="i-d" type="number" min="1" max="31" placeholder="Ej: 11"></div>
@@ -714,8 +714,18 @@ function procesar(){
   const diasT=parseFloat(document.getElementById('i-dt').value)||null;
   if(!raw){setSt('er','Pega primero los datos del ERP.');return;}
   try{
-    const r=parseERP(raw);r.mes=mes;r.ano=ano;r.dias=dias;r.diasT=diasT;
+    const r=parseERP(raw);
+    // Validate: if ERP file has a date, confirm it matches selected month
+    if(r.fechaERP){
+      const erpMes=r.mes||mes;
+      if(erpMes&&erpMes!==mes){
+        const nomERP=MF[erpMes-1]||erpMes, nomSel=MF[mes-1]||mes;
+        if(!confirm('⚠️ El archivo ERP parece ser de '+nomERP+' pero has seleccionado '+nomSel+'.\n\n¿Cargar como '+nomSel+'?')){return;}
+      }
+    }
+    r.mes=mes;r.ano=ano;r.dias=dias;r.diasT=diasT;
     if(!DM[ano])DM[ano]={};DM[ano][mes]=r;
+    _saveDMToStorage();
     MA={ano,mes};
     updSb();markMt(mes,ano);renderPout(r);
     setUltimaCarga('Manual · '+new Date().toLocaleString('es-ES',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}));
@@ -1576,9 +1586,9 @@ function updP(el){const k=el.dataset.k,i=parseInt(el.dataset.i),v=parseFloat(el.
 function guardarPres(){_savePresToStorage();rResumen();alert('✓ Presupuesto guardado.');}
 
 /* AUTO_DATA_INJECT */
-// Datos inyectados automaticamente 26/03/2026 10:30
+// Datos inyectados automaticamente 26/03/2026 10:36
 (function autoLoad(){
-  const d = {"total": 221105.55, "sjp": 60824.77, "sjd": 33970.84, "garp": 14044.0, "gard": 36454.27, "alm": 57129.72, "avd": 18681.95, "cavero": 91209.24, "ursula": 32518.32, "prof": 115954.59, "pvp_pin": 20293.13, "pvp_ins": 75983.42, "distrib": 1075.05, "ind": 7799.36, "dias": 1, "diasT": 19, "mes": 4, "ano": 2026, "actualizado": "26/03/2026 10:30", "fechaERP": "ERP 25/03/26 20:00"};
+  const d = {"total": 221105.55, "sjp": 60824.77, "sjd": 33970.84, "garp": 14044.0, "gard": 36454.27, "alm": 57129.72, "avd": 18681.95, "cavero": 91209.24, "ursula": 32518.32, "prof": 115954.59, "pvp_pin": 20293.13, "pvp_ins": 75983.42, "distrib": 1075.05, "ind": 7799.36, "dias": 1, "diasT": 19, "mes": 4, "ano": 2026, "actualizado": "26/03/2026 10:36", "fechaERP": "ERP 25/03/26 20:00"};
   if(!window._autoLoaded){
     window._autoLoaded=true;
     window.addEventListener('load',function(){
@@ -1708,12 +1718,14 @@ function actualizarDiasMesActivo() {
   ['mt-1','mt-2','mt-3','mt-4'].forEach(id=>document.getElementById(id)?.classList.add('has'));
   document.getElementById('mt-4')?.classList.add('cur');
   document.getElementById('s-mes').value='4';
+  // Clear ERP textarea to prevent stale data from previous sessions
+  const _ta=document.getElementById('erp-ta');if(_ta)_ta.value='';
   // PRES: load user edits from storage (budget corrections persist)
   _loadPresFromStorage();
-  // DM: wipe localStorage completely and replace with fresh hardcoded data.
-  // This guarantees no stale data from previous versions ever contaminates the view.
-  // Any months loaded via ERP upload during this session will be added and re-saved.
+  // DM: wipe hipoDM completely — hardcoded months always take priority.
+  // No stale data from any previous version can survive.
   try{localStorage.removeItem('hipoDM');}catch(e){}
+  try{localStorage.removeItem('hipoDM2');}catch(e){}
   _saveDMToStorage();
   updSb();rResumen();
 })();
