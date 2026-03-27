@@ -1,0 +1,38 @@
+name: Actualizar Cuadro de Mando
+
+on:
+  schedule:
+    # 19:10 UTC = 20:10 Madrid (invierno CET)
+    # 18:10 UTC = 20:10 Madrid (verano CEST)
+    # Ponemos dos horarios para cubrir ambos:
+    - cron: '10 18 * * *'   # verano (CEST, abril-octubre)
+    - cron: '10 19 * * *'   # invierno (CET, octubre-abril)
+  workflow_dispatch:         # permite ejecución manual desde GitHub
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: Instalar Python y dependencias
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar librerías
+        run: pip install openpyxl
+
+      - name: Ejecutar script de actualización
+        env:
+          GMAIL_EMAIL:      ${{ secrets.GMAIL_EMAIL }}
+          GMAIL_PASSWORD:   ${{ secrets.GMAIL_PASSWORD }}
+          GITHUB_TOKEN_HP:  ${{ secrets.GH_TOKEN_HP }}
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GITHUB_USUARIO:   civcomercial2010-cmyk
+          GITHUB_REPO:      cuadromandohpinturas
+        run: python actualizar_gha.py
