@@ -273,7 +273,7 @@ tbody tr:hover:not(.tot):not(.grp) td{background:#f5f7ff}
   <div class="sb-i" onclick="nav('datos')"><span class="ic">⊕</span>Cargar Datos ERP</div>
   <div class="sb-i" onclick="nav('presupuesto')"><span class="ic">⊞</span>Presupuesto</div>
   <div class="sb-foot">
-    <div class="sb-dt" id="sb-dt">Auto · 26/04/2026 20:10</div>
+    <div class="sb-dt" id="sb-dt">— Sin datos —</div>
     <div id="sb-carga-box" style="font-size:9px;color:var(--muted);text-align:center;padding:6px 8px 2px;border-top:1px solid rgba(255,255,255,0.07);margin-top:4px">
       <div style="font-size:8px;text-transform:uppercase;letter-spacing:.5px;opacity:.5;margin-bottom:2px">Última carga ERP</div>
       <div id="sb-ultima-carga" style="color:#a0aec0;font-weight:500;font-size:10px">Sin datos ERP</div>
@@ -1586,9 +1586,9 @@ function updP(el){const k=el.dataset.k,i=parseInt(el.dataset.i),v=parseFloat(el.
 function guardarPres(){_savePresToStorage();rResumen();alert('✓ Presupuesto guardado.');}
 
 /* AUTO_DATA_INJECT */
-// Datos inyectados automaticamente 26/04/2026 20:10
+// Datos inyectados automaticamente 26/04/2026 19:11
 (function autoLoad(){
-  const d = {"total": 227874.25, "sjp": 58418.83, "sjd": 44582.96, "garp": 15649.28, "gard": 37760.59, "alm": 39949.01, "avd": 31182.89, "cavero": 70788.07, "ursula": 24296.24, "prof": 95359.47, "pvp_pin": 9202.43, "pvp_ins": 110133.21, "distrib": 3074.2, "ind": 10104.94, "dias": 1, "diasT": 20, "mes": 4, "ano": 2026, "actualizado": "26/04/2026 20:10", "fechaERP": "ERP 25/04/26 20:00"};
+  const d = {"total": 227874.25, "sjp": 58418.83, "sjd": 44582.96, "garp": 15649.28, "gard": 37760.59, "alm": 39949.01, "avd": 31182.89, "cavero": 70788.07, "ursula": 24296.24, "prof": 95359.47, "pvp_pin": 9202.43, "pvp_ins": 110133.21, "distrib": 3074.2, "ind": 10104.94, "dias": 19, "diasT": 19, "mes": 4, "ano": 2026, "diasFromERP": true, "actualizado": "26/04/2026 19:11", "fechaERP": "ERP 25/04/26"};
   if(!window._autoLoaded){
     window._autoLoaded=true;
     window.addEventListener('load',function(){
@@ -1596,15 +1596,20 @@ function guardarPres(){_savePresToStorage();rResumen();alert('✓ Presupuesto gu
       d.diasFromERP=true;
       DM[d.ano][d.mes]=d;
       MA={ano:d.ano,mes:d.mes};
-      ['mt-1','mt-2','mt-3','mt-4','mt-5','mt-6','mt-7','mt-8','mt-9','mt-10','mt-11','mt-12']
-        .forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('has','cur');});
+      ['mt-1','mt-2','mt-3','mt-4','mt-5','mt-6','mt-7','mt-8',
+       'mt-9','mt-10','mt-11','mt-12'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el)el.classList.remove('has','cur');
+      });
       const mtEl=document.getElementById('mt-'+d.mes);
       if(mtEl)mtEl.classList.add('has','cur');
       document.getElementById('s-mes').value=d.mes;
-      if(d.dias)document.getElementById('i-d').value=d.dias;
-      if(d.diasT)document.getElementById('i-dt').value=d.diasT;
+      if(d.dias&&document.getElementById('i-d'))
+        document.getElementById('i-d').value=d.dias;
+      if(d.diasT&&document.getElementById('i-dt'))
+        document.getElementById('i-dt').value=d.diasT;
       updSb();
-      if(d.fechaERP&&typeof setUltimaCarga==='function')setUltimaCarga(d.fechaERP);
+      if(typeof setUltimaCarga==='function')setUltimaCarga(d.fechaERP);
       rResumen();
       console.log('OK Auto-cargado:',d.mes+'/'+d.ano,'Total:',d.total);
     });
