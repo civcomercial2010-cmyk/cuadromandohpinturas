@@ -2,1796 +2,1905 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>HIPOPOTAMO — Cuadro de Mando 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hipopótamo Pinturas — Cuadro de Mando 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
 <style>
-:root{
-  --bg:#f0f2f7;--bg2:#fff;--bg3:#f7f8fc;
-  --card:#fff;--border:#dde1ec;--border2:#c8cede;
-  --tx:#1a1d2e;--sub:#4a5270;--muted:#7a85a3;--faint:#b0b8d0;
-  --blue:#1a56e8;--blue-l:#e8eefb;--blue-m:#4f7ef5;
-  --green:#0d9f6e;--green-l:#e6f7f2;
-  --red:#d93025;--red-l:#fde8e7;
-  --amber:#c47a0a;--amber-l:#fef3e2;
-  --purple:#6b21a8;--purple-l:#f3e8ff;
-  --cyan:#0369a1;--cyan-l:#e0f2fe;
-  --teal:#0e7490;--teal-l:#cffafe;
-  --sb:#1a1d2e;--sb-tx:#c8cedf;--sb-muted:#6b7494;--sb-act:#4f7ef5;
-  --font:'Inter',sans-serif;--mono:'JetBrains Mono',monospace;
-  --r:8px;--r2:12px;--sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  color-scheme: light;
+  --blue:      #1a56e8;
+  --blue-lt:   #eef3fd;
+  --blue-md:   #c5d7f8;
+  --green:     #0d9f6e;
+  --green-lt:  #e8fbf3;
+  --green-md:  #a7f0d0;
+  --red:       #d93025;
+  --amber:     #c47a0a;
+  --bg:        #f0eeea;
+  --srf:       #ffffff;
+  --srf2:      #f6f5f1;
+  --bdr:       #e0ddd6;
+  --bdr2:      #ccc9c0;
+  --txt:       #1c1b19;
+  --txt2:      #5c5a55;
+  --txt3:      #9c9a93;
+  --shd:       0 1px 4px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04);
+  --r-sm:      8px;
+  --r-md:      12px;
+  --r-lg:      16px;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--tx);font-family:var(--font);font-size:14px}
-.shell{display:flex;min-height:100vh}
-/* ── SIDEBAR ── */
-.sb{width:220px;background:var(--sb);flex-shrink:0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
-.sb-top{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,.07)}
-.sb-logo{display:flex;align-items:center;gap:10px}
-.sb-ic{width:32px;height:32px;background:var(--blue-m);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.sb-nm h1{font-size:12px;font-weight:700;color:#fff;line-height:1.3}
-.sb-nm p{font-size:9px;color:var(--sb-muted);text-transform:uppercase;letter-spacing:.07em;margin-top:2px}
-.sb-s{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--sb-muted);padding:12px 16px 4px;font-weight:600}
-.sb-i{display:flex;align-items:center;gap:9px;padding:8px 16px;cursor:pointer;color:var(--sb-tx);font-size:12px;font-weight:500;transition:all .15s;border-left:2px solid transparent}
-.sb-i:hover{background:rgba(255,255,255,.05);color:#fff}
-.sb-i.on{background:rgba(79,126,245,.2);color:#fff;border-left-color:var(--sb-act)}
-.sb-i .ic{font-size:12px;width:18px;text-align:center;opacity:.7}
-.sb-i.on .ic{opacity:1}
-.sb-foot{margin-top:auto;padding:12px 16px;border-top:1px solid rgba(255,255,255,.07)}
-.sb-dt{font-family:var(--mono);font-size:10px;color:var(--sb-muted)}
-.sb-lv{display:flex;align-items:center;gap:5px;margin-top:4px;font-size:10px;color:#4ade80}
-.ld{width:5px;height:5px;border-radius:50%;background:#4ade80;animation:bl 2s infinite}
-@keyframes bl{0%,100%{opacity:1}50%{opacity:.2}}
-/* ── MAIN ── */
-.main{flex:1;overflow:auto;padding:22px 26px 40px;min-width:0}
-.pg{display:none}.pg.on{display:block}
-.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
-.ph-l h2{font-size:17px;font-weight:700}
-.ph-l p{font-size:11px;color:var(--muted);margin-top:3px}
-.ph-b{background:var(--amber-l);border:1px solid #f5c47a;color:var(--amber);font-size:10px;font-weight:600;padding:3px 9px;border-radius:16px;font-family:var(--mono)}
-/* ── KPI ── */
-.kr{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin-bottom:18px}
-.kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:13px 15px;box-shadow:var(--sh);position:relative;overflow:hidden}
-.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kc,var(--blue));border-radius:var(--r2) var(--r2) 0 0}
-.kpi.g{--kc:var(--green)}.kpi.r{--kc:var(--red)}.kpi.a{--kc:var(--amber)}.kpi.p{--kc:var(--purple)}.kpi.c{--kc:var(--cyan)}
-.kl{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600;margin-bottom:7px}
-.kv{font-size:20px;font-weight:700;font-family:var(--mono);letter-spacing:-.03em;line-height:1;margin-bottom:4px}
-.ks{font-size:10px;color:var(--muted);margin-bottom:5px}
-.kbar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:7px}
-.kfill{height:100%;border-radius:2px;background:var(--kc,var(--blue))}
-/* KPI extra row for projection */
-.kproy{font-size:12px;color:var(--amber);font-weight:700;margin-top:5px;padding:3px 8px;background:var(--amber-l);border-radius:4px;display:inline-block}
-.badge{display:inline-flex;align-items:center;gap:2px;font-size:10px;font-weight:700;font-family:var(--mono);padding:2px 6px;border-radius:4px}
-.up{background:var(--green-l);color:var(--green)}.dn{background:var(--red-l);color:var(--red)}.nt{background:var(--amber-l);color:var(--amber)}
-/* ── CARD ── */
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);box-shadow:var(--sh);margin-bottom:15px;overflow:hidden}
-.chead{padding:11px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.chead h3{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--sub)}
-.chead span{font-size:10px;color:var(--muted)}
-.cbody{padding:14px}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:15px}
-.g21{display:grid;grid-template-columns:2fr 1fr;gap:13px;margin-bottom:15px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px;margin-bottom:15px}
-.g6{display:grid;grid-template-columns:repeat(6,1fr);gap:9px;margin-bottom:15px}
-.cw-sm{height:170px;position:relative}
-.cw-md{height:220px;position:relative}
-.cw-lg{height:260px;position:relative}
-/* ── TABLE ── */
-table{width:100%;border-collapse:collapse}
-thead th{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;padding:7px 11px;text-align:right;border-bottom:2px solid var(--border2);background:var(--bg3);white-space:nowrap}
-thead th.l{text-align:left}
-tbody td{padding:8px 12px;text-align:right;border-bottom:1px solid var(--border);font-size:13px;white-space:nowrap}
-tbody td.l{text-align:left;font-size:13.5px;font-weight:600}
-tbody td.sub{text-align:left;font-size:11px;font-weight:500;color:var(--sub);padding-left:20px}
-tbody tr:last-child td{border-bottom:none}
-tbody tr.tot td{background:var(--bg3);font-weight:700;border-top:2px solid var(--border2);border-bottom:none}
-tbody tr.tot td.l{color:var(--blue)}
-tbody tr.grp td{background:#f0f2f7;font-weight:700;font-size:10px;color:var(--sub);letter-spacing:.03em;border-bottom:1px solid var(--border2)}
-tbody tr:hover:not(.tot):not(.grp) td{background:#f5f7ff}
-.num{font-family:var(--mono);font-size:12.5px}
-.pos{color:var(--green);font-weight:600}.neg{color:var(--red);font-weight:600}.neu{color:var(--muted)}.hi{color:var(--tx);font-weight:700}.dim{color:var(--faint)}
-/* ── PROGRESS BAR ── */
-.pbw{display:flex;align-items:center;gap:6px}
-.pb{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;min-width:50px}
-.pbf{height:100%;border-radius:2px}
-.pb-g{background:var(--green)}.pb-a{background:var(--amber)}.pb-r{background:var(--red)}.pb-b{background:var(--blue)}
-.pbp{font-family:var(--mono);font-size:10px;font-weight:600;min-width:30px;text-align:right}
-/* ── ALERTS ── */
-.alerts{display:grid;gap:9px;margin-bottom:16px}
-.alert{border-radius:var(--r);padding:9px 13px;border:1px solid;font-size:11px;display:flex;gap:8px;align-items:flex-start}
-.aw{background:var(--amber-l);border-color:#f5c47a;color:#92540a}
-.ao{background:var(--green-l);border-color:#6ee7c0;color:#065f46}
-.ai{background:var(--blue-l);border-color:#93b9f5;color:#1e3a8a}
-.ap{background:var(--purple-l);border-color:#c4b5fd;color:#4c1d95}
-.aic{font-size:14px;flex-shrink:0}
-.alert strong{display:block;font-weight:700;margin-bottom:2px}
-/* ── CENTRE CARDS ── */
-.cmc{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:13px;box-shadow:var(--sh)}
-.cmc-tag{display:flex;align-items:center;gap:5px;margin-bottom:8px}
-.cdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.cmc-nm{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--sub)}
-.cmc-ty{font-size:8px;background:var(--bg3);color:var(--muted);padding:1px 5px;border-radius:8px;border:1px solid var(--border);font-weight:600}
-.cmc-v{font-size:17px;font-weight:700;font-family:var(--mono);line-height:1;margin-bottom:3px}
-.cmc-s{font-size:10px;color:var(--muted);margin-bottom:5px}
-.cmc-bar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:4px}
-.cmc-f{height:100%;border-radius:2px}
-.cmc-proy{font-size:12px;color:var(--amber);font-weight:700;background:var(--amber-l);padding:2px 7px;border-radius:4px;display:inline-block;margin-top:3px}
-/* ── SEGMENTS ── */
-.seg{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:11px 13px;box-shadow:var(--sh)}
-.seg-nm{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:6px}
-.seg-v{font-size:15px;font-weight:700;font-family:var(--mono);margin-bottom:2px}
-.seg-p{font-size:10px;color:var(--muted);margin-bottom:5px}
-.seg-bar{height:3px;background:var(--border);border-radius:2px;overflow:hidden}
-.seg-f{height:100%;border-radius:2px}
-/* ── DATOS ── */
-.datos-hero{background:linear-gradient(135deg,var(--blue-l),var(--purple-l));border:1px solid #c5d5fb;border-radius:var(--r2);padding:16px 18px;margin-bottom:15px}
-.datos-hero h3{font-size:13px;font-weight:700;margin-bottom:5px}
-.datos-hero p{font-size:11px;color:var(--sub);line-height:1.7}
-.datos-hero code{font-family:var(--mono);background:rgba(255,255,255,.7);padding:1px 5px;border-radius:3px;font-size:10px;color:var(--blue);font-weight:600}
-.frow{display:flex;gap:10px;margin-bottom:11px;flex-wrap:wrap;align-items:flex-end}
-.ff label{display:block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px}
-.ff select,.ff input{background:var(--bg3);border:1px solid var(--border2);color:var(--tx);padding:6px 10px;border-radius:var(--r);font-family:var(--font);font-size:12px;outline:none}
-.ff input{width:80px}
-.ff select:focus,.ff input:focus{border-color:var(--blue)}
-.erpta{width:100%;height:260px;background:var(--bg3);border:1px solid var(--border2);color:var(--tx);padding:11px;border-radius:var(--r);font-family:var(--mono);font-size:10.5px;resize:vertical;line-height:1.6;outline:none}
-.erpta:focus{border-color:var(--blue)}
-.erpta::placeholder{color:var(--faint)}
-.btn{background:var(--blue);color:#fff;border:none;padding:8px 18px;border-radius:var(--r);cursor:pointer;font-family:var(--font);font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:5px;transition:background .15s}
-.btn:hover{background:#1244c8}
-.btn-s{padding:5px 12px;font-size:11px;background:var(--bg3);color:var(--sub);border:1px solid var(--border2)}
-.btn-s:hover{background:var(--border)}
-.stb{font-size:11px;margin-top:8px;padding:7px 11px;border-radius:var(--r);display:none}
-.s-ok{background:var(--green-l);color:var(--green);border:1px solid #6ee7c0;display:block}
-.s-er{background:var(--red-l);color:var(--red);border:1px solid #fca5a5;display:block}
-.pb2{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);padding:13px}
-.pb2 h4{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:9px}
-.pr{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:11px}
-.pr:last-child{border:none}
-.pr-l{color:var(--sub)}.pr-v{font-family:var(--mono);font-weight:600}
-.mts{display:flex;flex-wrap:wrap;gap:4px;margin:5px 0}
-.mt{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;background:var(--bg3);border:1px solid var(--border2);border-radius:14px;font-size:10px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--muted)}
-.mt:hover{border-color:var(--blue);color:var(--blue)}
-.mt.has{border-color:#6ee7c0;color:var(--green);background:var(--green-l)}
-.mt.cur{background:var(--blue);border-color:var(--blue);color:#fff}
-/* ── PRES INPUT ── */
-.pi{width:100%;background:transparent;border:none;text-align:right;font-family:var(--mono);font-size:11px;color:var(--tx);padding:1px 3px;border-radius:3px;outline:none}
-.pi:focus{background:var(--blue-l);border:1px solid var(--blue)}
-/* ── PROY BADGE inline ── */
-.proy-row{display:flex;align-items:center;gap:5px;margin-top:3px}
-.proy-lbl{font-size:13px;color:var(--amber);font-weight:700;font-family:var(--mono);background:var(--amber-l);padding:3px 8px;border-radius:4px;display:inline-block}
-
-/* ═══════════════════════════════════════
-   RESPONSIVE — MOBILE (≤ 768px)
-═══════════════════════════════════════ */
-.mob-header{display:none}
-.mob-nav{display:none}
-
-@media(max-width:768px){
-  body{font-size:13px}
-  .shell{flex-direction:column}
-  .sb{display:none!important}
-  .main{padding:14px 12px 80px;overflow:visible}
-
-  /* Mobile top bar */
-  .mob-header{
-    display:flex!important;align-items:center;justify-content:space-between;
-    background:var(--sb);padding:12px 16px;
-    position:sticky;top:0;z-index:100;
-    box-shadow:0 2px 8px rgba(0,0,0,.2)
-  }
-  .mob-header-left{display:flex;align-items:center;gap:9px}
-  .mob-header-ic{width:28px;height:28px;background:var(--blue-m);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-  .mob-header-title{font-size:13px;font-weight:700;color:#fff;line-height:1.2}
-  .mob-header-page{font-size:9px;color:var(--sb-muted);text-transform:uppercase;letter-spacing:.07em}
-  .mob-header-right{display:flex;align-items:center;gap:8px}
-  .mob-badge{font-size:11px;font-family:var(--mono);color:var(--amber);background:rgba(196,122,10,.18);padding:3px 9px;border-radius:12px;font-weight:700}
-  .mob-live{display:flex;align-items:center;gap:4px;font-size:9px;color:#4ade80}
-
-  /* Bottom nav bar */
-  .mob-nav{
-    display:flex!important;position:fixed;bottom:0;left:0;right:0;
-    background:var(--sb);border-top:1px solid rgba(255,255,255,.1);
-    z-index:200;box-shadow:0 -4px 20px rgba(0,0,0,.25);
-    padding-bottom:env(safe-area-inset-bottom,0)
-  }
-  .mob-nav-item{
-    flex:1;display:flex;flex-direction:column;align-items:center;
-    justify-content:center;padding:8px 2px 6px;cursor:pointer;
-    color:var(--sb-muted);font-size:8.5px;font-weight:600;
-    text-transform:uppercase;letter-spacing:.03em;gap:3px;
-    transition:color .15s;-webkit-tap-highlight-color:transparent
-  }
-  .mob-nav-item .mn-ic{font-size:19px;line-height:1;transition:transform .15s}
-  .mob-nav-item.on{color:var(--sb-act)}
-  .mob-nav-item.on .mn-ic{transform:translateY(-2px)}
-
-  /* Grids */
-  .kr{grid-template-columns:1fr 1fr;gap:8px}
-  .kv{font-size:15px}.kpi{padding:10px 11px}.kl{font-size:8px;margin-bottom:4px}
-  .g2,.g21,.g3{grid-template-columns:1fr!important;gap:10px}
-  .g6{grid-template-columns:1fr 1fr!important;gap:8px}
-
-  /* Charts */
-  .cw-sm{height:170px}.cw-md{height:210px}.cw-lg{height:195px}
-
-  /* Tables scroll */
-  .card{overflow-x:auto}
-  table{min-width:460px;font-size:11px}
-  thead th{padding:5px 7px;font-size:9px}
-  tbody td{padding:6px 7px;font-size:11px}
-
-  /* Headers */
-  .ph{flex-direction:column;gap:5px;margin-bottom:12px}
-  .ph-l h2{font-size:14px}.ph-l p{font-size:10px}
-  .chead h3{font-size:9px}.card{margin-bottom:11px}
-
-  /* Commercial quarterly cards */
-  #cav-q-detail,#urs-q-detail{grid-template-columns:1fr 1fr!important}
-
-  /* Datos section */
-  .erpta{height:170px;font-size:10px}
-  .frow{gap:7px}
+html, body {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px; line-height: 1.5;
+  background: var(--bg); color: var(--txt); min-height: 100vh;
 }
+/* HEADER */
+.app-header {
+  background: var(--srf); border-bottom: 1px solid var(--bdr);
+  padding: 0 24px; display: flex; align-items: center;
+  justify-content: space-between; height: 64px;
+  position: sticky; top: 0; z-index: 100;
+}
+.app-header-left { display: flex; align-items: center; gap: 14px; }
+.app-logo {
+  width: 38px; height: 38px; border-radius: 8px;
+  background: linear-gradient(135deg, #1a56e8, #0d9f6e);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 18px; font-weight: 700; flex-shrink: 0;
+}
+.app-title    { font-size: 17px; font-weight: 700; }
+.app-subtitle { font-size: 13px; color: var(--txt2); }
+.date-badge {
+  background: var(--srf2); border: 1px solid var(--bdr);
+  border-radius: var(--r-sm); padding: 7px 16px; text-align: right;
+}
+.date-badge .db-lbl  { font-size: 11px; color: var(--txt3); text-transform: uppercase; letter-spacing:.05em; }
+.date-badge .db-date { font-size: 14px; font-weight: 700; color: var(--txt); }
+/* TABS */
+.tab-bar {
+  background: var(--srf); border-bottom: 1px solid var(--bdr);
+  padding: 0 24px; display: flex;
+}
+.tab-btn {
+  padding: 16px 22px; font-size: 15px; font-weight: 600; font-family: inherit;
+  color: var(--txt2); background: none; border: none;
+  border-bottom: 3px solid transparent; cursor: pointer;
+  transition: color .15s, border-color .15s; white-space: nowrap; margin-bottom: -1px;
+}
+.tab-btn:hover { color: var(--txt); }
+.tab-btn.active-cavero { color: var(--blue);  border-bottom-color: var(--blue); }
+.tab-btn.active-ursula { color: var(--green); border-bottom-color: var(--green); }
+.tab-btn.active-erp    { color: var(--txt);   border-bottom-color: var(--txt); }
+/* PANELS */
+.tab-panel { display: none; padding: 24px; max-width: 1280px; margin: 0 auto; }
+.tab-panel.active { display: block; }
+/* MONTH BANNER */
+.month-banner {
+  border-radius: var(--r-lg); padding: 20px 28px; margin-bottom: 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+}
+.month-banner.cavero { background: var(--blue-lt);  border: 1px solid var(--blue-md); }
+.month-banner.ursula { background: var(--green-lt); border: 1px solid var(--green-md); }
+.banner-left h2   { font-size: 22px; font-weight: 700; }
+.banner-left .period { font-size: 14px; color: var(--txt2); margin-top: 3px; }
+.banner-right     { display: flex; gap: 24px; }
+.banner-stat      { text-align: center; }
+.bs-num { font-size: 28px; font-weight: 700; line-height: 1; }
+.bs-lbl { font-size: 12px; color: var(--txt2); margin-top: 3px; font-weight: 500; text-transform: uppercase; letter-spacing:.04em; }
+/* SECTION CARD */
+.section-card {
+  background: var(--srf); border: 1px solid var(--bdr);
+  border-radius: var(--r-md); padding: 22px 26px;
+  margin-bottom: 20px; box-shadow: var(--shd);
+}
+.section-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 18px; flex-wrap: wrap; gap: 8px;
+}
+.section-title {
+  font-size: 12px; font-weight: 700; letter-spacing:.07em;
+  text-transform: uppercase; color: var(--txt3);
+}
+.section-badge { font-size: 13px; font-weight: 600; padding: 4px 12px; border-radius: 20px; }
+.section-badge.green  { background: #e8fbf3; color: #0a6641; }
+.section-badge.red    { background: #fdeee9; color: #8b1f0f; }
+.section-badge.blue   { background: var(--blue-lt);  color: #0f3a9a; }
+.section-badge.ugreen { background: var(--green-lt); color: #0a6641; }
+.section-badge.gray   { background: var(--srf2); color: var(--txt2); }
+.kpi-value.nowrap { white-space: nowrap; }
+/* KPI GRID */
+.kpi-grid { display: grid; gap: 14px; margin-bottom: 18px; }
+.kpi-g4 { grid-template-columns: repeat(4,1fr); }
+.kpi-g3 { grid-template-columns: repeat(3,1fr); }
+.kpi-g2 { grid-template-columns: repeat(2,1fr); }
+@media (max-width: 900px) { .kpi-g4 { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 600px) { .kpi-g4,.kpi-g3,.kpi-g2 { grid-template-columns: 1fr; } }
+.kpi-card {
+  background: var(--srf2); border: 1px solid var(--bdr);
+  border-radius: var(--r-sm); padding: 16px 18px;
+  position: relative; overflow: hidden;
+}
+.kpi-card::before {
+  content:''; position: absolute; top:0; left:0; right:0;
+  height: 3px; border-radius: var(--r-sm) var(--r-sm) 0 0;
+}
+.kpi-card.accent-blue::before  { background: var(--blue); }
+.kpi-card.accent-green::before { background: var(--green); }
+.kpi-card.accent-red::before   { background: var(--red); }
+.kpi-card.accent-amber::before { background: var(--amber); }
+.kpi-card.accent-gray::before  { background: var(--bdr2); }
+.kpi-label {
+  font-size: 12px; font-weight: 600; color: var(--txt2);
+  text-transform: uppercase; letter-spacing:.05em; margin-bottom: 8px;
+}
+.kpi-value { font-size: 26px; font-weight: 700; line-height: 1.1; color: var(--txt); }
+.kpi-value.blue  { color: var(--blue); }
+.kpi-value.green { color: var(--green); }
+.kpi-value.red   { color: var(--red); }
+.kpi-value.amber { color: var(--amber); }
+.kpi-value.muted { color: var(--txt2); }
+.kpi-sub { font-size: 13px; color: var(--txt3); margin-top: 4px; }
+.kpi-cmp { font-size: 13px; margin-top: 5px; font-weight: 500; }
+.kpi-cmp.pos { color: var(--green); }
+.kpi-cmp.neg { color: var(--red); }
+.kpi-cmp.neu { color: var(--txt3); }
+/* PROGRESS */
+.progress-section { margin-top: 4px; }
+.progress-meta {
+  display: flex; justify-content: space-between;
+  font-size: 14px; color: var(--txt2); margin-bottom: 8px; font-weight: 500;
+}
+.progress-track {
+  height: 12px; background: var(--srf2);
+  border: 1px solid var(--bdr); border-radius: 6px; overflow: hidden;
+}
+.progress-fill { height: 100%; border-radius: 6px; transition: width .6s cubic-bezier(.4,0,.2,1); }
+/* DIVIDER */
+.divider { border: none; border-top: 1px solid var(--bdr); margin: 20px 0; }
+.segment-title {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing:.07em; color: var(--txt3); margin-bottom: 12px;
+}
+/* CHARTS */
+.chart-legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 14px; color: var(--txt2); margin-bottom: 14px; }
+.leg { display: flex; align-items: center; gap: 7px; }
+.leg-bar  { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+.leg-line { width: 22px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+.leg-dash { width: 22px; border-top: 3px dashed; flex-shrink: 0; }
+.chart-wrap { position: relative; }
+/* ROLLING STRIP */
+.rolling-strip { display: flex; gap: 14px; margin-bottom: 16px; flex-wrap: wrap; }
+.rolling-kpi {
+  background: var(--srf2); border: 1px solid var(--bdr);
+  border-radius: var(--r-sm); padding: 12px 18px; min-width: 200px;
+}
+.rk-lbl { font-size: 12px; color: var(--txt2); text-transform: uppercase; letter-spacing:.05em; font-weight: 600; margin-bottom: 4px; }
+.rk-val { font-size: 22px; font-weight: 700; }
+/* ANNUAL STRIP */
+.annual-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 16px; }
+@media (max-width: 700px) { .annual-strip { grid-template-columns: repeat(2,1fr); } }
+.annual-kpi { background: var(--srf2); border: 1px solid var(--bdr); border-radius: var(--r-sm); padding: 12px 16px; }
+.ak-year  { font-size: 12px; font-weight: 700; color: var(--txt3); text-transform: uppercase; letter-spacing:.05em; margin-bottom: 4px; }
+.ak-val   { font-size: 20px; font-weight: 700; }
+.ak-delta { font-size: 12px; margin-top: 2px; }
+/* BONOS TABLE */
+.tarj-table-wrap { overflow-x: auto; }
+.tarj-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.tarj-table th {
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing:.05em; color: var(--txt2); padding: 10px 14px;
+  border-bottom: 2px solid var(--bdr); text-align: left; background: var(--srf2);
+}
+.tarj-table td { padding: 12px 14px; border-bottom: 1px solid var(--bdr); color: var(--txt); }
+.tarj-table tr:last-child td { border-bottom: none; }
+.tarj-table .current-month { background: #fffdf5; font-weight: 600; }
+.tarj-table .empty-cell { color: var(--txt3); }
+.cmp-pos { color: var(--green); font-weight: 600; }
+.cmp-neg { color: var(--red);   font-weight: 600; }
+.cmp-neu { color: var(--txt3); }
+/* ERP */
+.erp-wrap { max-width: 860px; }
+.erp-intro {
+  background: #eef3fd; border: 1px solid #c5d7f8;
+  border-radius: var(--r-sm); padding: 14px 18px;
+  font-size: 14px; color: #1a3a8f; margin-bottom: 20px; line-height: 1.6;
+}
+.erp-intro strong { font-weight: 700; }
+.field-label {
+  font-size: 13px; font-weight: 600; color: var(--txt2);
+  margin-bottom: 6px; display: block; text-transform: uppercase; letter-spacing:.04em;
+}
+.erp-textarea {
+  width: 100%; height: 220px; font-family: 'Courier New', monospace; font-size: 13px;
+  border: 1px solid var(--bdr2); border-radius: var(--r-sm);
+  padding: 14px; background: var(--srf2); color: var(--txt);
+  resize: vertical; outline: none; transition: border-color .15s; margin-bottom: 14px;
+}
+.erp-textarea:focus { border-color: var(--blue); }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+.btn {
+  padding: 11px 22px; font-size: 15px; font-weight: 600; font-family: inherit;
+  border-radius: var(--r-sm); cursor: pointer;
+  transition: opacity .15s, transform .1s; border: none; white-space: nowrap;
+}
+.btn:hover { opacity: .88; } .btn:active { transform: scale(.98); }
+.btn-primary   { background: var(--blue);  color: #fff; }
+.btn-secondary { background: var(--srf2);  color: var(--txt); border: 1px solid var(--bdr2); }
+.btn-success   { background: var(--green); color: #fff; }
+.btn-danger    { background: var(--srf2);  color: var(--red); border: 1px solid #f5c2b0; }
+.erp-alert {
+  padding: 12px 16px; border-radius: var(--r-sm); font-size: 14px;
+  margin-bottom: 14px; display: flex; align-items: flex-start; gap: 10px;
+}
+.erp-alert.success { background: #e8fbf3; border: 1px solid #a7f0d0; color: #0a6641; }
+.erp-alert.error   { background: #fdeee9; border: 1px solid #f5c2b0; color: #8b1f0f; }
+.erp-alert.info    { background: var(--blue-lt); border: 1px solid var(--blue-md); color: #1a3a8f; }
+.erp-alert.warning { background: #fef3e0; border: 1px solid #fad08a; color: #7a4a05; }
+.erp-preview { background: var(--srf2); border: 1px solid var(--bdr); border-radius: var(--r-sm); margin-bottom: 20px; }
+.erp-prev-head {
+  padding: 12px 18px; border-bottom: 1px solid var(--bdr);
+  font-size: 13px; font-weight: 700; color: var(--txt2);
+  text-transform: uppercase; letter-spacing:.05em;
+}
+.erp-prev-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 11px 18px; border-bottom: 1px solid var(--bdr); font-size: 15px;
+}
+.erp-prev-row:last-child { border-bottom: none; }
+.erp-prev-lbl { color: var(--txt2); }
+.erp-prev-val { font-weight: 700; }
+.erp-prev-val.ok   { color: var(--green); }
+.erp-prev-val.null { color: var(--txt3); }
+.tarj-manual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 14px; }
+@media (max-width: 700px) { .tarj-manual-grid { grid-template-columns: 1fr; } }
+.tarj-person-block { background: var(--srf2); border: 1px solid var(--bdr); border-radius: var(--r-sm); padding: 16px 20px; }
+.tarj-person-block h4 { font-size: 15px; font-weight: 700; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--bdr); }
+.tarj-person-block h4.cavero { color: var(--blue); }
+.tarj-person-block h4.ursula { color: var(--green); }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.field-group { display: flex; flex-direction: column; gap: 5px; }
+.field-input {
+  padding: 9px 12px; font-size: 15px; font-family: inherit;
+  border: 1px solid var(--bdr2); border-radius: var(--r-sm);
+  background: var(--srf); color: var(--txt); outline: none; transition: border-color .15s;
+}
+.field-input:focus { border-color: var(--blue); }
+.field-select {
+  padding: 9px 12px; font-size: 15px; font-family: inherit;
+  border: 1px solid var(--bdr2); border-radius: var(--r-sm);
+  background: var(--srf); color: var(--txt); outline: none; cursor: pointer; width: 100%;
+}
+/* UTILITY */
+.hidden { display: none !important; }
+.flex-row { display: flex; align-items: center; gap: 10px; }
+.mt-12 { margin-top: 12px; } .mt-16 { margin-top: 16px; }
+.color-green { color: var(--green); }
+.color-red   { color: var(--red); }
+.color-amber { color: var(--amber); }
+.color-blue  { color: var(--blue); }
+.color-muted { color: var(--txt2); }
 </style>
 </head>
 <body>
 
-<!-- MOBILE HEADER -->
-<div class="mob-header" id="mob-header">
-  <div class="mob-header-left">
-    <div class="mob-header-ic">🦛</div>
+<header class="app-header">
+  <div class="app-header-left">
+    <div class="app-logo">
+      <img src="./Huella_HIPOPOTAMO.png" alt="Hipopótamo" width="32" height="32" style="display:block; border-radius:6px; object-fit:contain;">
+    </div>
     <div>
-      <div class="mob-header-title">Hipopotamo</div>
-      <div class="mob-header-page" id="mob-page-name">Resumen Ejecutivo</div>
+      <div class="app-title">Hipopótamo Pinturas y Decoración S.L.</div>
+      <div class="app-subtitle">Cuadro de mando comercial · Zaragoza</div>
     </div>
   </div>
-  <div class="mob-header-right">
-    <div class="mob-badge" id="mob-badge">—</div>
-    <div class="mob-live"><div class="ld"></div></div>
+  <div class="date-badge">
+    <div class="db-lbl">Datos a fecha</div>
+    <div class="db-date" id="header-date">—</div>
   </div>
-</div>
+</header>
 
-<div class="shell">
-
-<!-- SIDEBAR -->
-<nav class="sb">
-  <div class="sb-top">
-    <div class="sb-logo">
-      <div class="sb-ic">🦛</div>
-      <div class="sb-nm"><h1>HIPOPOTAMO<br>PINTURAS</h1><p>Cuadro de Mando</p></div>
-    </div>
-  </div>
-  <div class="sb-s">Análisis</div>
-  <div class="sb-i on" onclick="nav('resumen')"><span class="ic">◈</span>Resumen Ejecutivo</div>
-  <div class="sb-i" onclick="nav('mensual')"><span class="ic">◉</span>Seguimiento Mensual</div>
-  <div class="sb-i" onclick="nav('centros')"><span class="ic">◎</span>Centros de Venta</div>
-  <div class="sb-i" onclick="nav('comerciales')"><span class="ic">◍</span>Equipo Comercial</div>
-  <div class="sb-i" onclick="nav('historico')"><span class="ic">◌</span>Histórico</div>
-  <div class="sb-s">Config.</div>
-  <div class="sb-i" onclick="nav('datos')"><span class="ic">⊕</span>Cargar Datos ERP</div>
-  <div class="sb-i" onclick="nav('presupuesto')"><span class="ic">⊞</span>Presupuesto</div>
-  <div class="sb-foot">
-    <div class="sb-dt" id="sb-dt">Auto · 28/04/2026 20:10</div>
-    <div id="sb-carga-box" style="font-size:9px;color:var(--muted);text-align:center;padding:6px 8px 2px;border-top:1px solid rgba(255,255,255,0.07);margin-top:4px">
-      <div style="font-size:8px;text-transform:uppercase;letter-spacing:.5px;opacity:.5;margin-bottom:2px">Última carga ERP</div>
-      <div id="sb-ultima-carga" style="color:#a0aec0;font-weight:500;font-size:10px">Sin datos ERP</div>
-    </div>
-    <div class="sb-lv"><div class="ld"></div><span id="sb-st">Esperando datos</span></div>
-  </div>
+<nav class="tab-bar">
+  <button class="tab-btn" id="tab-cavero" onclick="showTab('cavero')">Antonio Cavero</button>
+  <button class="tab-btn" id="tab-ursula" onclick="showTab('ursula')">Úrsula Moreno</button>
+  <button class="tab-btn" id="tab-erp"    onclick="showTab('erp')">Cargar datos ERP</button>
 </nav>
 
-<!-- MAIN -->
-<main class="main">
+<!-- Banner de sincronización automática (se muestra solo si se detecta data.json) -->
+<div id="sync-banner" class="hidden" style="background:#e8fbf3;border-bottom:1px solid #a7f0d0;padding:8px 24px;font-size:13px;color:#0a6641;font-weight:500;"></div>
 
-<!-- ─── RESUMEN ─── -->
-<div class="pg on" id="pg-resumen">
-  <div class="ph"><div class="ph-l"><h2>Resumen Ejecutivo</h2><p id="ph-sub">Carga los datos del ERP para comenzar</p></div><div class="ph-b" id="ph-b">Sin datos</div></div>
-  <div id="res-main"></div>
-</div>
-
-<div class="pg" id="pg-mensual">
-  <div class="ph"><div class="ph-l"><h2>Seguimiento Mensual 2026</h2><p>Real vs Presupuesto · Proyección para meses en curso</p></div><div class="ph-b" id="pa-b">Pres. anual: —</div></div>
-  <div class="card">
-    <div class="chead"><h3>Mes a mes · Real, Proyección y Presupuesto</h3><span style="font-size:9px;color:var(--amber)">★ Proyección = Real ÷ Días × Total días mes</span></div>
-    <div style="overflow-x:auto">
-    <table style="min-width:680px"><thead><tr>
-      <th class="l" style="padding:9px 18px">Mes</th>
-      <th style="text-align:right;padding:9px 14px">Presupuesto</th>
-      <th style="text-align:right;padding:9px 14px">Real</th>
-      <th style="text-align:right;padding:9px 14px">Proyección</th>
-      <th style="text-align:right;padding:9px 14px">vs 2025</th>
-      <th style="text-align:center;padding:9px 14px">% Pres.</th>
-    </tr></thead><tbody id="tb-men"></tbody></table>
+<!-- ═══ PANEL CAVERO ═══ -->
+<div id="panel-cavero" class="tab-panel">
+  <div class="month-banner cavero">
+    <div class="banner-left">
+      <h2 class="color-blue" id="banner-title-cavero">—</h2>
+      <div class="period" id="banner-period-cavero">—</div>
+    </div>
+    <div class="banner-right">
+      <div class="banner-stat"><div class="bs-num color-blue" id="banner-elapsed-cavero">—</div><div class="bs-lbl">días trans.</div></div>
+      <div class="banner-stat"><div class="bs-num color-blue" id="banner-total-cavero">—</div><div class="bs-lbl">días totales</div></div>
     </div>
   </div>
 
-  <div class="g3" style="margin-top:12px">
-    <div class="card"><div class="chead"><h3>Mix por segmento</h3></div><div class="cbody" style="display:flex;flex-direction:column;align-items:center;gap:10px"><div style="position:relative;height:180px;width:180px"><canvas id="ch-men-dnt"></canvas></div><div id="men-dnt-legend" style="width:100%"></div></div></div>
-    <div class="card"><div class="chead"><h3>Pintura por centro</h3></div><div class="cbody" style="display:flex;flex-direction:column;align-items:center;gap:10px"><div style="position:relative;height:180px;width:180px"><canvas id="ch-men-pin"></canvas></div><div id="men-pin-legend" style="width:100%"></div></div></div>
-    <div class="card"><div class="chead"><h3>Instalaciones por centro</h3></div><div class="cbody" style="display:flex;flex-direction:column;align-items:center;gap:10px"><div style="position:relative;height:180px;width:180px"><canvas id="ch-men-ins"></canvas></div><div id="men-ins-legend" style="width:100%"></div></div></div>
-  </div>
-</div>
-
-<div class="pg" id="pg-centros">
-  <div class="ph"><div class="ph-l"><h2>Centros de Venta</h2><p>Pintura e Instalaciones/Decoración · Mes actual + Proyección</p></div></div>
-  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px" id="cen-grid"></div>
-</div>
-
-<div class="pg" id="pg-comerciales">
-  <div class="ph"><div class="ph-l"><h2>Equipo Comercial</h2><p>Antonio Cavero · Úrsula Moreno · Mes actual, trimestre y tendencia</p></div></div>
-  <div class="card" style="margin-bottom:12px">
-    <div class="chead"><h3>Resumen mes actual + Trimestre</h3><span id="com-q-label">Q1 Ene–Mar</span></div>
-    <div style="overflow-x:auto">
-    <table style="min-width:720px"><thead><tr>
-      <th class="l" style="padding:9px 18px">Comercial</th>
-      <th style="text-align:right;padding:9px 14px">Real mes</th>
-      <th style="text-align:right;padding:9px 14px">Proyección</th>
-      <th style="text-align:right;padding:9px 14px">Obj. mes</th>
-      <th style="text-align:right;padding:9px 14px">Diferencia</th>
-      <th style="text-align:right;padding:9px 14px">Acum. Q</th>
-      <th style="text-align:right;padding:9px 14px">Obj. Q</th>
-      <th style="text-align:center;padding:9px 14px">% Q</th>
-    </tr></thead><tbody id="com-table"></tbody></table>
-    </div>
-  </div>
-  <div class="g2" style="margin-bottom:12px">
-    <div class="card"><div class="chead"><h3>Antonio Cavero · Real mensual vs objetivo</h3></div><div class="cbody"><div class="cw-md"><canvas id="ch-com-cavero"></canvas></div></div></div>
-    <div class="card"><div class="chead"><h3>Úrsula Moreno · Real mensual vs objetivo</h3></div><div class="cbody"><div class="cw-md"><canvas id="ch-com-ursula"></canvas></div></div></div>
-  </div>
-  <div class="g2">
-    <div class="card"><div class="chead"><h3>Cavero · Tendencia anualizada rolling 12m</h3></div><div class="cbody"><div id="roll-diff-cavero" style="margin-bottom:8px;padding:8px 12px;background:var(--blue-l);border-radius:8px;font-size:11px"></div><div class="cw-md"><canvas id="ch-roll-cavero"></canvas></div></div></div>
-    <div class="card"><div class="chead"><h3>Úrsula · Tendencia anualizada rolling 12m</h3></div><div class="cbody"><div id="roll-diff-ursula" style="margin-bottom:8px;padding:8px 12px;background:var(--purple-l);border-radius:8px;font-size:11px"></div><div class="cw-md"><canvas id="ch-roll-ursula"></canvas></div></div></div>
-  </div>
-</div>
-
-<div class="pg" id="pg-historico">
-  <div class="ph"><div class="ph-l"><h2>Histórico</h2><p>Empresa total y desglose por centros · 2019–2026</p></div></div>
-  <div class="card" style="margin-bottom:12px">
-    <div class="chead"><h3>Totales anuales empresa</h3><span style="font-size:10px;color:var(--muted)">Pulsa un año para ver el detalle mensual</span></div>
-    <div style="overflow-x:auto"><table style="min-width:580px"><thead><tr>
-      <th style="width:30px;border-bottom:2px solid var(--border2)"></th>
-      <th class="l" style="padding:9px 12px;border-bottom:2px solid var(--border2)">Año</th>
-      <th style="text-align:right;padding:9px 12px;border-bottom:2px solid var(--border2)">Total</th>
-      <th style="text-align:right;padding:9px 12px;border-bottom:2px solid var(--border2)">vs Año ant.</th>
-      <th style="text-align:right;padding:9px 12px;border-bottom:2px solid var(--border2)">Media mensual</th>
-      <th style="text-align:right;padding:9px 12px;border-bottom:2px solid var(--border2)">Mejor mes</th>
-      <th style="text-align:right;padding:9px 12px;border-bottom:2px solid var(--border2)">Peor mes</th>
-    </tr></thead><tbody id="tb-hist-tot"></tbody></table></div>
-  </div>
-  <div class="card" style="margin-bottom:12px">
-    <div class="chead"><h3>Evolución mensual · comparar años</h3><div style="display:flex;gap:6px;flex-wrap:wrap" id="hist-yr-btns"></div></div>
-    <div class="cbody"><div class="cw-lg"><canvas id="ch-hist-evo"></canvas></div></div>
-  </div>
-  <div class="card" style="margin-bottom:12px">
-    <div class="chead"><h3>Rolling 12 meses · Empresa total</h3><span style="font-size:10px;color:var(--muted)">Solo meses cerrados</span></div>
-    <div class="cbody"><div class="cw-md"><canvas id="ch-hist-roll"></canvas></div></div>
-  </div>
-  <div class="g2">
-    <div class="card"><div class="chead"><h3>SJ Pintura · Rolling 12m</h3></div><div class="cbody"><div class="cw-sm"><canvas id="ch-roll-sjp"></canvas></div></div></div>
-    <div class="card"><div class="chead"><h3>SJ Deco · Rolling 12m</h3></div><div class="cbody"><div class="cw-sm"><canvas id="ch-roll-sjd"></canvas></div></div></div>
-    <div class="card"><div class="chead"><h3>Gargallo Pintura · Rolling 12m</h3></div><div class="cbody"><div class="cw-sm"><canvas id="ch-roll-garp"></canvas></div></div></div>
-    <div class="card"><div class="chead"><h3>Gargallo Deco · Rolling 12m</h3></div><div class="cbody"><div class="cw-sm"><canvas id="ch-roll-gard"></canvas></div></div></div>
-    <div class="card"><div class="chead"><h3>Almacén · Rolling 12m</h3></div><div class="cbody"><div class="cw-sm"><canvas id="ch-roll-alm"></canvas></div></div></div>
-    <div class="card"><div class="chead"><h3>Avd. Madrid · Rolling 12m</h3></div><div class="cbody"><div class="cw-sm"><canvas id="ch-roll-avd"></canvas></div></div></div>
-  </div>
-</div>
-
-<div class="pg" id="pg-datos">
-  <div style="background:#fff;border:1px solid #dde1ec;border-radius:12px;padding:14px 20px;margin-bottom:14px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-    <div>
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#4a5270;margin-bottom:2px">Corrección manual de días</div>
-      <div style="font-size:11px;color:#7a85a3">Úsalo si el cálculo automático no cuadra con el ERP</div>
-    </div>
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <label style="font-size:12px;color:#4a5270;font-weight:600">Días trabajados
-        <input id="inp-dias" type="number" min="1" max="25"
-          style="margin-left:6px;width:52px;padding:5px 6px;border:1.5px solid #dde1ec;border-radius:6px;font-size:14px;font-family:monospace;font-weight:700;text-align:center"
-          oninput="previewDias()">
-      </label>
-      <label style="font-size:12px;color:#4a5270;font-weight:600">de
-        <input id="inp-diast" type="number" min="1" max="25"
-          style="margin-left:4px;width:52px;padding:5px 6px;border:1.5px solid #dde1ec;border-radius:6px;font-size:14px;font-family:monospace;font-weight:700;text-align:center"
-          oninput="previewDias()">
-        días totales
-      </label>
-      <button onclick="aplicarDias()"
-        style="padding:6px 16px;background:#1a56e8;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer">
-        Aplicar
-      </button>
-      <button onclick="resetDias()"
-        style="padding:6px 14px;background:#f7f8fc;color:#4a5270;border:1px solid #dde1ec;border-radius:8px;font-size:12px;cursor:pointer">
-        Auto
-      </button>
-    </div>
-    <span id="dias-status" style="font-size:12px;color:#7a85a3;font-style:italic"></span>
-  </div>
-  <div class="ph"><div class="ph-l"><h2>Cargar Datos ERP</h2><p>Pega el informe mensual. El cuadro se actualiza automáticamente.</p></div></div>
-  <div class="datos-hero">
-    <h3>📋 Instrucciones (mes comercial: del 26 al 25)</h3>
-    <p>1. Abre el informe del ERP en Excel · 2. <code>Ctrl+A</code> para seleccionar todo · 3. <code>Ctrl+C</code> para copiar<br>
-    4. Pega abajo <code>Ctrl+V</code> · 5. Selecciona el <strong>mes comercial</strong> y días · 6. Pulsa <strong>Procesar</strong></p>
-  </div>
-  <div class="g2" style="align-items:start">
-    <div class="card">
-      <div class="chead"><h3>Datos ERP · Pega aquí</h3></div>
-      <div class="cbody">
-        <div class="frow">
-          <div class="ff"><label>Mes comercial</label>
-            <select id="s-mes"><option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option><option value="4">Abril</option><option value="5">Mayo</option><option value="6">Junio</option><option value="7">Julio</option><option value="8">Agosto</option><option value="9">Septiembre</option><option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option></select>
-          </div>
-          <div class="ff"><label>Año</label><select id="s-ano"><option>2026</option><option>2025</option></select></div>
-          <div class="ff"><label>Días facturados</label><input id="i-d" type="number" min="1" max="31" placeholder="Ej: 11"></div>
-          <div class="ff"><label>Días totales mes</label><input id="i-dt" type="number" min="1" max="31" placeholder="Ej: 19"></div>
-        </div>
-        <textarea class="erpta" id="erp-ta" placeholder="Pega aquí el contenido del Excel del ERP...
-
-Detección automática:
-• San José Pintura (código SAN JOSÉ), San José Deco (código 52)
-• Gargallo Pintura (código 36), Gargallo Deco (código 56)
-• Almacén, Avd. Madrid
-• Antonio Cavero (vendedor 26), Úrsula Moreno (vendedor 61)
-• Grupos: PROF, PVP/FINALES (con split PIN/INS), INDUSTRIA, DISTRIB"></textarea>
-        <div style="display:flex;gap:8px;margin-top:9px">
-          <button class="btn" onclick="procesar()">⟳ Procesar y actualizar cuadro</button>
-          <button class="btn btn-s" onclick="document.getElementById('erp-ta').value=''">✕ Limpiar</button>
-        </div>
-        <div class="stb" id="stb"></div>
+  <div class="section-card">
+    <div class="section-head"><span class="section-title">Mes actual</span></div>
+    <div class="kpi-grid kpi-g4">
+      <div class="kpi-card accent-blue">
+        <div class="kpi-label">Venta real</div>
+        <div class="kpi-value blue" id="kpi-real-cavero">—</div>
+        <div class="kpi-sub">Grupo profesionales</div>
+      </div>
+      <div class="kpi-card accent-amber">
+        <div class="kpi-label">Proyección mes</div>
+        <div class="kpi-value amber" id="kpi-proy-cavero">—</div>
+        <div class="kpi-sub">real ÷ días × total días</div>
+      </div>
+      <div class="kpi-card accent-gray">
+        <div class="kpi-label">Objetivo 2026</div>
+        <div class="kpi-value" id="kpi-obj-cavero">—</div>
+        <div class="kpi-sub">Presupuesto mensual</div>
+      </div>
+      <div class="kpi-card" id="kpi-dev-card-cavero">
+        <div class="kpi-label">Desviación vs objetivo</div>
+        <div class="kpi-value nowrap" id="kpi-dev-cavero">—</div>
+        <div class="kpi-sub" id="kpi-devproy-cavero">—</div>
       </div>
     </div>
-    <div>
-      <div class="pb2" style="margin-bottom:10px">
-        <h4>Resultado procesado</h4>
-        <div id="pout"><p style="color:var(--faint);font-size:11px">Sin datos.</p></div>
+    <div class="progress-section">
+      <div class="progress-meta"><span>Progreso sobre objetivo</span><span id="prog-pct-cavero" style="font-weight:700;">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="prog-fill-cavero" style="width:0%;background:var(--blue);"></div></div>
+    </div>
+
+    <hr class="divider">
+    <div class="segment-title">Detalle por segmento (datos ERP)</div>
+    <div class="kpi-grid kpi-g2">
+      <div class="kpi-card accent-blue"><div class="kpi-label">Industria</div><div class="kpi-value blue" id="kpi-industria">—</div><div class="kpi-sub">Venta a industria</div></div>
+      <div class="kpi-card accent-blue"><div class="kpi-label">Distribuidores</div><div class="kpi-value blue" id="kpi-distribuidores">—</div><div class="kpi-sub">Venta a distribuidores</div></div>
+    </div>
+
+    <hr class="divider">
+    <div class="segment-title">Bonos — mes actual</div>
+    <div class="kpi-grid kpi-g2">
+      <div class="kpi-card accent-blue">
+        <div class="kpi-label">Alta bonos</div>
+        <div class="kpi-value blue" id="kpi-bonos-altas-cavero">—</div>
+        <div class="kpi-sub" id="kpi-bonos-altas-prev-cavero" style="margin-top:6px;">2025: —</div>
+        <div class="kpi-cmp neu" id="kpi-bonos-altas-cmp-cavero">vs año ant.: —</div>
       </div>
-      <div class="pb2">
-        <h4>Meses cargados · 2026</h4>
-        <div class="mts" id="mts">
-          <span class="mt" id="mt-1" onclick="actMes(1)">Ene</span><span class="mt" id="mt-2" onclick="actMes(2)">Feb</span><span class="mt" id="mt-3" onclick="actMes(3)">Mar</span><span class="mt" id="mt-4" onclick="actMes(4)">Abr</span><span class="mt" id="mt-5" onclick="actMes(5)">May</span><span class="mt" id="mt-6" onclick="actMes(6)">Jun</span><span class="mt" id="mt-7" onclick="actMes(7)">Jul</span><span class="mt" id="mt-8" onclick="actMes(8)">Ago</span><span class="mt" id="mt-9" onclick="actMes(9)">Sep</span><span class="mt" id="mt-10" onclick="actMes(10)">Oct</span><span class="mt" id="mt-11" onclick="actMes(11)">Nov</span><span class="mt" id="mt-12" onclick="actMes(12)">Dic</span>
-        </div>
-        <p style="font-size:9px;color:var(--muted);margin-top:6px">Verde = mes con datos. Pulsa para ver ese mes.</p>
+      <div class="kpi-card accent-blue">
+        <div class="kpi-label">Consumo bono</div>
+        <div class="kpi-value blue" id="kpi-bonos-consumo-cavero">—</div>
+        <div class="kpi-sub" id="kpi-bonos-consumo-prev-cavero" style="margin-top:6px;">2025: —</div>
+        <div class="kpi-cmp neu" id="kpi-bonos-consumo-cmp-cavero">vs año ant.: —</div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- ─── PRESUPUESTO ─── -->
-<div class="pg" id="pg-presupuesto">
-  <div class="ph"><div class="ph-l"><h2>Presupuesto 2026</h2><p>Edita directamente · Se aplica a todos los análisis</p></div><button class="btn" onclick="guardarPres()">✓ Aplicar</button></div>
-  <div class="card"><div class="chead"><h3>Presupuesto mensual por centro y comercial</h3></div>
-    <table id="t-pres"><thead></thead><tbody></tbody></table>
+  <div class="section-card">
+    <div class="section-head"><span class="section-title">Evolución mensual 2025 / 2026</span></div>
+    <p class="section-note" style="font-size:13px;color:var(--txt2);margin:0 0 12px;line-height:1.45;">Solo ventas <strong>grupo Profesionales</strong> (misma base que el KPI superior; no incluye Industria ni Distribuidores).</p>
+    <div class="chart-legend">
+      <div class="leg"><div class="leg-bar" style="background:rgba(26,86,232,.42);"></div><span>Profesionales 2025</span></div>
+      <div class="leg"><div class="leg-bar" style="background:#1a56e8;"></div><span>Profesionales 2026</span></div>
+      <div class="leg"><div class="leg-dash" style="border-color:#c47a0a;"></div><span>Objetivo 2026</span></div>
+      <div class="leg"><div class="leg-bar" style="background:rgba(13,159,110,.5);"></div><span>Proyección mes actual</span></div>
+    </div>
+    <div class="chart-wrap" style="height:280px;"><canvas id="chart-2026-cavero"></canvas></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head"><span class="section-title">Rolling 12 meses</span></div>
+    <div class="rolling-strip">
+      <div class="rolling-kpi"><div class="rk-lbl">Rolling actual</div><div class="rk-val color-blue" id="rolling-actual-cavero">—</div></div>
+      <div class="rolling-kpi"><div class="rk-lbl">Mismo mes año anterior</div><div class="rk-val" id="rolling-prev-cavero">—</div></div>
+      <div class="rolling-kpi"><div class="rk-lbl">Variación interanual</div><div class="rk-val" id="rolling-delta-cavero">—</div></div>
+    </div>
+    <div class="chart-legend"><div class="leg"><div class="leg-line" style="background:#1a56e8;"></div><span>Rolling 12 meses (profesionales)</span></div></div>
+    <div class="chart-wrap" style="height:220px;"><canvas id="chart-rolling-cavero"></canvas></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head"><span class="section-title">Histórico anual</span></div>
+    <p class="section-note" style="font-size:13px;color:var(--txt2);margin:0 0 12px;line-height:1.45;">Solo grupo <strong>Profesionales</strong> (sin Industria ni Distribuidores).</p>
+    <div class="annual-strip" id="annual-strip-cavero"></div>
+    <div class="chart-legend">
+      <div class="leg"><div class="leg-line" style="background:#b0b0b0;"></div><span>2023</span></div>
+      <div class="leg"><div class="leg-line" style="background:#85b7eb;"></div><span>2024</span></div>
+      <div class="leg"><div class="leg-line" style="background:#4a7ee0;"></div><span>2025</span></div>
+      <div class="leg"><div class="leg-line" style="background:#d93025;"></div><span>2026</span></div>
+    </div>
+    <div class="chart-wrap" style="height:260px;"><canvas id="chart-annual-cavero"></canvas></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head"><span class="section-title">Bonos — histórico 2026</span></div>
+    <div class="tarj-table-wrap">
+      <table class="tarj-table">
+        <thead><tr><th>Mes comercial</th><th>Alta bonos 2026</th><th>Alta bonos 2025</th><th>vs año ant.</th><th>Consumo bono 2026</th><th>Consumo bono 2025</th><th>vs año ant.</th></tr></thead>
+        <tbody id="tarj-tbody-cavero"></tbody>
+      </table>
+    </div>
   </div>
 </div>
 
-</main>
+<!-- ═══ PANEL ÚRSULA ═══ -->
+<div id="panel-ursula" class="tab-panel">
+  <div class="month-banner ursula">
+    <div class="banner-left">
+      <h2 class="color-green" id="banner-title-ursula">—</h2>
+      <div class="period" id="banner-period-ursula">—</div>
+    </div>
+    <div class="banner-right">
+      <div class="banner-stat"><div class="bs-num color-green" id="banner-elapsed-ursula">—</div><div class="bs-lbl">días trans.</div></div>
+      <div class="banner-stat"><div class="bs-num color-green" id="banner-total-ursula">—</div><div class="bs-lbl">días totales</div></div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head"><span class="section-title">Mes actual</span></div>
+    <div class="kpi-grid kpi-g4">
+      <div class="kpi-card accent-green">
+        <div class="kpi-label">Venta real</div>
+        <div class="kpi-value green" id="kpi-real-ursula">—</div>
+        <div class="kpi-sub">Total vendedor 61</div>
+      </div>
+      <div class="kpi-card accent-amber">
+        <div class="kpi-label">Proyección mes</div>
+        <div class="kpi-value amber" id="kpi-proy-ursula">—</div>
+        <div class="kpi-sub">real ÷ días × total días</div>
+      </div>
+      <div class="kpi-card accent-gray">
+        <div class="kpi-label">Objetivo 2026</div>
+        <div class="kpi-value" id="kpi-obj-ursula">—</div>
+        <div class="kpi-sub">Presupuesto mensual</div>
+      </div>
+      <div class="kpi-card" id="kpi-dev-card-ursula">
+        <div class="kpi-label">Desviación vs objetivo</div>
+        <div class="kpi-value nowrap" id="kpi-dev-ursula">—</div>
+        <div class="kpi-sub" id="kpi-devproy-ursula">—</div>
+      </div>
+    </div>
+    <div class="progress-section">
+      <div class="progress-meta"><span>Progreso sobre objetivo</span><span id="prog-pct-ursula" style="font-weight:700;">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="prog-fill-ursula" style="width:0%;background:var(--green);"></div></div>
+    </div>
+
+    <hr class="divider">
+    <div class="segment-title">Bonos — mes actual</div>
+    <div class="kpi-grid kpi-g2">
+      <div class="kpi-card accent-green">
+        <div class="kpi-label">Alta bonos</div>
+        <div class="kpi-value green" id="kpi-bonos-altas-ursula">—</div>
+        <div class="kpi-sub" id="kpi-bonos-altas-prev-ursula" style="margin-top:6px;">2025: —</div>
+        <div class="kpi-cmp neu" id="kpi-bonos-altas-cmp-ursula">vs año ant.: —</div>
+      </div>
+      <div class="kpi-card accent-green">
+        <div class="kpi-label">Consumo bono</div>
+        <div class="kpi-value green" id="kpi-bonos-consumo-ursula">—</div>
+        <div class="kpi-sub" id="kpi-bonos-consumo-prev-ursula" style="margin-top:6px;">2025: —</div>
+        <div class="kpi-cmp neu" id="kpi-bonos-consumo-cmp-ursula">vs año ant.: —</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head"><span class="section-title">Evolución mensual 2025 / 2026</span></div>
+    <div class="chart-legend">
+      <div class="leg"><div class="leg-bar" style="background:rgba(13,159,110,.42);"></div><span>Venta 2025</span></div>
+      <div class="leg"><div class="leg-bar" style="background:#0d9f6e;"></div><span>Venta real 2026</span></div>
+      <div class="leg"><div class="leg-dash" style="border-color:#c47a0a;"></div><span>Objetivo 2026</span></div>
+      <div class="leg"><div class="leg-bar" style="background:rgba(13,159,110,.35);"></div><span>Proyección mes actual</span></div>
+    </div>
+    <div class="chart-wrap" style="height:280px;"><canvas id="chart-2026-ursula"></canvas></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head"><span class="section-title">Rolling 12 meses</span></div>
+    <div class="rolling-strip">
+      <div class="rolling-kpi"><div class="rk-lbl">Rolling actual</div><div class="rk-val color-green" id="rolling-actual-ursula">—</div></div>
+      <div class="rolling-kpi"><div class="rk-lbl">Mismo mes año anterior</div><div class="rk-val" id="rolling-prev-ursula">—</div></div>
+      <div class="rolling-kpi"><div class="rk-lbl">Variación interanual</div><div class="rk-val" id="rolling-delta-ursula">—</div></div>
+    </div>
+    <div class="chart-legend"><div class="leg"><div class="leg-line" style="background:#0d9f6e;"></div><span>Rolling 12 meses</span></div></div>
+    <div class="chart-wrap" style="height:220px;"><canvas id="chart-rolling-ursula"></canvas></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head"><span class="section-title">Histórico anual</span></div>
+    <div class="annual-strip" id="annual-strip-ursula"></div>
+    <div class="chart-legend">
+      <div class="leg"><div class="leg-line" style="background:#b0b0b0;"></div><span>2023</span></div>
+      <div class="leg"><div class="leg-line" style="background:#6ec9a0;"></div><span>2024</span></div>
+      <div class="leg"><div class="leg-line" style="background:#2ea87a;"></div><span>2025</span></div>
+      <div class="leg"><div class="leg-line" style="background:#d93025;"></div><span>2026</span></div>
+    </div>
+    <div class="chart-wrap" style="height:260px;"><canvas id="chart-annual-ursula"></canvas></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head"><span class="section-title">Bonos — histórico 2026</span></div>
+    <div class="tarj-table-wrap">
+      <table class="tarj-table">
+        <thead><tr><th>Mes comercial</th><th>Alta bonos 2026</th><th>Alta bonos 2025</th><th>vs año ant.</th><th>Consumo bono 2026</th><th>Consumo bono 2025</th><th>vs año ant.</th></tr></thead>
+        <tbody id="tarj-tbody-ursula"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PANEL ERP ═══ -->
+<div id="panel-erp" class="tab-panel">
+  <div class="erp-wrap">
+
+    <!-- ── SELECTOR MES ACTIVO ── -->
+    <div style="background:var(--srf);border:1px solid var(--bdr);border-radius:var(--r-md);padding:20px 24px;margin-bottom:24px;box-shadow:var(--shd);">
+      <div style="font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--txt3);margin-bottom:14px;">Mes visualizado en el cuadro</div>
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+        <div style="display:flex;flex-direction:column;gap:5px;min-width:220px;">
+          <label class="field-label" for="active-month-sel">Mes comercial activo</label>
+          <select class="field-select" id="active-month-sel" onchange="changeActiveMonth(this.value)" style="font-size:16px;font-weight:600;"></select>
+        </div>
+        <button class="btn btn-secondary" onclick="resetToCurrentMonth()" style="margin-top:20px;">↺ Volver al mes actual</button>
+        <div style="margin-top:20px;padding:10px 16px;background:var(--srf2);border:1px solid var(--bdr);border-radius:var(--r-sm);font-size:14px;color:var(--txt2);">
+          Mes en curso: <strong id="current-month-label" style="color:var(--txt);">—</strong>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-size:13px;color:var(--txt3);">
+        Cambiar este selector actualiza los KPIs, barras de progreso, gráficos y acumulados YTD hasta ese mes comercial (sin meses posteriores en 2026 ni en las series comparadas).
+      </div>
+    </div>
+
+    <div class="erp-intro">
+      <strong>Instrucciones:</strong> Abre <em>Ventas por caja.xlsx</em> → hoja <em>VENTAS</em>.
+      Selecciona todo (Ctrl+A), cópialo (Ctrl+C) y pégalo abajo.<br>
+      El sistema detecta el mes por la línea <em>"Fecha hasta"</em> y extrae:
+      Cavero (vendedor 26 · PROFESIONALES + INDUSTRIA + DISTRIBUIDORES)
+      y Úrsula (fila "Total vendedor 61" · columna D).
+      La fecha que aparece en la cabecera del cuadro se actualizará con la fecha del archivo.
+    </div>
+
+    <label class="field-label">Pegar contenido del Excel (texto tabulado)</label>
+    <textarea class="erp-textarea" id="erp-textarea" placeholder="Pega aquí el contenido copiado del Excel…"></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary"   onclick="parseERPData()">Analizar datos</button>
+      <button class="btn btn-secondary" onclick="clearERP()">Limpiar</button>
+      <button class="btn btn-secondary" onclick="configureGithubToken()">Configurar token GitHub</button>
+      <button class="btn btn-secondary" onclick="clearGithubToken()">Borrar token GitHub</button>
+    </div>
+    <div id="erp-alert-wrap"></div>
+    <div id="erp-preview" class="hidden"></div>
+    <div id="erp-save-row" class="btn-row hidden">
+      <button class="btn btn-success" onclick="saveERPData()">Guardar datos en el cuadro</button>
+      <button class="btn btn-danger"  onclick="clearERP()">Cancelar</button>
+    </div>
+
+    <hr class="divider" style="margin:28px 0;">
+    <div class="section-title" style="margin-bottom:14px;">Bonos — introducción manual</div>
+    <div class="erp-alert info">Si los datos de bonos no aparecen en el Excel, introdúcelos aquí manualmente.</div>
+    <div class="flex-row" style="margin-bottom:16px;gap:12px;flex-wrap:wrap;">
+      <div class="field-group" style="min-width:200px;">
+        <label class="field-label">Mes comercial</label>
+        <select class="field-select" id="tarj-month-sel"></select>
+      </div>
+    </div>
+    <div class="tarj-manual-grid">
+      <div class="tarj-person-block">
+        <h4 class="cavero">Antonio Cavero</h4>
+        <div class="field-row">
+          <div class="field-group"><label class="field-label">Alta bonos</label><input class="field-input" type="number" id="tarj-c-altas" placeholder="0" min="0"></div>
+          <div class="field-group"><label class="field-label">Consumo bono (€)</label><input class="field-input" type="number" id="tarj-c-consumo" placeholder="0.00" min="0" step="0.01"></div>
+        </div>
+      </div>
+      <div class="tarj-person-block">
+        <h4 class="ursula">Úrsula Moreno</h4>
+        <div class="field-row">
+          <div class="field-group"><label class="field-label">Alta bonos</label><input class="field-input" type="number" id="tarj-u-altas" placeholder="0" min="0"></div>
+          <div class="field-group"><label class="field-label">Consumo bono (€)</label><input class="field-input" type="number" id="tarj-u-consumo" placeholder="0.00" min="0" step="0.01"></div>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row mt-16"><button class="btn btn-primary" onclick="saveTarjetaManual()">Guardar bonos</button></div>
+    <div id="tarj-save-alert" class="hidden" style="margin-top:10px;"></div>
+
+    <hr class="divider" style="margin:28px 0;">
+
+    <!-- ── PRESUPUESTOS ── -->
+    <div class="section-title" style="margin-bottom:6px;">Presupuestos mensuales 2026</div>
+    <p style="font-size:14px;color:var(--txt2);margin-bottom:16px;">
+      Edita los objetivos mensuales de cada comercial. Los cambios se guardan en el navegador
+      y tienen prioridad sobre los valores por defecto.
+    </p>
+
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:15px;">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding:10px 14px;border-bottom:2px solid var(--bdr);background:var(--srf2);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--txt2);">Mes</th>
+            <th style="text-align:right;padding:10px 14px;border-bottom:2px solid var(--bdr);background:var(--srf2);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--blue);">Antonio Cavero (€)</th>
+            <th style="text-align:right;padding:10px 14px;border-bottom:2px solid var(--bdr);background:var(--srf2);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--green);">Úrsula Moreno (€)</th>
+          </tr>
+        </thead>
+        <tbody id="budget-tbody"></tbody>
+        <tfoot>
+          <tr>
+            <td style="padding:12px 14px;font-weight:700;font-size:15px;border-top:2px solid var(--bdr);">Total anual</td>
+            <td style="padding:12px 14px;text-align:right;font-weight:700;font-size:15px;color:var(--blue);border-top:2px solid var(--bdr);" id="budget-total-cavero">—</td>
+            <td style="padding:12px 14px;text-align:right;font-weight:700;font-size:15px;color:var(--green);border-top:2px solid var(--bdr);" id="budget-total-ursula">—</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="btn-row mt-16">
+      <button class="btn btn-primary" onclick="saveBudgets()">Guardar presupuestos</button>
+      <button class="btn btn-secondary" onclick="resetBudgets()">Restaurar valores por defecto</button>
+    </div>
+    <div id="budget-alert" class="hidden" style="margin-top:10px;"></div>
+
+    <hr class="divider" style="margin:28px 0;">
+    <div class="section-title" style="margin-bottom:14px;">Gestión de datos guardados</div>
+    <div class="erp-alert warning">Los datos hardcodeados (histórico 2023–2025 y Ene–Mar 2026) nunca se borran. Solo se eliminan los datos importados vía ERP o bonos manual.</div>
+    <div class="btn-row mt-12"><button class="btn btn-danger" onclick="resetLS()">Borrar datos importados</button></div>
+  </div>
 </div>
 
 <script>
-// CUADRO DE MANDO v2026-03-26 — datos Enero/Feb/Marzo reales, Abril vacío
-// ═══════ DATOS ═══════
-const MN=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-const MF=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-
-const HT={
-  2017:[91371,125936,171672,112958,183013,161780,168487,116991,157903,113687,212649,126525],
-  2018:[103291,152165,140485,124852,206167,182745,231189,152202,191822,218712,220079,121032],
-  2019:[146619,175663,225062,191599,210522,262530,257762,143820,210003,192621,216841,166621],
-  2020:[127427,162415,147696,65801,132743,228624,224917,168147,205898,196475,225231,148030],
-  2021:[121104,200941,190699,201252,231652,219476,224040,157544,193716,151468,304892,175647],
-  2022:[133065,232278,204707,197053,188591,279457,253778,115802,235289,238587,248500,136458],
-  2023:[148489,214139,190319,210823,248335,258291,267586,160229,178372,246349,261117,156078],
-  2024:[194478,189202,177972,259630,211622,282911,258322,140491,266278,228029,177781,210130],
-  2025:[138556,196325,192669,211578,190473,227989,244632,122447,287913,173140,267705,223407],
-};
-// Historical centres [sjp,sji,avdp,avdi,almp,almi,garp,gari]
-const HC={
-  "2019-1":[42845.06,11909.0,7056.19,20403.7,0,0,0.0,0.0],
-  "2019-2":[58499.29,5191.0,9277.04,17108.35,0,0,0.0,0.0],
-  "2019-3":[59710.72,12457.0,13832.54,15447.15,0,0,0.0,0.0],
-  "2019-4":[66070.38,12043.0,19419.49,16314.58,0,0,0.0,0.0],
-  "2019-5":[58762.99,16731.0,17191.68,19519.87,0,0,0.0,0.0],
-  "2019-6":[80833.51,13284.0,25768.78,32206.07,0,0,0.0,0.0],
-  "2019-7":[70089.44,11850.0,23592.29,35723.9,0,0,0.0,0.0],
-  "2019-8":[54604.18,3168.0,16361.93,22995.53,0,0,3603.39,3603.0],
-  "2019-9":[53519.04,4339.0,18472.86,27275.11,0,0,20548.36,20204.0],
-  "2019-10":[59133.43,10585.0,13857.02,9406.93,0,0,42174.41,30384.0],
-  "2019-11":[52543.08,22731.0,15080.77,13435.53,0,0,41285.65,32316.0],
-  "2019-12":[41185.45,11410.0,13463.76,14751.18,0,0,39708.71,25106.0],
-  "2020-1":[36307.24,8770.0,13568.15,3716.03,0,0,22518.3,9355.0],
-  "2020-2":[52697.02,10346.0,15595.48,17418.72,0,0,27656.54,11563.0],
-  "2020-3":[41515.5,21749.0,10301.62,9445.08,0,0,27648.05,18823.0],
-  "2020-4":[5226.16,0.0,0.0,50706.15,0,0,1182.13,0.0],
-  "2020-5":[35062.27,536.0,17403.88,47232.95,0,0,9615.89,9518.0],
-  "2020-6":[8276.15,29316.0,3343.45,8640.5,0,0,1608.52,23984.0],
-  "2020-7":[61943.97,35791.0,24222.97,34811.32,0,0,20539.93,17055.0],
-  "2020-8":[54796.26,20721.0,21992.78,26333.05,0,0,31634.71,25121.0],
-  "2020-9":[55064.94,33347.0,21743.28,20041.48,0,0,39221.13,36144.0],
-  "2020-10":[44197.29,30209.0,17480.99,28319.86,0,0,28820.65,26609.0],
-  "2020-11":[54165.76,40803.0,17642.37,16449.02,0,0,34804.3,34045.0],
-  "2020-12":[42110.65,45766.0,14411.82,17985.61,0,0,10108.69,10109.0],
-  "2021-1":[39470.08,1435.0,17043.24,8698.15,0,0,35471.72,32666.0],
-  "2021-2":[46403.06,47338.0,17475.61,22349.68,0,0,30563.25,26625.0],
-  "2021-3":[43891.72,35392.0,15574.12,17087.25,0,0,36315.19,34368.0],
-  "2021-4":[73628.46,49680.0,21449.47,16116.03,0,0,38894.01,30900.0],
-  "2021-5":[58085.8,50207.6,20016.92,20432.74,0,0,36926.85,36926.85],
-  "2021-6":[78511.94,35021.24,21497.23,30898.76,0,0,27903.18,27238.95],
-  "2021-7":[54227.38,36767.53,19858.87,27759.21,0,0,30600.35,30600.35],
-  "2021-8":[55551.21,2381.68,20651.57,17936.63,0,0,40189.76,40155.82],
-  "2021-9":[56364.63,42085.51,18385.2,13709.63,0,0,28092.26,28092.26],
-  "2021-10":[53981.49,34695.44,18906.03,13351.53,0,0,12570.72,12485.72],
-  "2021-11":[69100.68,91503.54,19318.47,17542.66,0,0,63432.51,63432.51],
-  "2021-12":[55125.61,32079.61,14161.37,8680.74,0,0,32792.43,32792.43],
-  "2022-1":[46556.96,20092.45,11358.77,23096.2,0,0,28466.91,28466.91],
-  "2022-2":[60891.26,55446.12,16991.57,24651.56,0,0,38656.24,38656.24],
-  "2022-3":[56405.14,51251.14,12277.94,13958.42,0,0,42988.35,42988.35],
-  "2022-4":[62224.94,45312.65,15961.6,12558.35,0,0,31007.23,31007.23],
-  "2022-5":[73248.87,33402.0,25238.75,34163.85,0,0,4700.08,4620.08],
-  "2022-6":[76231.78,59634.99,23863.91,19284.68,0,0,32563.09,32563.09],
-  "2022-7":[70236.45,64994.16,19561.53,43637.37,0,0,35406.06,35406.06],
-  "2022-8":[45843.12,5467.85,18712.73,19591.19,0,0,11632.81,11633.0],
-  "2022-9":[77919.09,54671.57,18308.34,24638.49,0,0,39843.95,39843.95],
-  "2022-10":[67583.68,48898.4,19255.85,28314.23,0,0,41915.58,41915.58],
-  "2022-11":[71591.12,58539.15,18879.14,25241.04,0,0,39321.1,39321.1],
-  "2022-12":[53055.37,21233.8,14403.42,8280.37,0,0,28285.37,28285.37],
-  "2023-1":[51967.51,23239.71,14637.89,11404.47,0,0,14180.65,25190.04],
-  "2023-2":[63919.49,56608.98,16599.18,14175.46,0,0,25541.93,25541.93],
-  "2023-3":[56179.05,36088.89,17593.57,38248.18,0,0,27918.26,27918.26],
-  "2023-4":[63599.2,43102.78,22081.46,21428.25,0,0,30384.2,30384.2],
-  "2023-5":[70936.21,56373.96,22759.13,26690.55,0,0,30770.3,30770.3],
-  "2023-6":[76541.26,40996.97,24009.2,19421.04,0,0,39546.16,39546.16],
-  "2023-7":[77902.39,65627.86,22283.63,33052.84,0,0,50449.95,50449.95],
-  "2023-8":[60094.35,20327.97,19805.33,21450.19,0,0,29948.64,29948.64],
-  "2023-9":[81655.41,38312.37,22449.1,15203.09,0,0,7834.58,7834.58],
-  "2023-10":[74135.57,47220.84,18877.14,20170.76,0,0,55625.09,55625.09],
-  "2023-11":[81043.35,66404.38,21644.56,21942.19,0,0,43168.46,43168.46],
-  "2023-12":[60887.17,18536.8,18176.47,36448.03,0,0,10827.5,10827.5],
-  "2024-1":[57921.42,32153.29,13449.11,24579.26,0,0,0.0,39267.88],
-  "2024-2":[62678.14,26665.87,16218.89,21921.02,0,0,0.0,29265.84],
-  "2024-3":[68552.09,28869.24,20849.88,28607.31,0,0,0.0,14582.64],
-  "2024-4":[77518.66,49241.58,20768.4,36926.66,0,0,0.0,46607.41],
-  "2024-5":[71717.36,51582.54,18723.73,28731.09,0,0,3825.69,22717.9],
-  "2024-6":[72606.28,57972.37,21805.02,25159.27,0,0,9625.94,64717.11],
-  "2024-7":[72195.5,73595.11,20418.26,23794.14,0,0,9438.03,31985.07],
-  "2024-8":[50162.99,8742.54,14335.28,19795.46,0,0,6964.34,30398.27],
-  "2024-9":[84654.45,50399.22,16993.69,29403.27,0,0,9626.21,60809.2],
-  "2024-10":[57822.57,49307.04,16131.36,27579.8,0,0,8466.44,35504.07],
-  "2024-11":[64117.37,25205.46,14343.58,29123.49,0,0,8024.28,27108.98],
-  "2024-12":[59653.44,38116.49,12572.06,39994.5,0,0,7438.11,26438.51],
-  "2025-1":[37282.33,24150.04,10644.3,19772.08,0,0,5773.54,37562.05],
-  "2025-2":[52153.76,35673.76,15773.31,22165.4,0,0,8751.91,34172.91],
-  "2025-3":[52253.46,51901.84,13118.14,33410.97,0,0,6514.85,29411.97],
-  "2025-4":[59065.25,50095.16,17656.92,25840.7,0,0,11468.32,38716.21],
-  "2025-5":[54893.37,27603.37,19988.53,23175.84,0,0,11620.69,40661.92],
-  "2025-6":[70593.75,33043.0,24557.93,33499.99,0,0,19326.72,35186.73],
-  "2025-7":[64338.65,46539.55,21174.19,55037.27,0,0,13268.22,35867.35],
-  "2025-8":[58826.82,224.48,20075.31,22343.97,0,0,14081.7,38.66],
-  "2025-9":[76517.68,75859.69,21925.82,44837.28,0,0,13736.88,46528.12],
-  "2025-10":[41748.55,23504.07,17839.33,28141.65,0,0,15570.28,35796.61],
-  "2025-11":[57318.74,72241.49,19971.16,30163.78,0,0,14168.1,48882.8],
-  "2025-12":[34573.85,54524.63,16415.92,58185.99,0,0,14388.16,38514.39]
-};
-// Segment historical 2025
-const HS25={pvp_p:[14134,18037,14187,25981,20287,30346,26828,26185,19955,19146,20703,10769],pvp_i:[61712,85488,81314,88739,68546,70359,82450,650,124409,59592,142970,97573],prof:[59338,80807,91092,88032,89392,117632,127015,88756,134059,83881,99784,108261],dist:[1108,1982,1801,1151,1036,3794,2130,3112,3774,942,2069,541],ind:[2264,10011,4274,7674,11213,5857,6209,3744,5716,9579,2180,6264]};
-
-let PRES={
-  total:[168547,250228,228929,268130,245534,324879,325487,170883,322658,255121,289809,233898],
-  sjp:  [45587,65068,61591,73983,68321,84706,77020,71664,91791,49587,68345,42337],
-  sjd:  [40372,62303,50864,64478,49301,72503,69897,17937,64407,65870,74764,43363],
-  avd:  [16078,23728,19771,26768,31229,37958,32390,16487,33866,27022,30204,25535],
-  avdp: [11328,16398,13787,19182,25429,29429,24167,14376,26289,19272,21408,20434],
-  avdd: [4750,7330,5984,7586,5800,8530,8223,2110,7577,7749,8796,5102],
-  garp: [9006,13037,10961,15250,20217,23397,19214,11430,20901,15322,17020,16245],
-  gard: [34039,52530,42886,54364,41567,61130,58933,15123,54304,55537,63036,36561],
-  alm:  [23465,33562,42856,33287,34899,45185,68033,38242,57389,41783,36440,69857],
-  cavero:[63061,77248,63061,77248,63061,77248,77248,63061,77248,63061,77248,63061],
-  ursula:[31500,26000,31500,26000,31500,26000,26000,31500,26000,31500,26000,31500],
-};let DM={};let MA=null;const CH={};
-Chart.defaults.color='#4a5270';Chart.defaults.borderColor='#dde1ec';Chart.defaults.font.family="'Inter',sans-serif";Chart.defaults.font.size=11;
-try{Chart.register(ChartDataLabels);Chart.defaults.plugins.datalabels={display:false};}catch(e){window.ChartDataLabels=null;}
-const fmt=v=>v==null||isNaN(v)?'—':new Intl.NumberFormat('es-ES',{maximumFractionDigits:0}).format(v);
-const fK=v=>v==null?'—':Math.abs(v)>=1e6?(v/1e6).toFixed(2)+'M':Math.abs(v)>=1e3?(v/1e3).toFixed(0)+'K':Math.round(v)+'';
-const pct=(a,b)=>(!b||b===0)?null:(a-b)/b*100;
-const pS=v=>v==null?'—':(v>=0?'+':'')+v.toFixed(1)+'%';
-const cls=v=>v==null?'neu':v>=0?'pos':'neg';
-const proy=(r,d,dt)=>(d&&dt&&dt>0&&d<dt)?Math.round(r/d*dt):null;
-function mkC(id,type,data,opts){
-  if(CH[id]){CH[id].destroy();delete CH[id];}
-  const c=document.getElementById(id);if(!c)return;
-  // For line charts: always show tooltip on hover with value, unless overridden
-  const lineDefaults = type==='line' ? {
-    interaction:{mode:'index',intersect:false},
-    plugins:{
-      tooltip:{
-        mode:'index',intersect:false,
-        callbacks:{
-          label: ctx => {
-            const v = ctx.parsed.y;
-            if(v==null) return null;
-            const lbl = ctx.dataset.label || '';
-            return ` ${lbl}: ${fmt(v)} €`;
-          }
+'use strict';
+/* __DATOS_INYECTADOS__ */
+  (function(){
+    var _d = {"cavero": {"monthly": {"2026": [null, null, 83409.88, 33853.02, null, null, null, null, null, null, null, null]}, "industria": {"2026-03": 7657, "2026-01": 2845, "2026-02": 7705, "2026-04": 8009.93}, "distribuidores": {"2026-01": 934.67, "2026-02": 2699.59, "2026-03": 1075.05, "2026-04": 1078.26}, "bonos": {"2026-04": {"consumo": 25372.37, "altas": 20125.62}, "2026-01": {"altas": 23700, "consumo": 31537}, "2026-02": {"altas": 27934, "consumo": 43787}, "2026-03": {"altas": 46151, "consumo": 55176}}}, "ursula": {"monthly": {"2026": [null, null, 32518.32, 13837.21, null, null, null, null, null, null, null, null]}, "bonos": {"2026-04": {"altas": 7782.65, "consumo": 7119.82}, "2026-01": {"altas": 8399, "consumo": 9553}, "2026-02": {"altas": 7700, "consumo": 9697}, "2026-03": {"altas": 8399, "consumo": 10784}}}, "lastLoadDate": "2026-04-10", "lastRunTs": "2026-04-10T19:27:02.405820+00:00"};
+    try {
+      var ls = JSON.parse(localStorage.getItem('hipopotamo_v2') || '{}');
+      var remoteTs = _d.lastRunTs ? new Date(_d.lastRunTs).getTime() : 0;
+      var localTs = ls.lastRunTs ? new Date(ls.lastRunTs).getTime() : 0;
+      var preferRemote = remoteTs > localTs;
+      ['cavero','ursula'].forEach(function(p){
+        if(!_d[p]) return;
+        ls[p] = ls[p] || {};
+        if(_d[p].monthly){
+          ls[p].monthly = ls[p].monthly || {};
+          Object.entries(_d[p].monthly).forEach(function(e){
+            var yr=e[0], arr=e[1];
+            ls[p].monthly[yr] = ls[p].monthly[yr] || Array(12).fill(null);
+            arr.forEach(function(v,i){
+              if(v===null || v===undefined) return;
+              if(preferRemote) ls[p].monthly[yr][i]=v;
+              else if(ls[p].monthly[yr][i]===null || ls[p].monthly[yr][i]===undefined) ls[p].monthly[yr][i]=v;
+            });
+          });
         }
-      }
-    }
-  } : {};
-  // Deep merge: lineDefaults < opts (opts wins)
-  function deepMerge(a,b){
-    const r={...a};
-    for(const k in b){
-      if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])&&a[k]&&typeof a[k]==='object')
-        r[k]=deepMerge(a[k],b[k]);
-      else r[k]=b[k];
-    }
-    return r;
-  }
-  const finalOpts = deepMerge(lineDefaults, opts||{});
-  CH[id]=new Chart(c,{type,data,options:{responsive:true,maintainAspectRatio:false,...finalOpts}});
-}
-const defOpts={scales:{x:{grid:{display:false}},y:{grid:{color:'#eef0f6'},ticks:{callback:v=>fK(v)}}},plugins:{legend:{position:'top',labels:{usePointStyle:true,padding:12}},tooltip:{mode:'index',intersect:false,callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.raw)} €`}},datalabels:{display:false}}};
-
-// ═══════ NAV ═══════
-
-function diffLbl(real, obj){
-  const d = real - obj;
-  if(d >= 0) return `<span style="color:var(--green);font-weight:700">Superado en +${fmt(d)} €</span>`;
-  return `<span style="color:var(--red);font-weight:700">Le queda ${fmt(Math.abs(d))} €</span>`;
-}
-function diffLblS(real, obj){
-  // Short version for tables
-  const d = real - obj;
-  if(d >= 0) return `<span class="pos">+${fmt(d)} €</span>`;
-  return `<span class="neg">${fmt(d)} € </span>`;
-}
-const PAGE_NAMES={resumen:'Resumen Ejecutivo',mensual:'Seguimiento Mensual',centros:'Centros de Venta',comerciales:'Equipo Comercial',historico:'Histórico',datos:'Cargar Datos',presupuesto:'Presupuesto'};
-function previewDias(){
-  const d=parseInt(document.getElementById('inp-dias')?.value)||0;
-  const t=parseInt(document.getElementById('inp-diast')?.value)||0;
-  const el=document.getElementById('dias-status');
-  if(el&&d&&t) el.textContent=d+' de '+t+' dias';
-  else if(el) el.textContent='';
-}
-function aplicarDias(){
-  if(!MA)return;
-  const {ano,mes}=MA,d=DM[ano]?.[mes];if(!d)return;
-  const dias=parseInt(document.getElementById('inp-dias')?.value);
-  const diasT=parseInt(document.getElementById('inp-diast')?.value);
-  if(!dias||!diasT||dias<1||diasT<1||dias>diasT){alert('Valores incorrectos');return;}
-  d.dias=dias;d.diasT=diasT;d.diasManual=true;
-  const el=document.getElementById('dias-status');
-  if(el)el.textContent='✓ Fijado: '+dias+' de '+diasT+' dias';
-  updSb();rResumen();
-  const cur=document.querySelector('.pg.on');
-  if(cur?.id==='pg-centros')rCen();
-  if(cur?.id==='pg-comerciales')rCom();
-}
-function resetDias(){
-  if(!MA)return;
-  const {ano,mes}=MA,d=DM[ano]?.[mes];if(!d)return;
-  delete d.diasManual;actualizarDiasMesActivo();
-  const el=document.getElementById('dias-status');
-  const d2=DM[ano]?.[mes];
-  if(el&&d2)el.textContent='Auto: '+d2.dias+' de '+d2.diasT+' dias';
-  updSb();rResumen();
-}
-function _initDiasWidget(){
-  if(!MA)return;
-  actualizarDiasMesActivo();
-  const {ano,mes}=MA,d=DM[ano]?.[mes];if(!d)return;
-  const inp=document.getElementById('inp-dias');
-  const inpT=document.getElementById('inp-diast');
-  const el=document.getElementById('dias-status');
-  if(inp)inp.value=d.dias||'';
-  if(inpT)inpT.value=d.diasT||'';
-  if(el)el.textContent=(d.diasManual?'✓ Manual: ':'○ Auto: ')+(d.dias||'?')+' de '+(d.diasT||'?')+' dias';
-}
-function nav(p){
-  document.querySelectorAll('.sb-i').forEach(i=>i.classList.remove('on'));
-  document.querySelectorAll('.pg').forEach(x=>x.classList.remove('on'));
-  document.querySelectorAll('.mob-nav-item').forEach(i=>i.classList.remove('on'));
-  const sbEl=document.querySelector(`.sb-i[onclick="nav('${p}')"]`);
-  if(sbEl)sbEl.classList.add('on');
-  const mnEl=document.querySelector(`.mob-nav-item[data-page="${p}"]`);
-  if(mnEl)mnEl.classList.add('on');
-  document.getElementById('pg-'+p).classList.add('on');
-  const pn=document.getElementById('mob-page-name');
-  if(pn)pn.textContent=PAGE_NAMES[p]||p;
-  if(window.innerWidth<=768)window.scrollTo(0,0);
-  if(p==='mensual')rMen();
-  if(p==='centros')rCen();
-  if(p==='comerciales')rCom();
-  if(p==='historico')rHist();
-  if(p==='presupuesto')rPres();
-  if(p==='datos')_initDiasWidget();
-}
-
-// ═══════ PARSER ═══════
-function procesar(){
-  const raw=document.getElementById('erp-ta').value.trim();
-  const mes=parseInt(document.getElementById('s-mes').value);
-  const ano=parseInt(document.getElementById('s-ano').value);
-  const dias=parseFloat(document.getElementById('i-d').value)||null;
-  const diasT=parseFloat(document.getElementById('i-dt').value)||null;
-  if(!raw){setSt('er','Pega primero los datos del ERP.');return;}
-  try{
-    const r=parseERP(raw);
-    // Validate: if ERP file has a date, confirm it matches selected month
-    if(r.fechaERP){
-      const erpMes=r.mes||mes;
-      if(erpMes&&erpMes!==mes){
-        const nomERP=MF[erpMes-1]||erpMes, nomSel=MF[mes-1]||mes;
-        if(!confirm('⚠️ El archivo ERP parece ser de '+nomERP+' pero has seleccionado '+nomSel+'.\n\n¿Cargar como '+nomSel+'?')){return;}
-      }
-    }
-    r.mes=mes;r.ano=ano;r.dias=dias;r.diasT=diasT;
-    if(!DM[ano])DM[ano]={};DM[ano][mes]=r;
-    _saveDMToStorage();
-    MA={ano,mes};
-    updSb();markMt(mes,ano);renderPout(r);
-    setUltimaCarga('Manual · '+new Date().toLocaleString('es-ES',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}));
-    setSt('ok',`✓ ${MF[mes-1]} ${ano} procesado — Total: ${fmt(r.total)} €${dias&&diasT?` · Proyección: ${fmt(proy(r.total,dias,diasT))} €`:''}`);;
-    rResumen();
-  }catch(e){setSt('er','Error: '+e.message);console.error(e);}
-}
-
-function parseERP(raw){
-  const lines=raw.split('\n');
-  const r={total:0,sjp:0,sjd:0,garp:0,gard:0,alm:0,avd:0,cavero:0,ursula:0,
-    pvp_pin:0,pvp_ins:0,prof:0,distrib:0,ind:0,grupos:{},raws:{},rawv:{}};
-  let mode='c',cT=-1,cN=-1,cG=-1,cB=-1,cI=-1;
-  const pN=s=>{if(!s||s==='-')return 0;const c=String(s).replace(/\s/g,'').replace(/\./g,'').replace(',','.');return parseFloat(c)||0;};
-  // rawsF: col F (No Instalaciones) per tienda — used for SJP
-  const rawvPF={};
-  r.rawsF={};
-  for(const line of lines){
-    const cols=line.split('\t').map(s=>s.trim());
-    if(cols.some(c=>c==='Tienda')&&cols.some(c=>c==='Grupo')){
-      cT=cols.indexOf('Tienda');cN=cols.indexOf('Nombre Tienda');cG=cols.indexOf('Grupo');
-      cB=cols.indexOf('Base Imponible');cI=cols.indexOf('Instalaciones');mode='c';continue;
-    }
-    if(cols.some(c=>c==='Vendedor')&&cols.some(c=>c==='Grupo')){
-      cT=cols.indexOf('Vendedor');cN=cols.indexOf('Nombre Vendedor');cG=cols.indexOf('Grupo');
-      cB=cols.indexOf('Base Imponible');cI=cols.indexOf('Instalaciones');mode='v';continue;
-    }
-    if(cB<0)continue;
-    const tienda=String(cols[cT]||'').trim(),nombre=String(cols[cN]||'').trim();
-    const grupo=String(cols[cG]||'').trim().toUpperCase();
-    const base=pN(cols[cB]),inst=cI>=0?pN(cols[cI]):0;
-    if(!tienda||tienda==='VACIO'||isNaN(base))continue;
-    if(tienda==='TOTAL INFORME'){r.total=base;continue;}
-    if(tienda==='TOTAL GRUPOS CLASIFICACION'){
-      if(grupo){r.grupos[grupo]=(r.grupos[grupo]||0)+base;
-        if(grupo==='PVP'||grupo==='FINALES'){r.pvp_ins=(r.pvp_ins||0)+inst;r.pvp_pin=(r.pvp_pin||0)+Math.max(0,base-inst);}
-        if(grupo==='PROF')r.prof=(r.prof||0)+base;
-        if(grupo==='INDUSTRIA'||grupo.startsWith('INDUSTRIA'))r.ind=(r.ind||0)+base;
-        if(grupo==='DISTRIB'||grupo==='DISTRIBUIDORES')r.distrib=(r.distrib||0)+base;
-      }continue;
-    }
-    if(tienda==='TOTAL GRUPOS')continue;
-    if(mode==='c'&&tienda.startsWith('Total tienda ')){
-      const k=tienda.replace('Total tienda ','').trim();
-      r.raws[k]=(r.raws[k]||0)+base;
-      // col F = No Instalaciones (index 5)
-      const noIns=cI>=0&&cols[cI+1]!==undefined?pN(cols[cI+1]):0;
-      r.rawsF[k]=(r.rawsF[k]||0)+noIns;
-      continue;
-    }
-    if(mode==='v'){
-      if(tienda.startsWith('Total vendedor ')){
-        const k=tienda.replace('Total vendedor ','').trim(),nm=(nombre||k).toUpperCase().trim();
-        r.rawv[nm]=(r.rawv[nm]||0)+base;
-      } else if(!tienda.startsWith('Total')&&grupo==='PROFESIONALES'&&nombre){
-        // Individual row: track PROFESIONALES per salesperson
-        const nm=nombre.toUpperCase().trim();
-        rawvPF[nm]=(rawvPF[nm]||0)+base;
-      }
-    }
-  }
-  // Map centres — column rules per tienda:
-  // SJP (SAN JOSÉ) = col F (No Instalaciones = pintura only, excludes instalaciones)
-  // SJD (52 San José Instalaciones) = col D (Base Imponible, all instalaciones)
-  // GARD (56 Gargallo Deco) = col D (Base Imponible, all instalaciones)
-  // GARP, ALM, AVD = col D (E=0 or mixed total)
-  const rc=r.raws, rcF=r.rawsF;
-  r.sjp=Math.round(rcF['SAN JOSÉ']||rcF['SAN JOSE']||rc['SAN JOSÉ']||rc['SAN JOSE']||0);
-  r.sjd=Math.round(rc['52']||0);
-  r.garp=Math.round(rc['36']||0);
-  r.gard=Math.round(rc['56']||0);
-  r.alm=Math.round(rc['ALMACEN']||0);
-  r.avd=Math.round(rc['AVD. MADRID']||0);
-  if(!r.total||r.total===0)r.total=r.sjp+r.sjd+r.garp+r.gard+r.alm+r.avd;
-  // Cavero = PROFESIONALES only; Ursula = total
-  Object.entries(rawvPF).forEach(([k,v])=>{if(k.includes('ANTONIO CAVERO'))r.cavero+=v;});
-  Object.entries(r.rawv).forEach(([k,v])=>{if(k.includes('URSULA')||k.includes('ÚrSULA'))r.ursula+=v;});
-  r.cavero=Math.round(r.cavero);r.ursula=Math.round(r.ursula);
-  return r;
-}
-
-function setSt(t,m){const e=document.getElementById('stb');e.className='stb '+(t==='ok'?'s-ok':'s-er');e.textContent=m;}
-function setUltimaCarga(txt){
-  const el=document.getElementById('sb-ultima-carga');
-  if(el&&txt) el.textContent=txt;
-}
-
-function updSb(){
-  if(MA){const d=DM[MA.ano]?.[MA.mes];const mb=document.getElementById('mob-badge');if(mb&&d)mb.textContent=fK(d.total)+'€';}if(!MA)return;const d=DM[MA.ano]?.[MA.mes];const p=d?.dias&&d?.diasT?` (${d.dias}/${d.diasT}d)`:'';document.getElementById('sb-dt').textContent=MF[MA.mes-1]+' '+MA.ano+p;const c=Object.keys(DM[MA.ano]||{}).length;document.getElementById('sb-st').textContent=c+' mes'+(c!==1?'es':'')+' cargados';}
-function markMt(m,a){if(a!==2026)return;document.querySelectorAll('.mt').forEach(t=>t.classList.remove('cur'));document.getElementById('mt-'+m).classList.add('has','cur');}
-function actMes(m){if(!DM[2026]?.[m])return;MA={ano:2026,mes:m};document.querySelectorAll('.mt').forEach(t=>t.classList.remove('cur'));document.getElementById('mt-'+m).classList.add('cur');updSb();rResumen();}
-function renderPout(d){
-  const pr=d.dias&&d.diasT?proy(d.total,d.dias,d.diasT):null;
-  const rows=[['Total mes',fmt(d.total)+' €'],pr!=null?['Proyección cierre',fmt(pr)+' €']:null,
-    ['SJ Pintura',fmt(d.sjp)+' €'],['SJ Deco',fmt(d.sjd)+' €'],['Gargallo PIN',fmt(d.garp)+' €'],['Gargallo DECO',fmt(d.gard)+' €'],
-    ['Almacén',fmt(d.alm)+' €'],['Avd.Madrid',fmt(d.avd)+' €'],
-    ['Cavero',fmt(d.cavero)+' €'],['Úrsula',fmt(d.ursula)+' €'],
-    ['PROF',fmt(d.prof)+' €'],['PVP Pintura',fmt(d.pvp_pin)+' €'],['PVP Deco/Inst',fmt(d.pvp_ins)+' €'],
-  ].filter(Boolean);
-  document.getElementById('pout').innerHTML=rows.map(([l,v])=>`<div class="pr"><span class="pr-l">${l}</span><span class="pr-v">${v}</span></div>`).join('');
-}
-
-// ═══════ RESUMEN ═══════
-
-function rResumen(){
-  if(!MA)return;
-  actualizarDiasMesActivo();
-  const {ano,mes}=MA,d=DM[ano]?.[mes];if(!d)return;
-  const p=PRES.total[mes-1],y25=HT[2025]?.[mes-1]||0;
-  const pr=proy(d.total,d.dias,d.diasT);
-  const isClosed=!d.dias||!d.diasT||d.dias>=d.diasT;
-  const pct25=y25?pct(d.total,y25):null;
-
-  // YTD
-  const hoyYTD=new Date();hoyYTD.setHours(0,0,0,0);
-  let ytdR=0,ytdP=0;
-  for(let m=1;m<=mes;m++){
-    const finMes=new Date(ano,m-1,25);finMes.setHours(0,0,0,0);
-    if(hoyYTD>finMes){const dm=DM[ano]?.[m];ytdR+=dm?.total||0;ytdP+=PRES.total[m-1]||0;}
-  }
-  const ytdPct=ytdP>0?Math.min(100,Math.round(ytdR/ytdP*100)):0;
-
-  // Proy %
-  const prPct=p>0?Math.min(100,Math.round((pr||d.total)/p*100)):0;
-  const realPct=p>0?Math.min(100,Math.round(d.total/p*100)):0;
-  const fc=v=>v>=100?'var(--green)':v>=80?'var(--amber)':'var(--red)';
-  const devP=pct(d.total,p);
-
-  // Cavero & Ursula
-  const cavReal=d.cavero||0,ursReal=d.ursula||0;
-  const cavObj=PRES.cavero?.[mes-1]||0,ursObj=PRES.ursula?.[mes-1]||0;
-  const cavPr=proy(cavReal,d.dias,d.diasT),ursPr=proy(ursReal,d.dias,d.diasT);
-  const cavPct=cavObj>0?Math.min(100,Math.round(cavReal/cavObj*100)):0;
-  const ursPct=ursObj>0?Math.min(100,Math.round(ursReal/ursObj*100)):0;
-
-  document.getElementById('ph-sub').textContent=
-    isClosed?`${MF[mes-1]} ${ano} · Cerrado`:`${MF[mes-1]} ${ano} · ${d.dias}/${d.diasT} días laborables`;
-  document.getElementById('ph-b').textContent=MF[mes-1]+' '+ano;
-
-  document.getElementById('res-main').innerHTML=`
-  <!-- Zona principal -->
-  <div style="display:grid;grid-template-columns:340px 1fr;gap:12px;margin-bottom:12px">
-
-    <!-- Panel métricas -->
-    <div style="display:flex;flex-direction:column;gap:10px">
-
-      <!-- Proyección protagonista -->
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;border-left:6px solid var(--amber)">
-        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">★ Proyección cierre</div>
-        <div style="font-size:44px;font-weight:700;font-family:var(--mono);color:var(--amber);line-height:1;margin-bottom:8px">${pr?fK(pr):fK(d.total)}</div>
-        <div style="font-size:13px;color:var(--sub)">Pres: ${fmt(p)} € · <span style="color:${devP>=0?'var(--green)':'var(--red)'};font-weight:600">${pS(devP)}</span></div>
-        <div style="font-size:12px;color:var(--muted);margin-top:3px">${d.dias} de ${d.diasT} días · real: ${fmt(d.total)} €</div>
-        <div style="margin-top:10px;height:6px;background:var(--border);border-radius:3px;overflow:hidden">
-          <div style="height:100%;width:${prPct}%;background:var(--amber);border-radius:3px"></div>
-        </div>
-        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px">
-          <span>0</span><span style="color:var(--amber);font-weight:600">${prPct}%</span><span>${fmt(p)} €</span>
-        </div>
-      </div>
-
-      <!-- Real + YTD -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;border-left:6px solid var(--blue)">
-          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Real acumulado</div>
-          <div style="font-size:28px;font-weight:700;font-family:var(--mono);color:var(--tx);line-height:1;margin-bottom:6px">${fK(d.total)}</div>
-          <div style="font-size:12px;color:var(--sub)">vs ${ano-1}: <span style="color:${pct25>=0?'var(--green)':'var(--red)'};font-weight:600">${pS(pct25)}</span></div>
-        </div>
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;border-left:6px solid var(--green)">
-          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">YTD ${ano}</div>
-          <div style="font-size:28px;font-weight:700;font-family:var(--mono);color:var(--tx);line-height:1;margin-bottom:6px">${fK(ytdR)}</div>
-          <div style="font-size:12px;color:var(--amber);font-weight:600">${ytdPct}% pres. acum.</div>
-        </div>
-      </div>
-
-      <!-- Comerciales -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;border-left:6px solid var(--blue)">
-          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Cavero</div>
-          <div style="font-size:26px;font-weight:700;font-family:var(--mono);color:var(--tx);line-height:1;margin-bottom:7px">${fmt(cavReal)} €</div>
-          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span style="color:var(--muted)">Presupuesto</span><span style="font-family:var(--mono);color:var(--sub);font-weight:600">${fmt(cavObj)} €</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span style="color:var(--muted)">Proyección</span><span style="font-family:var(--mono);color:var(--amber);font-weight:600">★ ${fmt(cavPr)} €</span></div>
-          <div style="font-size:11px;margin-bottom:7px">${diffLbl(cavReal,cavObj)}</div>
-          <div style="height:5px;background:var(--border);border-radius:2px"><div style="height:100%;width:${cavPct}%;background:var(--blue);border-radius:2px"></div></div>
-        </div>
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;border-left:6px solid ${ursPct>=100?'var(--green)':'var(--red)'}">
-          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Úrsula</div>
-          <div style="font-size:26px;font-weight:700;font-family:var(--mono);color:var(--tx);line-height:1;margin-bottom:7px">${fmt(ursReal)} €</div>
-          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span style="color:var(--muted)">Presupuesto</span><span style="font-family:var(--mono);color:var(--sub);font-weight:600">${fmt(ursObj)} €</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span style="color:var(--muted)">Proyección</span><span style="font-family:var(--mono);color:var(--amber);font-weight:600">★ ${fmt(ursPr)} €</span></div>
-          <div style="font-size:11px;margin-bottom:7px">${diffLbl(ursReal,ursObj)}</div>
-          <div style="height:5px;background:var(--border);border-radius:2px"><div style="height:100%;width:${ursPct}%;background:${ursPct>=100?'var(--green)':'var(--red)'};border-radius:2px"></div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Gráfico principal -->
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
-        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sub)">Real vs Presupuesto · ${ano-1} vs ${ano}</div>
-        <div style="display:flex;gap:12px;flex-wrap:wrap">
-          <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--sub)"><span style="width:12px;height:12px;border-radius:2px;background:var(--blue);display:inline-block"></span>Real ${ano}</span>
-          <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--sub)"><span style="width:12px;height:12px;border-radius:2px;background:rgba(196,122,10,.55);display:inline-block"></span>Proyección</span>
-          <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--sub)"><span style="width:12px;height:12px;border-radius:2px;background:#b0b8d0;display:inline-block"></span>Real ${ano-1}</span>
-          <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--sub)"><span style="width:22px;height:2px;border-top:2px dashed var(--amber);display:inline-block"></span>Pres.</span>
-        </div>
-      </div>
-      <div style="flex:1;position:relative;min-height:260px"><canvas id="ch-men"></canvas></div>
-    </div>
-  </div>
-
-  <!-- Centros mini -->
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 18px">
-    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sub);margin-bottom:12px">Centros · real → proyección · % vs presupuesto</div>
-    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px" id="cc-grid"></div>
-  </div>`;
-
-  // Build chart data
-  const real2026 = MN.map((_,i)=>DM[ano]?.[i+1]?.total||null);
-  const proy2026 = MN.map((_,i)=>{const dm=DM[ano]?.[i+1];return dm?.dias&&dm?.diasT&&dm.dias<dm.diasT?Math.round(proy(dm.total,dm.dias,dm.diasT)):null;});
-  const pres2026 = PRES.total;
-  const real_prev = HT[ano-1]||[];
-  // 2025 only up to current month
-  const real2025m = real_prev.map((v,i)=>i<mes?v:null);
-
-  mkC('ch-men','bar',{labels:MN,datasets:[
-    {label:`Real ${ano-1}`,data:real2025m,backgroundColor:'#b0b8d0',borderRadius:4,order:3,barPercentage:.85,categoryPercentage:.75},
-    {label:`Real ${ano}`,data:real2026,backgroundColor:'#1a56e8',borderRadius:4,order:2,barPercentage:.8,categoryPercentage:.7},
-    {label:'Proyección',data:proy2026,backgroundColor:'rgba(196,122,10,0.7)',borderRadius:4,order:2,barPercentage:.8,categoryPercentage:.7},
-    {label:`Presupuesto ${ano}`,data:pres2026,type:'line',borderColor:'#c47a0a',borderWidth:2.5,borderDash:[6,4],pointRadius:3,pointBackgroundColor:'#c47a0a',fill:false,tension:.3,order:0},
-  ]},{...defOpts,plugins:{...defOpts.plugins,tooltip:{mode:'index',intersect:false,filter:c=>c.parsed.y!==null,callbacks:{label:c=>c.parsed.y===null?null:` ${c.dataset.label}: ${fmt(c.parsed.y)} €`}}}});
-
-  // Centre cards
-  const isCl=isClosed;
-  const CTRS=[
-    {id:'sjp', nm:'SJ Pintura',    tp:'Pintura',       col:'#1a56e8',cl:'#e8eefb'},
-    {id:'sjd', nm:'SJ Deco',       tp:'Instalaciones', col:'#7c3aed',cl:'#f3e8ff'},
-    {id:'garp',nm:'Gargallo Pin.', tp:'Pintura',       col:'#4f7ef5',cl:'#eef2fe'},
-    {id:'gard',nm:'Gargallo Deco', tp:'Instalaciones', col:'#a78bfa',cl:'#ede9fe'},
-    {id:'alm', nm:'Almacén',       tp:'Central',       col:'#0d9f6e',cl:'#e6f7f2'},
-    {id:'avd', nm:'Avd. Madrid',   tp:'Mixto',         col:'#c47a0a',cl:'#fef3e2'},
-  ];
-  document.getElementById('cc-grid').innerHTML=CTRS.map(c=>{
-    const rv=d[c.id]||0,pv=PRES[c.id]?.[mes-1]||0,pr2=proy(rv,d.dias,d.diasT);
-    const fill=pv>0?Math.min(100,Math.round(rv/pv*100)):0;
-    const fc2=fill>=100?'var(--green)':fill>=80?'var(--amber)':'var(--red)';
-    const tp=c.tp==='PIN'?'Pintura':c.tp==='DECO'?'Instalaciones':c.tp||'';
-    return `<div style="padding:12px 10px;background:${c.cl};border-radius:10px;text-align:center;border-top:3px solid ${c.col}">
-      <div style="font-size:11px;font-weight:700;color:var(--tx);margin-bottom:3px">${c.nm}</div>
-      ${tp?`<div style="font-size:9px;color:var(--muted);margin-bottom:5px">${tp}</div>`:''}
-      <div style="font-size:20px;font-weight:700;font-family:var(--mono);color:var(--tx)">${fK(rv)}</div>
-      ${!isCl&&pr2?`<div style="font-size:12px;color:var(--amber);font-weight:600;margin-top:2px">→ ${fK(pr2)}</div>`:''}
-      <div style="font-size:11px;color:${fill>=100?'var(--green)':fill>=80?'var(--amber)':'var(--red)'};font-weight:600;margin-top:2px">${fill}% pres.</div>
-    </div>`;
-  }).join('');
-}
-
-
-// ═══════ MENSUAL ═══════
-
-function rMen(){
-  const ano=MA?.ano||2026;
-  document.getElementById('pa-b').textContent='Pres. anual: '+fmt(PRES.total.reduce((a,b)=>a+b,0))+' €';
-  const hoyMen=new Date();hoyMen.setHours(0,0,0,0);
-  let rows='',totalR=0,totalPr=0,totalP=0,totalY25=0;
-
-  MF.forEach((mnm,i)=>{
-    const mes=i+1,d=DM[ano]?.[m=mes];
-    const pv=PRES.total[i]||0;
-    const hy25=HT[ano-1]?.[i]||0;
-    let rv=0,pr=null,estado='';
-    if(d&&d.total){
-      rv=d.total;
-      const isCl=!d.dias||!d.diasT||d.dias>=d.diasT;
-      if(!isCl&&d.dias&&d.diasT) pr=proy(rv,d.dias,d.diasT);
-      estado=isCl?'cerrado':'curso';
-    } else {
-      estado='futuro';
-    }
-    const vs25=hy25?pct(rv||pr||0,hy25):null;
-    const pctP=pv>0?Math.round((pr||rv||0)/pv*100):0;
-    const pctBadge=estado==='futuro'?'—':pctP+'%'+(pr&&estado==='curso'?'★':'');
-    const badgeBg=estado==='futuro'?'var(--bg3)':pctP>=100?'var(--green-l)':pctP>=80?'var(--amber-l)':'var(--red-l)';
-    const badgeCl=estado==='futuro'?'var(--muted)':pctP>=100?'var(--green)':pctP>=80?'var(--amber)':'var(--red)';
-
-    // Mes name color
-    const mesColor=estado==='futuro'?'var(--faint)':estado==='curso'?'var(--amber)':rv>=pv?'var(--green)':'var(--red)';
-    const rowBg=estado==='curso'?'rgba(196,122,10,.04)':estado==='futuro'?'':'';
-    const opacity=estado==='futuro'?'opacity:.45':'';
-
-    totalR+=rv; totalPr+=pr||rv||pv; totalP+=pv; totalY25+=hy25;
-
-    rows+=`<tr style="border-bottom:1px solid var(--border);${rowBg?'background:'+rowBg+';':''}${opacity}">
-      <td class="l" style="padding:11px 18px;font-weight:700;font-size:14px;color:${mesColor}">
-        ${mnm}${estado==='curso'?` <span style="font-size:9px;background:var(--amber-l);color:var(--amber);padding:1px 6px;border-radius:6px;font-weight:600">En curso</span>`:''}
-      </td>
-      <td class="num" style="padding:11px 14px;text-align:right;color:var(--sub);font-size:13px">${pv?fmt(pv)+'&nbsp;€':'—'}</td>
-      <td class="num" style="padding:11px 14px;text-align:right;font-weight:700;color:var(--tx);font-size:13px">${rv?fmt(rv)+'&nbsp;€':'—'}</td>
-      <td class="num" style="padding:11px 14px;text-align:right;font-weight:${pr?700:400};color:${pr?'var(--amber)':'var(--faint)'};font-size:13px">${pr?'★ '+fmt(pr)+'&nbsp;€':'—'}</td>
-      <td class="num" style="padding:11px 14px;text-align:right;font-size:13px;color:${vs25==null?'var(--faint)':vs25>=0?'var(--green)':'var(--red)'};font-weight:600">${vs25!=null?pS(vs25):'—'}</td>
-      <td style="padding:11px 14px;text-align:center">
-        <span style="background:${badgeBg};color:${badgeCl};font-family:var(--mono);font-weight:700;font-size:13px;padding:4px 12px;border-radius:6px">${pctBadge}</span>
-      </td>
-    </tr>`;
-  });
-
-  // Total row
-  const totPctP=totalP>0?Math.round(totalPr/totalP*100):0;
-  const totBadgeBg=totPctP>=100?'var(--green-l)':totPctP>=80?'var(--amber-l)':'var(--red-l)';
-  const totBadgeCl=totPctP>=100?'var(--green)':totPctP>=80?'var(--amber)':'var(--red)';
-  rows+=`<tr style="background:var(--bg3);border-top:2px solid var(--border2)">
-    <td class="l" style="padding:12px 18px;font-weight:700;font-size:14px;color:var(--blue)">TOTAL ${ano}</td>
-    <td class="num" style="padding:12px 14px;text-align:right;font-weight:700;color:var(--tx);font-size:13px">${fmt(totalP)}&nbsp;€</td>
-    <td class="num" style="padding:12px 14px;text-align:right;font-weight:700;color:var(--tx);font-size:13px">${fmt(totalR)}&nbsp;€</td>
-    <td class="num" style="padding:12px 14px;text-align:right;font-weight:700;color:var(--amber);font-size:13px">★ ${fmt(totalPr)}&nbsp;€</td>
-    <td class="num" style="padding:12px 14px;text-align:right;font-size:13px;color:${pct(totalR,totalY25)>=0?'var(--green)':'var(--red)'};font-weight:700">${pS(pct(totalR,totalY25))}</td>
-    <td style="padding:12px 14px;text-align:center">
-      <span style="background:${totBadgeBg};color:${totBadgeCl};font-family:var(--mono);font-weight:700;font-size:13px;padding:4px 12px;border-radius:6px">${totPctP}%★</span>
-    </td>
-  </tr>`;
-
-  document.getElementById('tb-men').innerHTML=rows;
-  const _dD2=DM[MA.ano]?.[MA.mes];if(_dD2)_buildMenDonuts(_dD2);
-}
-
-function _buildMenDonuts(d){
-  function _dnt(cid,lid,segs){const tot=segs.reduce((s,x)=>s+Math.max(0,x.v),0)||1;if(window['_dnt_'+cid]){try{window['_dnt_'+cid].destroy();}catch(e){}}const cv=document.getElementById(cid);if(!cv)return;window['_dnt_'+cid]=new Chart(cv,{type:'doughnut',data:{labels:segs.map(s=>s.l),datasets:[{data:segs.map(s=>Math.max(0,Math.round(s.v))),backgroundColor:segs.map(s=>s.c),borderWidth:3,borderColor:'#ffffff',hoverOffset:8}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{display:false},datalabels:{display:false},tooltip:{callbacks:{label:c=>' '+c.label+': '+fmt(c.raw)+' € ('+(c.raw/tot*100).toFixed(1)+'%)'}}}}});const lg=document.getElementById(lid);if(lg)lg.innerHTML=segs.map(s=>{const p=(Math.max(0,s.v)/tot*100).toFixed(1);return '<div style="display:flex;align-items:center;gap:7px;margin-bottom:3px"><div style="width:11px;height:11px;border-radius:2px;background:'+s.c+';flex-shrink:0"></div><div><span style="font-size:12px;font-weight:700;color:#1a1d2e">'+s.l+'</span> <span style="font-size:11px;color:#4a5270">'+fmt(s.v)+' €</span> <strong style="font-size:11px;color:'+s.c+'">'+p+'%</strong></div></div>';}).join('');}
-  _dnt('ch-men-dnt','men-dnt-legend',[{l:'Profesional',v:d.prof||0,c:'#1a56e8'},{l:'PVP Pintura',v:d.pvp_pin||0,c:'#4f7ef5'},{l:'Instalaciones',v:d.pvp_ins||0,c:'#7c3aed'},{l:'Industria',v:d.ind||0,c:'#c47a0a'},{l:'Distribuidores',v:d.distrib||0,c:'#0d9f6e'}]);
-  _dnt('ch-men-pin','men-pin-legend',[{l:'SJ Pintura',v:d.sjp||0,c:'#1a56e8'},{l:'Gargallo Pin.',v:d.garp||0,c:'#4f7ef5'},{l:'Almacén',v:d.alm||0,c:'#0d9f6e'},{l:'Avd. Madrid',v:d.avd||0,c:'#c47a0a'}]);
-  _dnt('ch-men-ins','men-ins-legend',[{l:'SJ Deco',v:d.sjd||0,c:'#7c3aed'},{l:'Gargallo Deco',v:d.gard||0,c:'#a78bfa'}]);
-}
-
-
-// ═══════ CENTROS ═══════
-
-function rCen(){
-  if(!MA)return;
-  const {ano,mes}=MA,d=DM[ano]?.[mes];if(!d)return;
-  actualizarDiasMesActivo();
-  const isClosed=!d.dias||!d.diasT||d.dias>=d.diasT;
-  const QM=[[1,2,3],[4,5,6],[7,8,9],[10,11,12]];
-  const qIdx=Math.floor((mes-1)/3),qMes=QM[qIdx],QN=['Q1','Q2','Q3','Q4'];
-  const CV=[{id:'sjp',nm:'SJ Pintura',tp:'Pintura',col:'#1a56e8'},{id:'sjd',nm:'SJ Deco',tp:'Instalaciones',col:'#7c3aed'},{id:'garp',nm:'Gargallo Pin.',tp:'Pintura',col:'#4f7ef5'},{id:'gard',nm:'Gargallo Deco',tp:'Instalaciones',col:'#a78bfa'},{id:'alm',nm:'Almacén',tp:'Central',col:'#0d9f6e'},{id:'avd',nm:'Avd. Madrid',tp:'Mixto',col:'#c47a0a'}];
-  const dH=(rv,pv2)=>{const df=rv-pv2;return df>=0?'<span style="color:#0d9f6e;font-weight:700;font-size:11px">Superado en +'+fmt(df)+' €</span>':'<span style="color:#d93025;font-weight:700;font-size:11px">Le queda '+fmt(Math.abs(df))+' €</span>';};
-  document.getElementById('cen-grid').innerHTML=CV.map(c=>{
-    const rv=d[c.id]||0,pv=PRES[c.id]?.[mes-1]||0;
-    const pr=!isClosed&&d.dias&&d.diasT?proy(rv,d.dias,d.diasT):null;
-    const fill=pv>0?Math.min(100,Math.round(rv/pv*100)):0,fc=fill>=100?'#0d9f6e':fill>=80?'#c47a0a':'#d93025';
-    const ytdQ=qMes.reduce((s,m)=>s+(DM[ano]?.[m]?.[c.id]||0),0);
-    const objQ=qMes.reduce((s,m)=>s+(PRES[c.id]?.[m-1]||0),0);
-    const pctQ=objQ>0?Math.min(100,Math.round(ytdQ/objQ*100)):0,fcQ=pctQ>=100?'#0d9f6e':pctQ>=80?'#c47a0a':'#d93025';
-    return '<div style="background:#fff;border:1px solid #dde1ec;border-radius:12px;overflow:hidden"><div style="background:'+c.col+';padding:10px 16px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;font-weight:700;color:#fff">'+c.nm+'</span><span style="font-size:10px;background:rgba(255,255,255,.2);color:#fff;padding:2px 8px;border-radius:8px">'+c.tp+' · '+QN[qIdx]+'</span></div><div style="padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><div style="font-size:9px;color:#7a85a3;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">Este mes</div><div style="font-size:26px;font-weight:700;font-family:monospace;color:#1a1d2e;line-height:1;margin-bottom:4px">'+fmt(rv)+' €</div>'+(pr?'<div style="font-size:11px;color:#c47a0a;font-weight:700;margin-bottom:4px">★ Proy: '+fmt(pr)+' €</div>':'<div style="margin-bottom:4px"></div>')+'<div style="font-size:11px;color:#7a85a3;margin-bottom:3px">Obj: '+fmt(pv)+' €</div><div style="margin-bottom:6px">'+dH(rv,pv)+'</div><div style="height:4px;background:#dde1ec;border-radius:2px;margin-bottom:3px"><div style="height:100%;width:'+fill+'%;background:'+fc+';border-radius:2px"></div></div><div style="font-size:10px;color:'+fc+';font-weight:700">'+fill+'% pres.</div></div><div style="border-left:1px solid #f0f2f7;padding-left:12px"><div style="font-size:9px;color:#7a85a3;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">'+QN[qIdx]+' '+MN[qMes[0]-1]+'–'+MN[qMes[2]-1]+'</div><div style="font-size:22px;font-weight:700;font-family:monospace;color:#1a1d2e;line-height:1;margin-bottom:8px">'+fmt(ytdQ)+' €</div><div style="font-size:11px;color:#7a85a3;margin-bottom:3px">Obj: '+fmt(objQ)+' €</div><div style="margin-bottom:6px">'+dH(ytdQ,objQ)+'</div><div style="height:4px;background:#dde1ec;border-radius:2px;margin-bottom:3px"><div style="height:100%;width:'+pctQ+'%;background:'+fcQ+';border-radius:2px"></div></div><div style="font-size:10px;color:'+fcQ+';font-weight:700">'+pctQ+'% obj. '+QN[qIdx]+'</div></div></div></div>';
-  }).join('');
-}
-
-// ═══════ COMERCIALES ═══════
-// Trimestres comerciales: Q1=Ene-Mar, Q2=Abr-Jun, Q3=Jul-Sep, Q4=Oct-Dic
-// Pero meses comerciales van del 26 al 25, así que el trimestre Q1 incluye meses 1,2,3
-const TRIMESTRES = [[1,2,3],[4,5,6],[7,8,9],[10,11,12]];
-const TRIM_NMS = ['Q1 (Ene-Mar)','Q2 (Abr-Jun)','Q3 (Jul-Sep)','Q4 (Oct-Dic)'];
-
-function trimestreActual(mes) {
-  return TRIMESTRES.findIndex(t => t.includes(mes));
-}
-
-function buildComercialCard(vId, vNm, vColor, presArr, hist25, chartMensId, chartRollId, qDetailId, qLabelId, d, ano, mes) {
-  const isClosed = !d.dias || !d.diasT || d.dias >= d.diasT;
-  const pr2 = proy(d[vId]||0, d.dias, d.diasT);
-  const totV = (d.cavero||0)+(d.ursula||0)||1;
-
-  // Acumulado YTD (solo meses cerrados)
-  const hoyNow = new Date(); hoyNow.setHours(0,0,0,0);
-  let ytd=0, ytdP=0;
-  for(let m=1; m<=mes; m++){
-    const finMes=new Date(ano,m-1,25); finMes.setHours(0,0,0,0);
-    if(hoyNow > finMes){
-      ytd += DM[ano]?.[m]?.[vId]||0;
-      ytdP += presArr[m-1]||0;
-    }
-  }
-  const objAnual = presArr.reduce((a,b)=>a+b,0);
-  const pOA = pct(ytd, objAnual);
-  const fillA = objAnual>0?Math.min(100,Math.round(ytd/objAnual*100)):0;
-  const fcA = fillA>=100?'pb-g':fillA>=80?'pb-a':'pb-r';
-
-  // Trimestre actual
-  const qIdx = trimestreActual(mes);
-  const qMeses = TRIMESTRES[qIdx];
-  let qReal=0, qPres=0;
-  qMeses.forEach(m => {
-    qReal += DM[ano]?.[m]?.[vId]||0;
-    qPres += presArr[m-1]||0;
-  });
-  const qPct = pct(qReal, qPres);
-  const qLabel = document.getElementById(qLabelId);
-  if(qLabel) qLabel.textContent = TRIM_NMS[qIdx]+' · Real: '+fmt(qReal)+' € / Obj: '+fmt(qPres)+' € ('+pS(qPct)+')';
-
-  // Tabla resumen (actualizar fila en tb-com)
-  const rv = d[vId]||0, presM = presArr[mes-1]||0;
-  const devM = pct(rv, presM);
-  return `<tr>
-    <td class="l" style="color:${vColor};font-weight:700">${vNm}</td>
-    <td class="num hi">${fmt(rv)} €</td>
-    <td class="num ${pr2&&!isClosed?'nt':'dim'}">${pr2&&!isClosed?'★ '+fmt(pr2)+' €':'—'}</td>
-    <td class="num">${fmt(presM)} €</td>
-    <td class="num ${cls(devM)}">${pS(devM)}</td>
-    <td class="num">${fmt(ytd)} €</td>
-    <td class="num neu">${fmt(objAnual)} €</td>
-    <td class="num ${cls(pOA)}">${pS(pOA)}</td>
-    <td style="padding-left:16px"><div class="pbw"><div class="pb" style="min-width:50px"><div class="pbf ${fcA}" style="width:${fillA}%"></div></div><span class="pbp" style="color:${fillA>=100?'var(--green)':fillA>=80?'var(--amber)':'var(--red)'}">${fillA}%</span></div></td>
-  </tr>`;
-}
-
-function buildComercialCharts(vId, vNm, vColor, presArr, hist25, chartMensId, chartRollId, qDetailId, ano, mes) {
-  // ── Gráfico mensual: barras 2026 real + barras 2025 + línea presupuesto ──
-  const real2026 = MN.map((_,i) => DM[ano]?.[i+1]?.[vId]||null);
-  const hist25arr = hist25 || [];
-
-  // Añadir líneas de trimestre (fondo coloreado por trimestre)
-  const trimColors = ['rgba(26,86,232,0.06)','rgba(13,159,110,0.06)','rgba(196,122,10,0.06)','rgba(139,107,245,0.06)'];
-  const annotations = {};
-  TRIMESTRES.forEach((meses,qi) => {
-    // Calcular total trimestre 2026 y presupuesto
-    const tReal = meses.reduce((s,m)=>s+(DM[ano]?.[m]?.[vId]||0),0);
-    const tPres = meses.reduce((s,m)=>s+(presArr[m-1]||0),0);
-    const tPct = pct(tReal, tPres);
-    const el = document.getElementById(qDetailId);
-    if(el) {
-      const isCurrentQ = meses.includes(mes);
-      el.innerHTML = '';
-      TRIMESTRES.forEach((tm,ti)=>{
-        const tr2 = tm.reduce((s,m)=>s+(DM[ano]?.[m]?.[vId]||0),0);
-        const tp = tm.reduce((s,m)=>s+(presArr[m-1]||0),0);
-        const tpct = pct(tr2,tp);
-        const isCurr = tm.includes(mes);
-        el.innerHTML += `<div style="background:${isCurr?'var(--amber-l)':'var(--bg3)'};border:1px solid ${isCurr?'#f5c47a':'var(--border)'};border-radius:8px;padding:8px 10px">
-          <div style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:4px">${TRIM_NMS[ti]}${isCurr?' ★':''}</div>
-          <div style="font-family:var(--mono);font-size:13px;font-weight:700;color:${tpct==null?'var(--muted)':tpct>=0?'var(--green)':'var(--red)'}">${tr2>0?fmt(tr2)+' €':'—'}</div>
-          <div style="font-size:10px;color:var(--muted)">Obj: ${fmt(tp)} €</div>
-          <div style="font-size:11px;font-weight:600;color:${tpct==null?'var(--faint)':tpct>=0?'var(--green)':'var(--red)'}">${pS(tpct)}</div>
-        </div>`;
+        if(_d[p].industria){
+          ls[p].industria = ls[p].industria || {};
+          Object.entries(_d[p].industria).forEach(function(e){ var k=e[0],v=e[1];
+            if(preferRemote) ls[p].industria[k]=v;
+            else if(ls[p].industria[k]===null || ls[p].industria[k]===undefined) ls[p].industria[k]=v;
+          });
+        }
+        if(_d[p].distribuidores){
+          ls[p].distribuidores = ls[p].distribuidores || {};
+          Object.entries(_d[p].distribuidores).forEach(function(e){ var k=e[0],v=e[1];
+            if(preferRemote) ls[p].distribuidores[k]=v;
+            else if(ls[p].distribuidores[k]===null || ls[p].distribuidores[k]===undefined) ls[p].distribuidores[k]=v;
+          });
+        }
+        if(_d[p].bonos){
+          ls[p].bonos = ls[p].bonos || {};
+          Object.entries(_d[p].bonos).forEach(function(e){
+            var k=e[0], obj=e[1]||{};
+            ls[p].bonos[k] = ls[p].bonos[k] || {};
+            Object.entries(obj).forEach(function(be){ var bk=be[0],bv=be[1];
+              if(preferRemote) ls[p].bonos[k][bk]=bv;
+              else if(ls[p].bonos[k][bk]===null || ls[p].bonos[k][bk]===undefined) ls[p].bonos[k][bk]=bv;
+            });
+          });
+        }
       });
-    }
-  });
+      if(_d.lastLoadDate && preferRemote) ls.lastLoadDate=_d.lastLoadDate;
+      else if(_d.lastLoadDate && !ls.lastLoadDate) ls.lastLoadDate=_d.lastLoadDate;
+      ls.lastRunTs = _d.lastRunTs || new Date().toISOString();
+      localStorage.setItem('hipopotamo_v2', JSON.stringify(ls));
+    } catch(e) { console.warn('Inyeccion datos:', e); }
+  })();
+const MONTHS_ES    = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const MONTHS_SHORT = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const LS_KEY = 'hipopotamo_v2';
 
-  mkC(chartMensId,'bar',{labels:MN,datasets:[
-    {label:'Real 2026',data:real2026,backgroundColor:vColor,borderRadius:4,order:1},
-    {label:'Real 2025',data:hist25arr,backgroundColor:vColor+'33',borderRadius:4,order:2},
-    {label:'Pres. 2026',data:presArr,type:'line',borderColor:'#c47a0a',borderWidth:2,borderDash:[5,4],pointRadius:3,pointBackgroundColor:'#c47a0a',fill:false,tension:.3,order:0},
-  ]},{
-    scales:{x:{grid:{display:false}},y:{grid:{color:'#eef0f6'},ticks:{callback:v=>fK(v)}}},
-    plugins:{
-      legend:{position:'top',labels:{usePointStyle:true,padding:12}},
-      tooltip:{mode:'index',intersect:false,callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.raw)} €`}},
-      datalabels:{display:false}
-    }
-  });
-
-  // ── Rolling 12m desde datos históricos del comercial ──
-  const HIST_COM = {
-    cavero: {
-      2017:[788593/12,788593/12,788593/12,788593/12,788593/12,788593/12,788593/12,788593/12,788593/12,788593/12,788593/12,788593/12],
-      2018:[48201,57164,60803,57215,78812,88774,96956,76269,86584,107490,81882,43498],
-      2019:[60911,72616,72992,75635,74642,108027,104262,81121,83332,66118,63885,52818],
-      2020:[48158,71497,46416,19050,56489,86473,88867,67171,58457,65050,59589,44605],
-      2021:[34168,58385,57324,54945,68581,95045,69261,54802,58291,56064,76675,58462],
-      2022:[63326,77947,59922,67216,97262,84391,102214,56730,74957,85454,84247,51228],
+const HC = {
+  cavero: {
+    budget2026: [63061,77248,63061,77248,63061,77248,77248,63061,77248,63061,77248,63061],
+    /* monthly = solo grupo Profesionales (mismo criterio que KPI y extractores; nunca total con Ind+Dist). */
+    monthly: {
       2023:[58083,66396,82899,69020,80160,75401,89730,62039,71003,78199,82111,79914],
       2024:[67771,71061,80457,98811,85229,80531,72108,52790,89149,68877,69733,71648],
       2025:[40118,65146,68093,64989,69148,93969,90198,68654,97134,59863,74993,93577],
+      /* 2026 Ene–Feb: cifras previas incluían Ind+Dist; corregido restando desglose típico del periodo. */
+      2026:[38044,62166,83410,null,null,null,null,null,null,null,null,null]
     },
-    ursula: {
-      2021:[7778,12368,6905,8380,6760,11040,7833,14044,8194,8912,14617,6233],
-      2022:[6473,9504,9846,8841,11055,15269,10481,7802,17474,9569,11922,10158],
+    bonos: {
+      '2025-01':{altas:48917,consumo:32059},
+      '2025-02':{altas:24203,consumo:41955},
+      '2025-03':{altas:27848,consumo:48550},
+      '2025-04':{altas:22411,consumo:40552},
+      '2025-05':{altas:41300,consumo:49666},
+      '2025-06':{altas:38652,consumo:64064},
+      '2025-07':{altas:52402,consumo:57774},
+      '2025-08':{altas:36000,consumo:43034},
+      '2025-09':{altas:66600,consumo:64171},
+      '2025-10':{altas:83450,consumo:52269},
+      '2025-11':{altas:81370,consumo:52653},
+      '2025-12':{altas:null,consumo:null}
+    }
+  },
+  ursula: {
+    budget2026: [31500,26000,31500,26000,31500,26000,26000,31500,26000,31500,26000,31500],
+    monthly: {
       2023:[6452,15077,11375,12963,15851,17379,20528,12118,15683,12176,22745,14595],
       2024:[15658,17009,17277,16423,17628,22996,39689,12845,25957,19027,22206,22696],
       2025:[17499,15793,23216,27718,20708,24316,36622,20820,36654,25591,27938,20828],
-    }
-  };
-
-  const hcData = HIST_COM[vId] || {};
-  const allYrs = Object.keys(hcData).map(Number).sort((a,b)=>a-b);
-  // Add 2026 data
-  const data2026 = MN.map((_,i)=>DM[2026]?.[i+1]?.[vId]||null);
-  if(data2026.some(v=>v)) hcData[2026] = data2026;
-
-  // Build rolling 12m
-  const allYrs2 = Object.keys(hcData).map(Number).sort((a,b)=>a-b);
-  const flatL=[], flatD=[];
-  allYrs2.forEach(y => {
-    const arr = hcData[y] || [];
-    arr.forEach((v,mi)=>{
-      flatL.push(MN[mi]+' '+String(y).slice(2));
-      // Rolling 12
-      let sum=0,cnt=0,ok=true;
-      for(let b=0;b<12;b++){
-        const ti=allYrs2.indexOf(y)*12+mi-b;
-        if(ti<0){ok=false;break;}
-        const yr=allYrs2[Math.floor(ti/12)];
-        const mo=ti%12;
-        const arr2=hcData[yr]||[];
-        if(arr2[mo]!=null){sum+=arr2[mo];cnt++;}
-      }
-      flatD.push(ok&&cnt===12?Math.round(sum):null);
-    });
-  });
-
-  mkC(chartRollId,'line',{labels:flatL,datasets:[
-    {label:'Rolling 12m',data:flatD,borderColor:vColor,borderWidth:2.5,pointRadius:0,fill:{target:'origin',above:vColor+'12'},tension:.4}
-  ]},{
-    scales:{x:{grid:{display:false},ticks:{maxTicksLimit:14,font:{size:10}}},y:{grid:{color:'#eef0f6'},ticks:{callback:v=>fK(v)}}},
-    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${fmt(c.raw)} €`}},datalabels:{display:false}}
-  });
-}
-
-
-function rCom(){
-  if(!MA)return;
-  const{ano,mes}=MA,d=DM[ano]?.[mes];if(!d)return;
-  actualizarDiasMesActivo();
-  const isClosed=!d.dias||!d.diasT||d.dias>=d.diasT;
-
-  const COM=[
-    {id:'cavero',nm:'Antonio Cavero',col:'#1a56e8',presKey:'cavero'},
-    {id:'ursula',nm:'Úrsula Moreno', col:'#7c3aed',presKey:'ursula'},
-  ];
-
-  // Q1 months
-  const qMeses=[[1,2,3],[4,5,6],[7,8,9],[10,11,12]];
-  const qIdx=Math.floor((mes-1)/3);
-  const qMes=qMeses[qIdx];
-
-  // Build table
-  let tableRows=COM.map(c=>{
-    const rv=d[c.id]||0,obj=PRES[c.presKey]?.[mes-1]||0;
-    const pr=proy(rv,d.dias,d.diasT);
-    const ytdQ=qMes.reduce((s,m)=>s+(DM[ano]?.[m]?.[c.id]||0),0);
-    const objQ=qMes.reduce((s,m)=>s+(PRES[c.presKey]?.[m-1]||0),0);
-    const pctQ=objQ>0?Math.round(ytdQ/objQ*100):0;
-    const badgeBg=pctQ>=100?'var(--green-l)':pctQ>=80?'var(--amber-l)':'var(--red-l)';
-    const badgeCl=pctQ>=100?'var(--green)':pctQ>=80?'var(--amber)':'var(--red)';
-    const diff=rv-obj;
-    const diffHtml=diff>=0
-      ?`<span style="color:var(--green);font-weight:700">Superado en +${fmt(diff)} €</span>`
-      :`<span style="color:var(--red);font-weight:700">Le queda ${fmt(Math.abs(diff))} €</span>`;
-    return `<tr style="border-bottom:1px solid var(--border)">
-      <td class="l" style="padding:12px 18px;font-weight:700;font-size:14px;color:${c.col}">${c.nm}</td>
-      <td class="num" style="padding:12px 14px;text-align:right;font-weight:700;font-family:var(--mono);font-size:13px">${fmt(rv)} €</td>
-      <td class="num" style="padding:12px 14px;text-align:right;font-family:var(--mono);color:var(--amber);font-weight:700;font-size:13px">★ ${fmt(pr)} €</td>
-      <td class="num" style="padding:12px 14px;text-align:right;font-family:var(--mono);color:var(--sub);font-size:13px">${fmt(obj)} €</td>
-      <td style="padding:12px 14px;text-align:right;font-size:12px">${diffHtml}</td>
-      <td class="num" style="padding:12px 14px;text-align:right;font-weight:700;font-family:var(--mono);font-size:13px">${fmt(ytdQ)} €</td>
-      <td class="num" style="padding:12px 14px;text-align:right;font-family:var(--mono);color:var(--sub);font-size:13px">${fmt(objQ)} €</td>
-      <td style="padding:12px 14px;text-align:center">
-        <span style="background:${badgeBg};color:${badgeCl};font-family:var(--mono);font-weight:700;font-size:13px;padding:3px 10px;border-radius:6px">${pctQ}%</span>
-      </td>
-    </tr>`;
-  }).join('');
-
-  document.getElementById('com-table').innerHTML=tableRows;
-
-  // Monthly charts per comercial
-  COM.forEach(c=>{
-    const realData=MN.map((_,i)=>DM[ano]?.[i+1]?.[c.id]||null);
-    const objData=PRES[c.presKey]||[];
-    mkC('ch-com-'+c.id,'bar',{labels:MN,datasets:[
-      {label:'Real',data:realData,backgroundColor:c.col,borderRadius:5},
-      {label:'Objetivo',data:objData,type:'line',borderColor:'#c47a0a',borderWidth:2,borderDash:[5,4],pointRadius:3,pointBackgroundColor:'#c47a0a',fill:false},
-    ]},{
-      ...defOpts,
-      plugins:{...defOpts.plugins,legend:{display:false},
-        tooltip:{mode:'index',intersect:false,callbacks:{
-          title:()=>'',
-          label:c=>c.parsed.y===null?null:` ${Math.round(c.parsed.y).toLocaleString('es-ES')} €`
-        }}
-      }
-    });
-  });
-
-  // Rolling 12m — last 12 CLOSED months
-  _buildComRolling(ano, mes);
-}
-
-function _buildComRolling(ano,mes){
-  const lastClosed=mes>1?mes-1:12;
-  const MNs=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-  const COM2=[
-    {id:'cavero',col:'#1a56e8',nm:'Antonio Cavero',hist23:[58083,66396,82899,69020,80160,75401,89730,62039,71003,78199,82111,79914],hist24:[67771,71061,80457,98811,85229,80531,72108,52790,89149,68877,69733,71648],hist25:[40118,65146,68093,64989,69148,93969,90198,68654,97134,59863,74993,93577],roll26:[908825,920927]},
-    {id:'ursula',col:'#7c3aed',nm:'Úrsula Moreno',hist23:[6452,15077,11375,12963,15851,17379,20528,12118,15683,12176,22745,14595],hist24:[15658,17009,17277,16423,17628,22996,39689,12845,25957,19027,22206,22696],hist25:[17499,15793,23216,27718,20708,24316,36622,20820,36654,25591,27938,20828],roll26:[]},
-  ];
-  COM2.forEach(c=>{
-    const sAll=[],lAll=[];
-    [{yr:2023,d:c.hist23},{yr:2024,d:c.hist24},{yr:2025,d:c.hist25}].forEach(({yr,d})=>{d.forEach((v,i)=>{lAll.push(MNs[i]+' '+String(yr).slice(2));sAll.push(v);});});
-    for(let m=1;m<=lastClosed;m++){lAll.push(MNs[m-1]+' 26');sAll.push(DM[ano]?.[m]?.[c.id]||0);}
-    const rD=[],rL=[];
-    if(c.roll26&&c.roll26.length>0){
-      for(let i=11;i<sAll.length-lastClosed;i++){let s=0;for(let b=0;b<12;b++)s+=sAll[i-b]||0;rD.push(Math.round(s/1000));rL.push(lAll[i]);}
-      c.roll26.forEach((v,i)=>{rD.push(Math.round(v/1000));rL.push(MNs[i]+' 26');});
-    } else {
-      for(let i=11;i<sAll.length;i++){let s=0;for(let b=0;b<12;b++)s+=sAll[i-b]||0;rD.push(Math.round(s/1000));rL.push(lAll[i]);}
-    }
-    if(rD.length<2){rD.push(0);rL.push('?');}
-    const N=Math.min(36,rD.length),cD=rD.slice(-N),cL=rL.slice(-N);
-    // KPI: compare rolling 12m totals (not monthly raw values)
-    const _lastK=rD[rD.length-1]||0;
-    const _prevK=rD.length>=13?rD[rD.length-13]:rD[0];
-    const _lastL=rL[rL.length-1]||'';
-    const _prevL=rL.length>=13?rL[rL.length-13]:rL[0]||'';
-    const dK=_lastK-(_prevK||0);
-    const dEl=document.getElementById('roll-diff-'+c.id);
-    if(dEl)dEl.innerHTML='<div style="font-size:10px;color:#7a85a3;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">'+_lastL+' vs '+_prevL+' (rolling 12m)</div><div style="font-size:20px;font-weight:700;font-family:monospace;color:'+(dK>=0?'#0d9f6e':'#d93025')+'">'+( dK>=0?'+':'')+dK+'K€</div>';
-    if(window['_rc_'+c.id]){try{window['_rc_'+c.id].destroy();}catch(e){}}
-    const cv=document.getElementById('ch-roll-'+c.id);if(!cv)return;
-    const mn=Math.min(...cD),mx=Math.max(...cD),pad=Math.round((mx-mn)*.25)||10;
-    const ptC=cD.map((v,i)=>i===0?c.col:v>=cD[i-1]?'#0d9f6e':'#d93025');
-    window['_rc_'+c.id]=new Chart(cv,{type:'line',data:{labels:cL,datasets:[{data:cD,borderColor:'transparent',backgroundColor:c.col+'18',fill:true,tension:.4,pointRadius:0},{label:c.nm,data:cD,borderColor:c.col,borderWidth:2.5,pointRadius:cD.map((_,i)=>i===cD.length-1?6:2),pointBackgroundColor:ptC,pointBorderColor:'#ffffff',pointBorderWidth:2,fill:false,tension:.4}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},datalabels:{display:false},tooltip:{filter:it=>it.datasetIndex===1,callbacks:{title:t=>t[0]?.label||'',label:ct=>` ${ct.parsed.y}K€`}}},scales:{x:{grid:{display:false},ticks:{font:{size:10},color:'#7a85a3',maxTicksLimit:12,maxRotation:30}},y:{min:mn-pad,max:mx+pad,ticks:{callback:v=>v+'K',font:{size:10},color:'#7a85a3',maxTicksLimit:5},grid:{color:'rgba(0,0,0,.05)'}}}}});
-  });
-}
-
-
-// ═══════ HISTÓRICO ═══════
-
-// Historic year detail state
-let _histOpen=null;
-
-function rHist(){
-  const yrs=Object.keys(HT).map(Number).sort((a,b)=>a-b);
-
-  // Build annual totals table with expandable rows
-  _buildHistTable(yrs);
-
-  // Year selector chart
-  _buildHistEvoChart(yrs);
-
-  // Rolling total
-  _buildHistRolling();
-
-  // Rolling per centre
-  ['sjp','sjd','garp','gard','alm','avd'].forEach(id=>_buildCentreRolling(id));
-}
-
-function _buildHistTable(yrs){
-  const tbody=document.getElementById('tb-hist-tot');
-  if(!tbody)return;
-  let html='';
-  const MN_s=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-
-  yrs.forEach((y,i)=>{
-    const v=HT[y]||[];
-    const tot=v.reduce((a,b)=>a+(b||0),0);
-    const prev=i>0?HT[yrs[i-1]]?.reduce((a,b)=>a+(b||0),0):null;
-    const g=prev?pct(tot,prev):null;
-    const med=Math.round(tot/v.filter(x=>x>0).length)||0;
-    const mx=Math.max(...v.filter(x=>x>0));
-    const mn2=Math.min(...v.filter(x=>x>0));
-    const mxM=MN_s[v.indexOf(mx)];
-    const mnM=MN_s[v.indexOf(mn2)];
-    const isOpen=_histOpen===y;
-    const isCurso=y===2026;
-    const yCol=isCurso?'var(--amber)':'var(--tx)';
-    const rowBg=isCurso?'rgba(196,122,10,.04)':'';
-
-    html+=`<tr onclick="_toggleHistYear(${y})" style="border-bottom:${isOpen?'none':'1px solid var(--border)'};cursor:pointer;background:${rowBg}${isOpen?';background:var(--blue-l)':''}" onmouseenter="this.style.background='var(--bg3)'" onmouseleave="this.style.background='${isOpen?'var(--blue-l)':rowBg}'">
-      <td style="padding:10px 14px;text-align:center;font-size:12px;color:var(--muted);width:30px">${isOpen?'▼':'▶'}</td>
-      <td style="padding:10px 12px;font-weight:700;font-size:14px;color:${yCol}">
-        ${y}${isCurso?` <span style="font-size:9px;background:var(--amber-l);color:var(--amber);padding:1px 6px;border-radius:6px;font-weight:600">En curso</span>`:''}
-      </td>
-      <td class="num hi" style="padding:10px 12px;text-align:right;font-size:13px">${fmt(tot)} €</td>
-      <td class="num" style="padding:10px 12px;text-align:right;font-size:13px;color:${g==null?'var(--muted)':g>=0?'var(--green)':'var(--red)'};font-weight:600">${g!=null?pS(g):'—'}</td>
-      <td class="num" style="padding:10px 12px;text-align:right;font-size:13px">${fmt(med)} €</td>
-      <td class="num pos" style="padding:10px 12px;text-align:right;font-size:12px">${mxM} · ${fK(mx)}</td>
-      <td class="num neg" style="padding:10px 12px;text-align:right;font-size:12px">${mnM} · ${fK(mn2)}</td>
-    </tr>`;
-
-    if(isOpen){
-      const maxV=Math.max(...v.filter(x=>x>0));
-      const cells=MN_s.map((m,mi)=>{
-        const val=v[mi];
-        const pct2=val?Math.round(val/maxV*100):0;
-        const barCol=val&&val===maxV?'var(--green)':val&&val===Math.min(...v.filter(x=>x>0))?'var(--red)':'var(--blue)';
-        return `<td style="text-align:center;padding:8px 4px">
-          <div style="font-size:10px;color:var(--muted);font-weight:600;margin-bottom:4px">${m}</div>
-          <div style="height:40px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:3px">
-            <div style="width:20px;background:${val?barCol:'var(--border)'};border-radius:3px 3px 0 0;height:${val?pct2:3}%;min-height:3px;opacity:${val?1:.3}"></div>
-          </div>
-          <div style="font-family:var(--mono);font-weight:700;color:${val?barCol:'var(--faint)'};font-size:11px">${val?fK(val):'—'}</div>
-        </td>`;
-      }).join('');
-      html+=`<tr style="background:var(--bg3);border-bottom:2px solid var(--border2)">
-        <td colspan="2" style="padding:10px 14px;font-size:11px;color:var(--sub);font-weight:600;vertical-align:top">Detalle mensual ${y}</td>
-        <td colspan="5" style="padding:6px 8px"><table style="width:100%;border-collapse:collapse"><tr>${cells}</tr></table></td>
-      </tr>`;
-    }
-  });
-  tbody.innerHTML=html;
-}
-
-function _toggleHistYear(y){
-  _histOpen = _histOpen===y ? null : y;
-  const yrs=Object.keys(HT).map(Number).sort((a,b)=>a-b);
-  _buildHistTable(yrs);
-}
-
-function _buildHistEvoChart(yrs){
-  if(!window._histYrActive) window._histYrActive=new Set([2024,2025,2026]);
-  const yc={2021:'#b0b8d0',2022:'#7a85a3',2023:'#4a5270',2024:'#1a56e8',2025:'#0d9f6e',2026:'#d93025'};
-
-  // Build buttons
-  const btnEl=document.getElementById('hist-yr-btns');
-  if(btnEl){
-    btnEl.innerHTML=[2021,2022,2023,2024,2025,2026].map(y=>{
-      const on=window._histYrActive.has(y);
-      const col=yc[y];
-      return `<button onclick="_toggleHistYr(${y})" id="hbtn-${y}" style="padding:4px 12px;border-radius:12px;border:${on?'1.5px':'1px'} solid ${on?col:'var(--border2)'};background:${on?col+'22':'transparent'};color:${on?col:'var(--muted)'};font-size:11px;font-weight:600;cursor:pointer">${y}</button>`;
-    }).join('');
-  }
-
-  const _ht26=MN.map((_,i)=>{const m=i+1,dm=DM[2026]?.[m];if(!dm)return null;const isCl=!dm.dias||!dm.diasT||dm.dias>=dm.diasT;return Math.round((isCl?dm.total:(proy(dm.total,dm.dias,dm.diasT)||dm.total))/1000);});
-  const datasets=[...window._histYrActive].sort().map(y=>({
-    label:String(y),data:y===2026?_ht26:(HT[y]||[]).map(v=>v?Math.round(v/1000):null),
-    borderColor:yc[y],borderWidth:y===2026?3:1.8,
-    pointRadius:y===2026?4:2,pointBackgroundColor:yc[y],
-    fill:false,tension:.3
-  }));
-
-  mkC('ch-hist-evo','line',{labels:MN,datasets},{
-    ...defOpts,
-    plugins:{...defOpts.plugins,
-      legend:{display:false},
-      tooltip:{mode:'index',intersect:false,callbacks:{
-        title:()=>'',
-        label:c=>c.parsed.y===null?null:` ${c.dataset.label}: ${fmt(c.parsed.y*1000)} €`
-      }}
+      2026:[16856,20750,32518,null,null,null,null,null,null,null,null,null]
     },
-    scales:{
-      x:{grid:{display:false},ticks:{font:{size:12},color:'var(--muted)'}},
-      y:{ticks:{callback:v=>v+'K',font:{size:12},color:'var(--muted)'},grid:{color:'rgba(0,0,0,.05)'}}
-    }
-  });
-}
-
-function _toggleHistYr(y){
-  if(!window._histYrActive) window._histYrActive=new Set([2024,2025,2026]);
-  if(window._histYrActive.has(y)) window._histYrActive.delete(y);
-  else window._histYrActive.add(y);
-  const yrs=Object.keys(HT).map(Number).sort((a,b)=>a-b);
-  _buildHistEvoChart(yrs);
-}
-
-function _buildHistRolling(){
-  // Use HT data to build rolling 12m
-  const allYrs=[2017,2018,2019,2020,2021,2022,2023,2024,2025];
-  const series=[],labels=[];
-  allYrs.forEach(y=>MN.forEach((_,mi)=>{
-    labels.push(MN[mi]+' '+String(y).slice(2));
-    series.push(HT[y]?.[mi]||0);
-  }));
-  // Add 2026 closed months
-  if(MA){
-    const lastClosed=MA.mes>1?MA.mes-1:0;
-    for(let m=1;m<=lastClosed;m++){
-      labels.push(MN[m-1]+' 26');
-      series.push((HT[2026]?.[m-1])||(DM[2026]?.[m]?.total/1000||0));
+    bonos: {
+      '2025-01':{altas:8000, consumo:9724},
+      '2025-02':{altas:13200,consumo:7174},
+      '2025-03':{altas:9300, consumo:16220},
+      '2025-04':{altas:5635, consumo:12524},
+      '2025-05':{altas:10583,consumo:8852},
+      '2025-06':{altas:9000, consumo:11717},
+      '2025-07':{altas:10500,consumo:11745},
+      '2025-08':{altas:5000, consumo:10686},
+      '2025-09':{altas:18560,consumo:16426},
+      '2025-10':{altas:10242,consumo:14382},
+      '2025-11':{altas:23848,consumo:15795},
+      '2025-12':{altas:null,consumo:null}
     }
   }
-
-  const rollData=[],rollLabels=[];
-  for(let i=11;i<series.length;i++){
-    let sum=0;for(let b=0;b<12;b++) sum+=series[i-b]||0;
-    rollData.push(Math.round(sum));
-    rollLabels.push(labels[i]);
-  }
-
-  const mn=Math.min(...rollData),mx=Math.max(...rollData);
-  const pad=Math.round((mx-mn)*.2)||50000;
-
-  mkC('ch-hist-roll','line',{labels:rollLabels,datasets:[
-    {data:rollData,borderColor:'transparent',backgroundColor:'rgba(26,86,232,.07)',fill:true,tension:.4,pointRadius:0},
-    {label:'Rolling 12m',data:rollData,borderColor:'#1a56e8',borderWidth:2.5,pointRadius:2,pointBackgroundColor:'#1a56e8',fill:false,tension:.4}
-  ]},{
-    responsive:true,maintainAspectRatio:false,
-    interaction:{mode:'index',intersect:false},
-    plugins:{legend:{display:false},tooltip:{
-      filter:item=>item.datasetIndex===1,
-      callbacks:{title:t=>t[0]?.label||'',label:c=>` ${fmt(c.parsed.y)} €`}
-    }},
-    scales:{
-      x:{grid:{display:false},ticks:{font:{size:10},color:'var(--muted)',maxTicksLimit:14,maxRotation:30}},
-      y:{min:mn-pad,max:mx+pad,ticks:{callback:v=>fK(v),font:{size:10},color:'var(--muted)',maxTicksLimit:5},grid:{color:'rgba(0,0,0,.04)'}}
-    }
-  });
-}
-
-function _buildCentreRolling(centreId){
-  // Use HC data
-  const hcKeys=Object.keys(HC).sort((a,b)=>{
-    const[ay,am]=a.split('-').map(Number);const[by,bm]=b.split('-').map(Number);
-    return ay!==by?ay-by:am-bm;
-  });
-  const IX={sjp:0,sjd:1,avd:2,alm:3,garp:6,gard:7};
-  const ix=IX[centreId];
-  if(ix===undefined)return;
-
-  const series=hcKeys.map(k=>(HC[k]?.[ix]||0)/1000);
-  const labels=hcKeys.map(k=>{const[y,m]=k.split('-');return MN[parseInt(m)-1]+' '+String(y).slice(2);});
-
-  // Exclude current open month
-  const closedN=MA?((MA.mes-1)+((MA.ano-2019)*12)):series.length;
-  const sSeries=series.slice(0,closedN);
-  const sLabels=labels.slice(0,closedN);
-
-  const rollData=[],rollLabels=[];
-  for(let i=11;i<sSeries.length;i++){
-    let sum=0;for(let b=0;b<12;b++) sum+=sSeries[i-b]||0;
-    rollData.push(Math.round(sum));
-    rollLabels.push(sLabels[i]);
-  }
-  if(!rollData.length)return;
-
-  const mn=Math.min(...rollData),mx=Math.max(...rollData);
-  const pad=Math.round((mx-mn)*.35)||5;
-  const col={sjp:'#1a56e8',sjd:'#7c3aed',garp:'#4f7ef5',gard:'#a78bfa',alm:'#0d9f6e',avd:'#c47a0a'}[centreId];
-
-  mkC('ch-roll-'+centreId,'line',{labels:rollLabels,datasets:[
-    {data:rollData,borderColor:'transparent',backgroundColor:col+'15',fill:true,tension:.4,pointRadius:0},
-    {label:centreId,data:rollData,borderColor:col,borderWidth:2,pointRadius:2,pointBackgroundColor:col,fill:false,tension:.4}
-  ]},{
-    responsive:true,maintainAspectRatio:false,
-    interaction:{mode:'index',intersect:false},
-    plugins:{legend:{display:false},tooltip:{
-      filter:item=>item.datasetIndex===1,
-      callbacks:{title:t=>t[0]?.label||'',label:c=>` ${c.parsed.y}K`}
-    }},
-    scales:{
-      x:{grid:{display:false},ticks:{font:{size:9},color:'var(--muted)',maxTicksLimit:8,maxRotation:30}},
-      y:{min:mn-pad,max:mx+pad,ticks:{callback:v=>v+'K',font:{size:9},color:'var(--muted)',maxTicksLimit:4},grid:{color:'rgba(0,0,0,.04)'}}
-    }
-  });
-}
-
-
-// ═══════ PRESUPUESTO ═══════
-function rPres(){
-  const keys=[['total','Total emp.'],['sjp','SJ Pintura'],['sjd','SJ Deco'],['garp','Gargallo PIN'],['gard','Gargallo DECO'],['alm','Almacén'],['avd','Avd.Madrid'],['cavero','Cavero'],['ursula','Úrsula']];
-  const t=document.getElementById('t-pres');
-  t.innerHTML=`<thead><tr><th class="l">Mes</th>${keys.map(([,n])=>`<th>${n}</th>`).join('')}</tr></thead>`;
-  let tb='';
-  MF.forEach((m,i)=>{
-    tb+=`<tr><td class="l" style="font-weight:600">${m}</td>`;
-    keys.forEach(([k])=>{tb+=`<td><input class="pi" type="number" value="${Math.round(PRES[k][i])}" data-k="${k}" data-i="${i}" onchange="updP(this)"></td>`;});
-    tb+='</tr>';
-  });
-  tb+=`<tr class="tot"><td class="l">TOTAL</td>`;
-  keys.forEach(([k])=>{tb+=`<td class="num" id="pt-${k}">${fmt(PRES[k].reduce((a,b)=>a+b,0))} €</td>`;});
-  tb+='</tr>';
-  const tb2=document.createElement('tbody');tb2.innerHTML=tb;t.appendChild(tb2);
-}
-function updP(el){const k=el.dataset.k,i=parseInt(el.dataset.i),v=parseFloat(el.value)||0;PRES[k][i]=v;const e=document.getElementById('pt-'+k);if(e)e.textContent=fmt(PRES[k].reduce((a,b)=>a+b,0))+' €';}
-function guardarPres(){_savePresToStorage();rResumen();alert('✓ Presupuesto guardado.');}
-
-/* AUTO_DATA_INJECT */
-// Datos inyectados automaticamente 28/04/2026 20:10
-(function autoLoad(){
-  const d = {"total": 20500.36, "sjp": 5067.06, "sjd": 0.01, "garp": 1085.92, "gard": 2792.56, "alm": 8195.65, "avd": 3359.17, "cavero": 12020.33, "ursula": 1583.9, "prof": 13575.76, "pvp_pin": 1974.51, "pvp_ins": 3503.31, "distrib": 138.62, "ind": 1308.16, "dias": 2, "diasT": 20, "mes": 5, "ano": 2026, "actualizado": "28/04/2026 20:10", "fechaERP": "ERP 28/04/26 20:00"};
-  if(!window._autoLoaded){
-    window._autoLoaded=true;
-    window.addEventListener('load',function(){
-      if(!DM[d.ano])DM[d.ano]={};
-      d.diasFromERP=true;
-      DM[d.ano][d.mes]=d;
-      MA={ano:d.ano,mes:d.mes};
-      ['mt-1','mt-2','mt-3','mt-4','mt-5','mt-6','mt-7','mt-8','mt-9','mt-10','mt-11','mt-12']
-        .forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('has','cur');});
-      const mtEl=document.getElementById('mt-'+d.mes);
-      if(mtEl)mtEl.classList.add('has','cur');
-      document.getElementById('s-mes').value=d.mes;
-      if(d.dias)document.getElementById('i-d').value=d.dias;
-      if(d.diasT)document.getElementById('i-dt').value=d.diasT;
-      updSb();
-      if(d.fechaERP&&typeof setUltimaCarga==='function')setUltimaCarga(d.fechaERP);
-      rResumen();
-      console.log('OK Auto-cargado:',d.mes+'/'+d.ano,'Total:',d.total);
-    });
-  }
-})();
-
-
-// ═══════ FESTIVOS ZARAGOZA + DÍAS LABORABLES ═══════
-const FESTIVOS = {
-  2025: ['2025-01-01','2025-01-06','2025-03-05','2025-04-17','2025-04-18',
-         '2025-04-23','2025-05-01','2025-10-12','2025-11-01','2025-12-06',
-         '2025-12-08','2025-12-25'],
-  2026: ['2026-01-01','2026-01-06','2026-03-05','2026-04-02','2026-04-03',
-         '2026-04-23','2026-05-01','2026-10-12','2026-11-01','2026-12-06',
-         '2026-12-08','2026-12-25'],
-  2027: ['2027-01-01','2027-01-06','2027-03-05','2027-03-26','2027-03-29',
-         '2027-04-23','2027-05-01','2027-10-12','2027-11-01','2027-12-06',
-         '2027-12-08','2027-12-25'],
 };
 
-function esFestivo(fecha, ano) {
-  const lista = FESTIVOS[ano] || [];
-  const str = fecha.toISOString().slice(0,10);
-  return lista.includes(str);
-}
+const FESTIVOS = new Set([
+  '2026-01-01','2026-01-06','2026-03-05','2026-04-02',
+  '2026-04-03','2026-04-23','2026-05-01','2026-10-12',
+  // En 2026, Todos los Santos y Constitución caen en domingo y se observan el lunes.
+  '2026-11-02','2026-12-07','2026-12-08','2026-12-25'
+]);
 
-function diasLaborables(inicio, fin, ano) {
-  // Cuenta días L-V excluyendo festivos entre inicio y fin inclusive
-  let count = 0;
-  let d = new Date(inicio);
-  d.setHours(0,0,0,0);
-  const fEnd = new Date(fin);
-  fEnd.setHours(0,0,0,0);
-  while (d <= fEnd) {
-    const dow = d.getDay(); // 0=dom, 6=sab
-    if (dow >= 1 && dow <= 5 && !esFestivo(d, ano)) count++;
-    d.setDate(d.getDate() + 1);
-  }
-  return count;
+function ymdLocal(d){
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
-
-function rangoMesComercial(mes, ano) {
-  // Mes comercial: del 26 del mes anterior al 25 del mes actual
-  let inicioM = mes === 1 ? 12 : mes - 1;
-  let inicioA = mes === 1 ? ano - 1 : ano;
-  const inicio = new Date(inicioA, inicioM - 1, 26);
-  const fin    = new Date(ano, mes - 1, 25);
-  return {inicio, fin};
+function isFest(d){ return FESTIVOS.has(ymdLocal(d)); }
+function isWork(d){ const w=d.getDay(); return w!==0&&w!==6&&!isFest(d); }
+function countWork(from,to){
+  let n=0; const d=new Date(from); d.setHours(12,0,0,0);
+  const e=new Date(to); e.setHours(12,0,0,0);
+  while(d<=e){if(isWork(d))n++;d.setDate(d.getDate()+1);}
+  return n;
 }
-
-function calcDiasMesComercial(mes, ano, fechaRef) {
-  // fechaRef: fecha de referencia (fecha del ERP si disponible, sino hoy)
-  const {inicio, fin} = rangoMesComercial(mes, ano);
-  let ref = fechaRef ? new Date(fechaRef) : new Date();
-  ref.setHours(0,0,0,0);
-  const diasTot  = diasLaborables(inicio, fin, ano);
-  const diasTrab = diasLaborables(inicio, ref < fin ? ref : fin, ano);
-  const cerrado  = ref > fin;
-  return {diasTrab, diasTot, cerrado};
-}
-
-// ── Calcular días para el mes activo y actualizar DM ──
-function actualizarDiasMesActivo() {
-  if (!MA) return;
-  const {ano, mes} = MA;
-  const d = DM[ano]?.[mes];
-  if (!d) return;
-  if (d.diasManual) return; // locked by user
-  let fechaRef = null;
-  if (d.fechaERP) {
-    // ISO format YYYY-MM-DD
-    const mISO = d.fechaERP.match(/^(\d{4})-(\d{2})-(\d{2})/);
-    if (mISO) {
-      fechaRef = new Date(parseInt(mISO[1]), parseInt(mISO[2])-1, parseInt(mISO[3]));
-    } else {
-      // Legacy DD/MM/YY
-      const mLeg = d.fechaERP.match(/(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
-      if (mLeg) {
-        const yy = parseInt(mLeg[3]);
-        fechaRef = new Date(yy < 100 ? 2000+yy : yy, parseInt(mLeg[2])-1, parseInt(mLeg[1]));
-      }
+function parseLastLoadDateLocal(raw){
+  if(!raw) return null;
+  const s = String(raw).trim();
+  // ISO con hora/Z: usar calendario local del instante (evita quedarse en el día UTC del prefijo).
+  if(/\dT\d/.test(s) || s.endsWith('Z') || /[+-]\d{2}:?\d{2}$/.test(s)){
+    const d = new Date(s);
+    if(!isNaN(d.getTime())){
+      return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12, 0, 0);
     }
   }
-  const {diasTrab, diasTot, cerrado} = calcDiasMesComercial(mes, ano, fechaRef);
-  d.diasT = diasTot;
-  d.dias  = cerrado ? diasTot : diasTrab;
+  // yyyy-mm-dd (solo fecha)
+  const iso = s.match(/^(\d{4})-(\d{2})-(\d{2})(?:\D|$)/);
+  if(iso){
+    const d = new Date(parseInt(iso[1]), parseInt(iso[2])-1, parseInt(iso[3]), 12, 0, 0);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  // dd/mm/yyyy o dd/mm/yy
+  const es = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+  if(es){
+    let y = parseInt(es[3]);
+    if(y < 100) y += 2000;
+    const d = new Date(y, parseInt(es[2])-1, parseInt(es[1]), 12, 0, 0);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  const d = new Date(s);
+  if(!isNaN(d.getTime())){
+    d.setHours(12,0,0,0);
+    return d;
+  }
+  return null;
+}
+/** No contar días laborables más allá del cierre del periodo ni de «hoy» (evita 19/19 si lastLoadDate viene de un JSON antiguo o erróneo). */
+function capRefDateForElapsed(refDate, end, today){
+  if(!refDate || isNaN(refDate.getTime())) return refDate;
+  const t = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12, 0, 0);
+  let r = new Date(refDate.getFullYear(), refDate.getMonth(), refDate.getDate(), 12, 0, 0);
+  const e = new Date(end.getFullYear(), end.getMonth(), end.getDate(), 12, 0, 0);
+  if(r > e) r = e;
+  if(r > t) r = t;
+  return r;
+}
+function getComercialMonth(today){
+  const day=today.getDate(); let year=today.getFullYear(), month=today.getMonth();
+  if(day>=26){month+=1;if(month>11){month=0;year++;}}
+  const pY=month===0?year-1:year, pM=month===0?11:month-1;
+  const start=new Date(pY,pM,26,12,0,0), end=new Date(year,month,25,12,0,0);
+  const totalDays=countWork(start,end);
+
+  // elapsedDays: usar la fecha_hasta del último Excel cargado (lastLoadDate),
+  // NO el día de hoy. Así el cuadro muestra exactamente los días con datos reales.
+  // Parseamos la fecha como LOCAL (no UTC) para evitar desfases de zona horaria.
+  const ls=loadLS();
+  let refDate;
+  if(ls.lastLoadDate){
+    refDate=parseLastLoadDateLocal(ls.lastLoadDate);
+    if(!refDate){
+      refDate=new Date(today); refDate.setHours(12,0,0,0);
+    }
+  } else {
+    refDate=new Date(today); refDate.setHours(12,0,0,0);
+  }
+  refDate = capRefDateForElapsed(refDate, end, today);
+
+  const elapsedDays=refDate<start?0:refDate>end?totalDays:countWork(start,refDate);
+  return{year,month,start,end,totalDays,elapsedDays};
 }
 
+function fmtEur(v,dec=0){
+  if(v===null||v===undefined||isNaN(v))return'—';
+  return new Intl.NumberFormat('es-ES',{minimumFractionDigits:dec,maximumFractionDigits:dec}).format(Math.round(v))+' €';
+}
+function fmtNum(v){ if(v===null||v===undefined||isNaN(v))return'—'; return new Intl.NumberFormat('es-ES').format(v); }
+function dateKey(y,m){ return`${y}-${String(m+1).padStart(2,'0')}`; }
+function deviationInfo(real,obj){
+  if(real===null||real===undefined||obj===null)return{text:'—',cls:'gray',sign:0};
+  const d=real-obj;
+  if(d>=0)return{text:`Superado en +${fmtEur(d)}`,cls:'green',sign:1};
+  return{text:`Le queda ${fmtEur(Math.abs(d))}`,cls:'red',sign:-1};
+}
+function proy(real,elapsed,total){ if(!real||!elapsed||!total)return null; return(real/elapsed)*total; }
 
-// ═══════ INIT ═══════
-(function(){
-  // Meses preloaded - dias/diasT se recalculan con el calendario de Zaragoza
-  // Enero: mes comercial 26/12/25-25/01/26 → cerrado (dias=diasT)
-  // Febrero: mes comercial 26/01/26-25/02/26 → cerrado
-  // Marzo: mes comercial 26/02/26-25/03/26 → parcial, calculado por holidays
-  DM[2026]={
-    // sjp = SAN JOSÉ col F (No Instalaciones = pintura only)
-    // sjd = tienda 52 col D (Base Imponible — es todo instalaciones)
-    // gard = tienda 56 col D (Base Imponible — es todo instalaciones)
-    // garp, alm, avd = col D (E=0 o mixto total)
-    // total = TOTAL INFORME col D
-    // cavero = solo grupo PROFESIONALES
-    1:{total:124953,sjp:32752,sjd:24257,garp:6445,gard:21892,alm:21945,avd:17662,cavero:41824,ursula:16856,prof:54226,pvp_pin:17433,pvp_ins:49513,distrib:935,ind:2845},
-    2:{total:244619,sjp:41030,sjd:57067,garp:10571,gard:52886,alm:44010,avd:38385,cavero:72571,ursula:20750,prof:84926,pvp_pin:16793,pvp_ins:132495,distrib:2700,ind:7705},
-    3:{total:221106,sjp:58267,sjd:33971,garp:14044,gard:36454,alm:57130,avd:18682,cavero:83410,ursula:32518,prof:115955,pvp_pin:20294,pvp_ins:75983,distrib:1075,ind:7799},
+function loadLS(){ try{return JSON.parse(localStorage.getItem(LS_KEY)||'{}');}catch{return{};} }
+function saveLS(d){ localStorage.setItem(LS_KEY,JSON.stringify(d)); }
+
+const GH_SYNC_CFG = {
+  owner: 'civcomercial2010-cmyk',
+  repo: 'comercialespin',
+  branch: 'main',
+  path: 'data.json',
+  tokenKey: 'hipopotamo_gh_token'
+};
+
+function cloneObj(o){ return JSON.parse(JSON.stringify(o||{})); }
+function normMonthly(src){
+  const out={};
+  Object.entries(src||{}).forEach(([yr,arr])=>{
+    if(!Array.isArray(arr)) return;
+    out[String(yr)] = Array.from({length:12},(_,i)=>arr[i]??null);
+  });
+  return out;
+}
+function buildDataJsonFromLS(){
+  const ls=loadLS();
+  return {
+    cavero: {
+      monthly: normMonthly(ls?.cavero?.monthly),
+      industria: cloneObj(ls?.cavero?.industria),
+      distribuidores: cloneObj(ls?.cavero?.distribuidores),
+      bonos: cloneObj(ls?.cavero?.bonos)
+    },
+    ursula: {
+      monthly: normMonthly(ls?.ursula?.monthly),
+      bonos: cloneObj(ls?.ursula?.bonos)
+    },
+    lastLoadDate: ls?.lastLoadDate || null,
+    lastRunTs: new Date().toISOString()
   };
-  // Marzo cerrado (25/03). Abril en curso desde hoy 26/03, sin ventas aún.
-  DM[2026][4]={total:0,sjp:0,sjd:0,garp:0,gard:0,alm:0,avd:0,
-               cavero:0,ursula:0,prof:0,pvp_pin:0,pvp_ins:0,distrib:0,ind:0};
-  MA={ano:2026,mes:4};
-  ['mt-1','mt-2','mt-3','mt-4'].forEach(id=>document.getElementById(id)?.classList.add('has'));
-  document.getElementById('mt-4')?.classList.add('cur');
-  document.getElementById('s-mes').value='4';
-  // Clear ERP textarea to prevent stale data from previous sessions
-  const _ta=document.getElementById('erp-ta');if(_ta)_ta.value='';
-  // PRES: load user edits from storage (budget corrections persist)
-  _loadPresFromStorage();
-  // DM: wipe hipoDM completely — hardcoded months always take priority.
-  // No stale data from any previous version can survive.
-  try{localStorage.removeItem('hipoDM');}catch(e){}
-  try{localStorage.removeItem('hipoDM2');}catch(e){}
-  _saveDMToStorage();
-  updSb();rResumen();
-})();
+}
+function toB64Utf8(s){ return btoa(unescape(encodeURIComponent(s))); }
+function configureGithubToken(){
+  const prev = localStorage.getItem(GH_SYNC_CFG.tokenKey);
+  const token = prompt('Pega tu token de GitHub (permiso Contents: Read and write):', prev||'');
+  if(token===null) return;
+  const t = token.trim();
+  if(!t){
+    showERPAlert('Token vacío. No se guardó ningún token.','warning');
+    return;
+  }
+  localStorage.setItem(GH_SYNC_CFG.tokenKey, t);
+  showERPAlert('Token de GitHub guardado correctamente.','success');
+}
+function clearGithubToken(){
+  localStorage.removeItem(GH_SYNC_CFG.tokenKey);
+  showERPAlert('Token de GitHub eliminado.','success');
+}
+async function syncDataJsonToGitHub(){
+  let token = localStorage.getItem(GH_SYNC_CFG.tokenKey);
+  if(!token){
+    token = prompt('Para guardar también en data.json de GitHub, pega un token con permisos de escritura de Contents (repo).');
+    if(!token) return {ok:false, skipped:true, reason:'no-token'};
+    localStorage.setItem(GH_SYNC_CFG.tokenKey, token.trim());
+  }
+  token = token.trim();
 
-function _loadPresFromStorage(){try{const s=localStorage.getItem('hipoPres2');if(!s)return;const p=JSON.parse(s);Object.keys(p).forEach(k=>{if(PRES[k])PRES[k]=p[k];});}catch(e){}}
-function _savePresToStorage(){try{localStorage.setItem('hipoPres2',JSON.stringify(PRES));}catch(e){}}
-function _mesFromFechaERP(fechaERP){
-  // Extract commercial month from fechaERP string like "ERP 25/03/26 20:00"
-  // Commercial month = month of "Fecha hasta" = day 25 of that month
-  if(!fechaERP) return null;
-  const m=fechaERP.match(/(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
-  if(!m) return null;
-  const dd=parseInt(m[1]),mm=parseInt(m[2]);
-  // Day 25 = last day of commercial month mm
-  // Day 26+ = first days of commercial month mm+1
-  // ERP "25/03/26" means end of March commercial month = mes 3
-  if(dd<=25) return mm;
-  return mm===12?1:mm+1;
+  const api = `https://api.github.com/repos/${GH_SYNC_CFG.owner}/${GH_SYNC_CFG.repo}/contents/${GH_SYNC_CFG.path}`;
+  const headers = {
+    'Authorization': `Bearer ${token}`,
+    'Accept': 'application/vnd.github+json',
+    'Content-Type': 'application/json'
+  };
+
+  let sha = null;
+  const getResp = await fetch(`${api}?ref=${GH_SYNC_CFG.branch}`, {headers});
+  if(getResp.ok){
+    const meta = await getResp.json();
+    sha = meta.sha;
+  } else if(getResp.status !== 404){
+    if(getResp.status===401 || getResp.status===403) localStorage.removeItem(GH_SYNC_CFG.tokenKey);
+    const txt = await getResp.text();
+    return {ok:false, skipped:false, reason:`get-${getResp.status}`, details:txt};
+  }
+
+  const payload = buildDataJsonFromLS();
+  const body = {
+    message: `sync data.json desde ERP (${new Date().toISOString()})`,
+    content: toB64Utf8(JSON.stringify(payload, null, 2) + '\n'),
+    branch: GH_SYNC_CFG.branch
+  };
+  if(sha) body.sha = sha;
+
+  const putResp = await fetch(api, {method:'PUT', headers, body:JSON.stringify(body)});
+  if(!putResp.ok){
+    if(putResp.status===401 || putResp.status===403) localStorage.removeItem(GH_SYNC_CFG.tokenKey);
+    const txt = await putResp.text();
+    return {ok:false, skipped:false, reason:`put-${putResp.status}`, details:txt};
+  }
+  return {ok:true};
 }
 
-function _loadDMFromStorage(){
-  try{
-    const s=localStorage.getItem('hipoDM');if(!s)return;
-    const data=JSON.parse(s);
-    Object.keys(data).forEach(ano=>{
-      const aN=parseInt(ano);
-      if(!DM[aN])DM[aN]={};
-      Object.keys(data[ano]).forEach(mes=>{
-        const mN=parseInt(mes);
-        // Never overwrite months already defined by INIT hardcode
-        if(DM[aN][mN]) return;
-        const entry=data[ano][mes];
-        // Validate: if entry has a fechaERP, confirm it belongs to this month
-        if(entry&&entry.fechaERP){
-          const erpMes=_mesFromFechaERP(entry.fechaERP);
-          if(erpMes!==null&&erpMes!==mN){
-            console.warn('hipoDM: mes '+mN+' rechazado — fechaERP indica mes '+erpMes+' ('+entry.fechaERP+')');
-            return; // skip this entry — wrong month
+/* ── CARGA AUTOMÁTICA DE data.json (generado por el script Python) ──
+   El HTML intenta leer data.json desde su misma carpeta cada vez que se abre.
+   Si lo encuentra, fusiona con localStorage: si data.json es más reciente
+   (lastRunTs), sustituye ventas/industria/distribuidores/bonos; si no, solo
+   rellena huecos. El hardcode HC sigue teniendo prioridad en getMerged() donde
+   corresponde. Presupuestos (budget2026) no se tocan aquí.
+─────────────────────────────────────────────────────────────────── */
+async function tryLoadDataJson(){
+  try {
+    const resp = await fetch('./data.json?_=' + Date.now(), {cache:'no-store'});
+    if(!resp.ok) return false;
+    const remote = await resp.json();
+
+    const ls = loadLS();
+    const remoteTs = remote.lastRunTs ? new Date(remote.lastRunTs).getTime() : 0;
+    const localTs = ls.lastRunTs ? new Date(ls.lastRunTs).getTime() : 0;
+    // Si data.json de GitHub es más reciente que lo último que teníamos guardado,
+    // aplicar sus cifras (Actions / ERP remoto); si no, solo rellenar huecos (comportamiento anterior).
+    const preferRemote = remoteTs > localTs;
+
+    // ── ventas mensuales
+    for(const person of ['cavero','ursula']){
+      if(!remote[person]) continue;
+      ls[person] = ls[person] || {};
+
+      // monthly
+      if(remote[person].monthly){
+        ls[person].monthly = ls[person].monthly || {};
+        for(const [yr, arr] of Object.entries(remote[person].monthly)){
+          ls[person].monthly[yr] = ls[person].monthly[yr] || Array(12).fill(null);
+          arr.forEach((v,i)=>{
+            if(v === null || v === undefined) return;
+            const hcVal = HC[person]?.monthly?.[yr]?.[i];
+            if(hcVal !== null && hcVal !== undefined) return;
+            if(preferRemote){
+              ls[person].monthly[yr][i] = v;
+            } else if(ls[person].monthly[yr][i] === null || ls[person].monthly[yr][i] === undefined){
+              ls[person].monthly[yr][i] = v;
+            }
+          });
+        }
+      }
+
+      // industria / distribuidores (cavero only)
+      if(remote[person].industria){
+        ls[person].industria = ls[person].industria || {};
+        for(const [k,v] of Object.entries(remote[person].industria)){
+          if(preferRemote){
+            ls[person].industria[k] = v;
+          } else if(ls[person].industria[k] === null || ls[person].industria[k] === undefined){
+            ls[person].industria[k] = v;
           }
         }
-        DM[aN][mN]=entry;
-      });
-    });
-  }catch(e){}
+      }
+      if(remote[person].distribuidores){
+        ls[person].distribuidores = ls[person].distribuidores || {};
+        for(const [k,v] of Object.entries(remote[person].distribuidores)){
+          if(preferRemote){
+            ls[person].distribuidores[k] = v;
+          } else if(ls[person].distribuidores[k] === null || ls[person].distribuidores[k] === undefined){
+            ls[person].distribuidores[k] = v;
+          }
+        }
+      }
+      if(remote[person].bonos){
+        ls[person].bonos = ls[person].bonos || {};
+        for(const [k,obj] of Object.entries(remote[person].bonos)){
+          ls[person].bonos[k] = ls[person].bonos[k] || {};
+          for(const [bk,bv] of Object.entries(obj||{})){
+            if(preferRemote){
+              ls[person].bonos[k][bk] = bv;
+            } else if(ls[person].bonos[k][bk] === null || ls[person].bonos[k][bk] === undefined){
+              ls[person].bonos[k][bk] = bv;
+            }
+          }
+        }
+      }
+    }
+
+    // Mantener lastLoadDate actualizado sin retroceder.
+    if(remote.lastLoadDate){
+      const rd = parseLastLoadDateLocal(remote.lastLoadDate);
+      const ld = parseLastLoadDateLocal(ls.lastLoadDate);
+      if(!ld || (rd && rd > ld)){
+        ls.lastLoadDate = `${rd.getFullYear()}-${String(rd.getMonth()+1).padStart(2,'0')}-${String(rd.getDate()).padStart(2,'0')}`;
+      }
+    }
+
+    // lastRunTs — útil para mostrar cuándo corrió Actions
+    if(remote.lastRunTs){
+      ls.lastRunTs = remote.lastRunTs;
+    }
+
+    saveLS(ls);
+    log_sync_banner(remote.lastLoadDate, remote.lastRunTs);
+    return true;
+
+  } catch(e) {
+    // data.json no existe o no es accesible → funcionamiento normal
+    return false;
+  }
 }
-function _saveDMToStorage(){try{const t={};Object.keys(DM).forEach(ano=>{t[ano]={};Object.keys(DM[ano]).forEach(mes=>{const d=DM[ano][mes];t[ano][mes]={total:d.total,sjp:d.sjp||0,sjd:d.sjd||0,garp:d.garp||0,gard:d.gard||0,alm:d.alm||0,avd:d.avd||0,cavero:d.cavero||0,ursula:d.ursula||0,prof:d.prof||0,pvp_pin:d.pvp_pin||0,pvp_ins:d.pvp_ins||0,distrib:d.distrib||0,ind:d.ind||0};});});localStorage.setItem('hipoDM',JSON.stringify(t));}catch(e){}}
+
+function log_sync_banner(fechaHasta, runTs){
+  const el = document.getElementById('sync-banner');
+  if(!el) return;
+  const dh = fechaHasta ? new Date(fechaHasta).toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'}) : '—';
+  const dt = runTs ? new Date(runTs).toLocaleString('es-ES',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '—';
+  el.textContent = `✓ Datos cargados automáticamente · Fecha datos: ${dh} · Última sincronización: ${dt}`;
+  el.classList.remove('hidden');
+}
+
+function getMerged(){
+  const ls=loadLS();
+  // Budgets: LS overrides HC if present
+  const lsBudC = ls?.cavero?.budget2026;
+  const lsBudU = ls?.ursula?.budget2026;
+  const budC = lsBudC ? HC.cavero.budget2026.map((v,i)=>lsBudC[i]??v) : [...HC.cavero.budget2026];
+  const budU = lsBudU ? HC.ursula.budget2026.map((v,i)=>lsBudU[i]??v) : [...HC.ursula.budget2026];
+  // Bonos: HC hardcoded (2025) + localStorage (meses posteriores via ERP/manual)
+  // LS wins para el mismo mes (datos más recientes tienen prioridad)
+  const mergedBonosC = Object.assign({}, HC.cavero.bonos||{}, ls?.cavero?.bonos||{});
+  const mergedBonosU = Object.assign({}, HC.ursula.bonos||{}, ls?.ursula?.bonos||{});
+  const data={
+    cavero:{budget2026:budC,monthly:{},
+      industria:ls?.cavero?.industria||{},distribuidores:ls?.cavero?.distribuidores||{},
+      bonos:mergedBonosC},
+    ursula:{budget2026:budU,monthly:{},bonos:mergedBonosU}
+  };
+  for(const yr of[2023,2024,2025,2026]){
+    const hcC=HC.cavero.monthly[yr]||Array(12).fill(null);
+    const hcU=HC.ursula.monthly[yr]||Array(12).fill(null);
+    const lsC=ls?.cavero?.monthly?.[yr]; const lsU=ls?.ursula?.monthly?.[yr];
+    data.cavero.monthly[yr]=hcC.map((v,i)=>v!==null?v:(lsC?.[i]??null));
+    data.ursula.monthly[yr]=hcU.map((v,i)=>v!==null?v:(lsU?.[i]??null));
+  }
+  return data;
+}
+
+function rolling12(person,data){
+  const flat=[];
+  for(const yr of[2023,2024,2025,2026]){
+    const arr=data[person].monthly[yr]||[];
+    for(let m=0;m<12;m++) flat.push({year:yr,month:m,value:arr[m]??null});
+  }
+  const r=[];
+  for(let i=11;i<flat.length;i++){
+    const sl=flat.slice(i-11,i+1);
+    if(sl.every(s=>s.value!==null))
+      r.push({year:flat[i].year,month:flat[i].month,value:sl.reduce((a,b)=>a+b.value,0)});
+  }
+  return r;
+}
+
+function getMonthlyWithProjection(person,data,cm){
+  const monthly = {};
+  for(const yr of [2023,2024,2025,2026]){
+    monthly[yr] = [...(data[person].monthly[yr]||Array(12).fill(null))];
+  }
+  if(cm && monthly[cm.year]){
+    const realCur = monthly[cm.year][cm.month];
+    const p = proy(realCur, cm.elapsedDays, cm.totalDays);
+    if(p!==null) monthly[cm.year][cm.month] = p;
+  }
+  return monthly;
+}
+
+/** Oculta meses civiles posteriores al mes comercial seleccionado (p. ej. sin Feb–Dic 2026 si el mes es Enero 2026). Rolling y evolución 2026. */
+function applyTimelineCapToMonthly(monthly,cm){
+  const out={};
+  for(const yr of [2023,2024,2025,2026]){
+    const arr=[...(monthly[yr]||Array(12).fill(null))];
+    for(let m=0;m<12;m++){
+      if(yr>cm.year||(yr===cm.year&&m>cm.month)) arr[m]=null;
+    }
+    out[yr]=arr;
+  }
+  return out;
+}
+
+/** En cada año, solo hasta el mismo índice de mes (Ene…mes seleccionado): histórico anual y YTD comparables. */
+function applyAnnualDisplayCapToMonthly(monthly,cm){
+  const out={};
+  for(const yr of [2023,2024,2025,2026]){
+    const arr=[...(monthly[yr]||Array(12).fill(null))];
+    for(let m=cm.month+1;m<12;m++) arr[m]=null;
+    out[yr]=arr;
+  }
+  return out;
+}
+
+function sumYtd(monthly,yr,endM){
+  let s=0;
+  for(let m=0;m<=endM;m++) s+=(monthly[yr]?.[m]??0);
+  return s;
+}
+
+const charts={};
+function dc(id){ if(charts[id]){charts[id].destroy();delete charts[id];} }
+const CC={
+  grid:'#e0ddd6',tick:'#5c5a55',
+  cavero:'#1a56e8',ursula:'#0d9f6e',obj:'#c47a0a',
+  proy:'rgba(13,159,110,0.45)',red:'#d93025',
+  annC:['#b0b0b0','#85b7eb','#4a7ee0','#d93025'],
+  annU:['#b0b0b0','#6ec9a0','#2ea87a','#d93025'],
+  y2025cavero:'rgba(26,86,232,0.42)',
+  y2025ursula:'rgba(13,159,110,0.42)'
+};
+function scales(){
+  return{
+    x:{grid:{color:CC.grid},ticks:{color:CC.tick,font:{size:14,family:'Outfit, sans-serif'}}},
+    y:{grid:{color:CC.grid},ticks:{color:CC.tick,font:{size:13,family:'Outfit, sans-serif'},callback:v=>fmtEur(v)}}
+  };
+}
+
+function buildChart2026(person,data,cm){
+  const id='chart-2026-'+person; dc(id);
+  const canvas=document.getElementById(id); if(!canvas)return;
+  const budget=data[person].budget2026;
+  const raw26=data[person].monthly[2026]||Array(12).fill(null);
+  const raw25=data[person].monthly[2025]||Array(12).fill(null);
+  const real26=raw26.map((v,m)=>(m>cm.month?null:v));
+  const real25=raw25.map((v,m)=>(m>cm.month?null:v));
+  const proyArr=Array(12).fill(null);
+  const realCur=raw26[cm.month];
+  if(realCur!==null&&realCur!==undefined&&cm.elapsedDays>0&&cm.month<=11) proyArr[cm.month]=proy(realCur,cm.elapsedDays,cm.totalDays);
+  const col25=person==='cavero'?CC.y2025cavero:CC.y2025ursula;
+
+  charts[id]=new Chart(canvas.getContext('2d'),{
+    type:'bar',
+    data:{labels:MONTHS_SHORT,datasets:[
+      {label:person==='cavero'?'Profesionales 2025':'Venta 2025',data:real25,backgroundColor:col25,borderRadius:4,order:4},
+      {label:person==='cavero'?'Profesionales 2026':'Venta real 2026',data:real26,backgroundColor:CC[person],borderRadius:4,order:3},
+      {label:'Proyección 2026',data:proyArr,backgroundColor:CC.proy,borderRadius:4,order:2},
+      {label:'Objetivo 2026',data:budget,type:'line',borderColor:CC.obj,borderWidth:2.5,
+       borderDash:[6,4],pointRadius:0,pointHoverRadius:5,tension:0,fill:false,order:1}
+    ]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          mode:'index',intersect:false,
+          titleFont:{size:14,family:'Outfit, sans-serif'},bodyFont:{size:14,family:'Outfit, sans-serif'},
+          callbacks:{
+            title:items=>MONTHS_ES[items[0].dataIndex],
+            label:item=>{ const v=item.raw; if(v===null||v===undefined)return null; return` ${item.dataset.label}: ${fmtEur(v)}`; }
+          }
+        }
+      },
+      scales:(()=>{ const sc=scales(); return { x:{...sc.x,categoryPercentage:0.68,barPercentage:0.88}, y:sc.y }; })()
+    }
+  });
+}
+
+function buildChartRolling(person,data,cm){
+  const id='chart-rolling-'+person; dc(id);
+  const canvas=document.getElementById(id); if(!canvas)return;
+  const projected=getMonthlyWithProjection(person,data,cm);
+  const cappedMonthly=applyTimelineCapToMonthly(projected,cm);
+  const projData={...data,[person]:{...data[person],monthly:cappedMonthly}};
+  const r=rolling12(person,projData);
+  const labels=r.map(x=>`${MONTHS_SHORT[x.month]} ${x.year}`);
+  const vals=r.map(x=>x.value);
+  const inRange=r.filter(x=>x.year<cm.year||(x.year===cm.year&&x.month<=cm.month));
+  const last=inRange.length?inRange[inRange.length-1]:null;
+  const prev=last?r.find(x=>x.year===last.year-1&&x.month===last.month):null;
+  document.getElementById('rolling-actual-'+person).textContent=last?fmtEur(last.value):'—';
+  if(last&&prev){
+    const delta=last.value-prev.value;
+    document.getElementById('rolling-prev-'+person).textContent=fmtEur(prev.value);
+    const dEl=document.getElementById('rolling-delta-'+person);
+    dEl.textContent=(delta>=0?'+':'')+fmtEur(delta);
+    dEl.className='rk-val '+(delta>=0?'color-green':'color-red');
+  } else {
+    document.getElementById('rolling-prev-'+person).textContent='—';
+    document.getElementById('rolling-delta-'+person).textContent='—';
+  }
+  charts[id]=new Chart(canvas.getContext('2d'),{
+    type:'line',
+    data:{labels,datasets:[{
+      label:'Rolling 12m',data:vals,borderColor:CC[person],
+      backgroundColor:person==='cavero'?'rgba(26,86,232,0.08)':'rgba(13,159,110,0.08)',
+      borderWidth:2.5,pointRadius:3,pointHoverRadius:6,tension:0.3,fill:true
+    }]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{
+        titleFont:{size:14,family:'Outfit, sans-serif'},bodyFont:{size:14,family:'Outfit, sans-serif'},
+        callbacks:{title:items=>labels[items[0].dataIndex],label:item=>` ${fmtEur(item.raw)}`}
+      }},
+      scales:scales()
+    }
+  });
+}
+
+function buildChartAnnual(person,data,cm){
+  const id='chart-annual-'+person; dc(id);
+  const canvas=document.getElementById(id); if(!canvas)return;
+  const palette=person==='cavero'?CC.annC:CC.annU;
+  const projected=getMonthlyWithProjection(person,data,cm);
+  const monthly=applyAnnualDisplayCapToMonthly(projected,cm);
+  const datasets=[2023,2024,2025,2026].map((yr,i)=>({
+    label:String(yr),data:monthly[yr]||Array(12).fill(null),
+    borderColor:palette[i],backgroundColor:'transparent',
+    borderWidth:i===3?3:2,pointRadius:i===3?4:2,
+    pointHoverRadius:6,tension:0.3,spanGaps:false
+  }));
+  charts[id]=new Chart(canvas.getContext('2d'),{
+    type:'line',data:{labels:MONTHS_SHORT,datasets},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{
+        titleFont:{size:14,family:'Outfit, sans-serif'},bodyFont:{size:14,family:'Outfit, sans-serif'},
+        callbacks:{
+          title:items=>MONTHS_ES[items[0].dataIndex],
+          label:item=>{const v=item.raw;if(v===null)return null;return` ${item.dataset.label}: ${fmtEur(v)}`;}
+        }
+      }},
+      scales:scales()
+    }
+  });
+  const strip=document.getElementById('annual-strip-'+person); if(!strip)return;
+  const endM=cm.month;
+  const totals=[2023,2024,2025,2026].map(yr=>sumYtd(monthly,yr,endM));
+  strip.innerHTML=[2023,2024,2025,2026].map((yr,i)=>{
+    const prevTot=i>0?totals[i-1]:null;
+    let delta=null;
+    if(i>0&&prevTot!==null&&prevTot>0) delta=((totals[i]-prevTot)/prevTot)*100;
+    const dStr=delta!==null&&!isNaN(delta)?`<div class="ak-delta ${delta>=0?'color-green':'color-red'}">${delta>=0?'+':''}${delta.toFixed(1)}% vs ${yr-1}</div>`:'';
+    return`<div class="annual-kpi"><div class="ak-year">${yr} YTD</div><div class="ak-val">${fmtEur(totals[i])}</div>${dStr}</div>`;
+  }).join('');
+}
+
+function cmpText(cur,prev,isMoney){
+  if(cur===null||cur===undefined)return{text:'vs año ant.: —',cls:'neu'};
+  if(prev===null||prev===undefined)return{text:'vs año ant.: sin datos',cls:'neu'};
+  const d=cur-prev;
+  const txt=isMoney?fmtEur(Math.abs(d)):Math.abs(d);
+  return{text:`vs año ant.: ${d>=0?'+':'−'}${txt}`,cls:d>=0?'pos':'neg'};
+}
+
+function renderPanel(person,data,cm){
+  const isC=person==='cavero'; const ac=isC?'blue':'green';
+  const mName=MONTHS_ES[cm.month];
+  document.getElementById('banner-title-'+person).textContent=
+    `${isC?'Antonio Cavero':'Úrsula Moreno'} — Mes comercial: ${mName} ${cm.year}`;
+  const fmt=d=>`${d.getDate()} ${MONTHS_SHORT[d.getMonth()]}`;
+  document.getElementById('banner-period-'+person).textContent=
+    `Periodo: ${fmt(cm.start)} – ${fmt(cm.end)} · Vendedor ${isC?'26':'61'}`;
+  document.getElementById('banner-elapsed-'+person).textContent=cm.elapsedDays;
+  document.getElementById('banner-total-'+person).textContent=cm.totalDays;
+
+  const real=data[person].monthly[cm.year]?.[cm.month]??null;
+  const obj=data[person].budget2026[cm.month];
+  const pr=proy(real,cm.elapsedDays,cm.totalDays);
+
+  const rEl=document.getElementById('kpi-real-'+person);
+  rEl.textContent=real!==null?fmtEur(real):'—';
+  rEl.className=`kpi-value ${real!==null?ac:'muted'}`;
+  document.getElementById('kpi-proy-'+person).textContent=pr?fmtEur(pr):'—';
+  document.getElementById('kpi-obj-'+person).textContent=fmtEur(obj);
+
+  const dv=deviationInfo(real,obj);
+  const dvEl=document.getElementById('kpi-dev-'+person);
+  dvEl.textContent=real!==null?dv.text:'—';
+  dvEl.className=`kpi-value nowrap ${dv.cls||'muted'}`;
+  document.getElementById('kpi-dev-card-'+person).className=
+    'kpi-card accent-'+(dv.sign>0?'green':dv.sign<0?'red':'gray');
+
+  const subEl=document.getElementById('kpi-devproy-'+person);
+  if(pr){ const pd=deviationInfo(pr,obj); subEl.textContent='Proy.: '+pd.text; }
+  else subEl.textContent='Proyección no disponible';
+
+  const pct=obj>0&&real!==null?Math.min((real/obj)*100,100):0;
+  const fill=document.getElementById('prog-fill-'+person);
+  fill.style.width=pct+'%'; fill.style.background=pct>=100?'#0d9f6e':(isC?'#1a56e8':'#0d9f6e');
+  const pEl=document.getElementById('prog-pct-'+person);
+  pEl.textContent=Math.round(pct)+'%'; pEl.style.color=pct>=100?'#0d9f6e':(isC?'#1a56e8':'#0d9f6e');
+
+  if(isC){
+    const ik=dateKey(cm.year,cm.month);
+    document.getElementById('kpi-industria').textContent=fmtEur(data.cavero.industria?.[ik]??null);
+    document.getElementById('kpi-distribuidores').textContent=fmtEur(data.cavero.distribuidores?.[ik]??null);
+  }
+
+  // Bonos KPI + comparativa año anterior
+  const bKey=dateKey(cm.year,cm.month);
+  const bPrevKey=dateKey(cm.year-1,cm.month);
+  const b=data[person].bonos?.[bKey]||{};
+  const bP=data[person].bonos?.[bPrevKey]||{};
+
+  // 1. Cifra 2026
+  document.getElementById('kpi-bonos-altas-'+person).textContent=b.altas!=null?fmtEur(b.altas):'—';
+  document.getElementById('kpi-bonos-consumo-'+person).textContent=b.consumo!=null?fmtEur(b.consumo):'—';
+
+  // 2. Cifra mismo mes año anterior (2025)
+  const prevAltasEl=document.getElementById('kpi-bonos-altas-prev-'+person);
+  const prevConsEl=document.getElementById('kpi-bonos-consumo-prev-'+person);
+  if(prevAltasEl) prevAltasEl.textContent=bP.altas!=null?`${cm.year-1}: ${fmtEur(bP.altas)}`:`${cm.year-1}: —`;
+  if(prevConsEl)  prevConsEl.textContent=bP.consumo!=null?`${cm.year-1}: ${fmtEur(bP.consumo)}`:`${cm.year-1}: —`;
+
+  // 3. Diferencia vs año anterior
+  const ca=cmpText(b.altas??null,bP.altas??null,true);
+  const cc=cmpText(b.consumo??null,bP.consumo??null,true);
+  const caEl=document.getElementById('kpi-bonos-altas-cmp-'+person);
+  const ccEl=document.getElementById('kpi-bonos-consumo-cmp-'+person);
+  caEl.textContent=ca.text; caEl.className='kpi-cmp '+ca.cls;
+  ccEl.textContent=cc.text; ccEl.className='kpi-cmp '+cc.cls;
+
+  renderBonosTable(person,data,cm);
+  buildChart2026(person,data,cm);
+  buildChartRolling(person,data,cm);
+  buildChartAnnual(person,data,cm);
+}
+
+function renderBonosTable(person,data,cm){
+  const tbody=document.getElementById('tarj-tbody-'+person); if(!tbody)return;
+  tbody.innerHTML='';
+  const curKey=dateKey(cm.year,cm.month);
+  for(let m=0;m<12;m++){
+    const key=dateKey(2026,m);
+    const prevKey=dateKey(2025,m);
+    const b=data[person].bonos?.[key]||{};
+    const bP=data[person].bonos?.[prevKey]||{};
+    const isCur=key===curKey;
+    const tr=document.createElement('tr');
+    if(isCur) tr.className='current-month';
+    const mLbl=MONTHS_ES[m]+' 2026'+(isCur?' ↩':'');
+
+    // Alta bonos 2026
+    const a26=b.altas!=null?fmtEur(b.altas):'<span class="empty-cell">—</span>';
+    // Alta bonos 2025
+    const a25=bP.altas!=null?fmtEur(bP.altas):'<span class="empty-cell">—</span>';
+    // Alta vs año ant.
+    let aCmp='<span class="cmp-neu">—</span>';
+    if(b.altas!=null&&bP.altas!=null){
+      const d=b.altas-bP.altas;
+      aCmp=`<span class="${d>=0?'cmp-pos':'cmp-neg'}">${d>=0?'+':'−'}${fmtEur(Math.abs(d))}</span>`;
+    }
+
+    // Consumo bono 2026
+    const c26=b.consumo!=null?fmtEur(b.consumo):'<span class="empty-cell">—</span>';
+    // Consumo bono 2025
+    const c25=bP.consumo!=null?fmtEur(bP.consumo):'<span class="empty-cell">—</span>';
+    // Consumo vs año ant.
+    let cCmp='<span class="cmp-neu">—</span>';
+    if(b.consumo!=null&&bP.consumo!=null){
+      const d=b.consumo-bP.consumo;
+      cCmp=`<span class="${d>=0?'cmp-pos':'cmp-neg'}">${d>=0?'+':'−'}${fmtEur(Math.abs(d))}</span>`;
+    }
+
+    tr.innerHTML=`<td>${mLbl}</td><td>${a26}</td><td>${a25}</td><td>${aCmp}</td><td>${c26}</td><td>${c25}</td><td>${cCmp}</td>`;
+    tbody.appendChild(tr);
+  }
+}
+
+/* ── ERP PARSER ── */
+let parsedERP=null;
+function parseAmount(str){
+  if(!str)return null;
+  const s=String(str).trim().replace(/\s/g,'').replace(/\./g,'').replace(',','.');
+  const v=parseFloat(s); return isNaN(v)?null:v;
+}
+
+function parseERPData(){
+  const text=document.getElementById('erp-textarea').value.trim();
+  if(!text){showERPAlert('Pega el contenido del Excel antes de analizar.','warning');return;}
+  const lines=text.split('\n').map(l=>l.trimEnd());
+  document.getElementById('erp-alert-wrap').innerHTML='';
+  document.getElementById('erp-preview').classList.add('hidden');
+  document.getElementById('erp-save-row').classList.add('hidden');
+
+  // Fecha hasta
+  let comercialMonth=null;
+  for(const line of lines){
+    const m=line.match(/Fecha\s+hasta[:\s]+(\d{1,2})\/(\d{1,2})\/(\d{2,4})/i);
+    if(m){
+      const day=parseInt(m[1]),mon=parseInt(m[2])-1,rawY=parseInt(m[3]);
+      const yr=rawY<100?2000+rawY:rawY;
+      let cmYear=yr,cmMonth=mon;
+      if(day>25){cmMonth=mon+1;if(cmMonth>11){cmMonth=0;cmYear++;}}
+      comercialMonth={year:cmYear,month:cmMonth,day,srcMon:mon,srcYear:yr};
+      break;
+    }
+  }
+  if(!comercialMonth){showERPAlert('No se encontró "Fecha hasta". Copia la hoja completa.','error');return;}
+
+  // Encontrar cabecera de VENDEDORES (la que tiene "Vendedor" en col A)
+  let colGrupo=2,colImporte=3,colConsumoT=6,colAltaT=7;
+  let pastVendHeader=false;
+  for(const line of lines){
+    const cols=line.split('\t').map(c=>c.trim().toLowerCase());
+    if(cols[0]==='vendedor'&&cols.some(c=>c.includes('grupo'))){
+      colGrupo    =cols.findIndex(c=>c==='grupo'||c==='grup');
+      const ci    =cols.findIndex(c=>c.includes('base imponible'));    if(ci>=0) colImporte=ci;
+      const ct    =cols.findIndex(c=>c.includes('consumo')&&c.includes('tarj')); if(ct>=0) colConsumoT=ct;
+      const at    =cols.findIndex(c=>c.includes('alta')&&c.includes('tarj'));    if(at>=0) colAltaT=at;
+      pastVendHeader=false; // reset — next line is data
+      break;
+    }
+  }
+
+  // Parsear filas de datos
+  let cavProf=0,cavInd=0,cavDist=0;
+  let cavBA=null,cavBC=null,ursTotal=null,ursBA=null,ursBC=null;
+  let inVendSection=false;
+
+  for(const line of lines){
+    const cols=line.split('\t').map(c=>c.trim());
+    if(!cols.length) continue;
+    const c0l=cols[0].toLowerCase();
+    if(cols[0].toLowerCase()==='vendedor'){inVendSection=true;continue;}
+    if(!inVendSection) continue;
+    const c0=cols[0];
+    const grupo=(cols[colGrupo]||'').toUpperCase();
+    const getVal=ci=>{
+      const raw=cols[ci]||'';
+      const s=raw.replace(/\s/g,'').replace(/\./g,'').replace(',','.');
+      const v=parseFloat(s); return isNaN(v)?null:v;
+    };
+    const importe=getVal(colImporte);
+    if(/^total\s+vendedor\s+26\b/i.test(c0)){
+      const ct=getVal(colConsumoT),at=getVal(colAltaT);
+      if(at!=null) cavBA=Math.round(Math.abs(at));
+      if(ct!=null) cavBC=Math.round(Math.abs(ct));
+      continue;
+    }
+    if(/^total\s+vendedor\s+61\b/i.test(c0)){
+      if(importe!=null) ursTotal=Math.round(importe*100)/100;
+      const ct=getVal(colConsumoT),at=getVal(colAltaT);
+      if(at!=null) ursBA=Math.round(Math.abs(at));
+      if(ct!=null) ursBC=Math.round(Math.abs(ct));
+      continue;
+    }
+    if(c0==='26'&&importe!=null){
+      if(grupo.includes('PROFESIONAL'))                        cavProf+=importe;
+      else if(grupo.includes('DISTRIBU')||grupo==='DIS V2')    cavDist+=importe;
+      else if(grupo.includes('INDUSTRIA'))                     cavInd +=importe;
+    }
+  }
+
+  // Total distribuidores: fila resumen al final — col. A "Distribuidor…" o col. C con "DISTRIB"
+  let cavDistFooter=null;
+  for(let i=lines.length-1;i>=0;i--){
+    const cols=lines[i].split('\t').map(c=>c.trim());
+    const a=(cols[0]||'').trim();
+    if(a==='26') continue;
+    if(/^total\s+vendedor\s+(26|61)\b/i.test(a)) continue;
+    const cCol=(cols[2]||'').toUpperCase();
+    const byC=/DISTRIB/.test(cCol)||cCol==='DIS V2';
+    const byA=a&&/(?:^|\s)(?:ventas\s+)?(?:total\s+)?distribuidor/i.test(a)&&!/vendedor/i.test(a);
+    if(!byC&&!byA) continue;
+    const raw=cols[colImporte]||'';
+    const s=raw.replace(/\s/g,'').replace(/\./g,'').replace(',','.');
+    const v=parseFloat(s);
+    if(!isNaN(v)&&v>0){ cavDistFooter=Math.round(v*100)/100; break; }
+  }
+  if(cavDistFooter!=null) cavDist=cavDistFooter;
+
+  parsedERP={
+    comercialMonth,
+    cavProf:cavProf>0?Math.round(cavProf):null,
+    cavInd:cavInd>0?Math.round(cavInd):null,
+    cavDist:cavDist>0?Math.round(cavDist):null,
+    ursula:ursTotal,
+    bonos:{c:{altas:cavBA,consumo:cavBC},u:{altas:ursBA,consumo:ursBC}}
+  };
+
+  // Preview editable
+  const cm2=parsedERP.comercialMonth;
+  const mLabel=MONTHS_ES[cm2.month]+' '+cm2.year;
+  const fv=v=>v!=null?v:'';
+  const editRow=(id,lbl,val)=>`
+    <div class="erp-prev-row">
+      <span class="erp-prev-lbl">${lbl}</span>
+      <span style="display:flex;align-items:center;gap:6px;">
+        <input type="number" id="ep-${id}" value="${fv(val)}" min="0" step="0.01"
+          style="width:150px;padding:5px 10px;font-size:14px;font-family:inherit;
+                 border:1px solid var(--bdr2);border-radius:var(--r-sm);
+                 background:var(--srf);color:var(--txt);text-align:right;">
+        <span style="font-size:13px;color:var(--txt3);">€</span>
+      </span>
+    </div>`;
+
+  const preview=document.getElementById('erp-preview');
+  preview.className='erp-preview';
+  preview.innerHTML=
+    '<div class="erp-prev-head">Mes detectado: <strong>'+mLabel+'</strong>'
+    +' &nbsp;·&nbsp; Fecha hasta: '+cm2.day+'/'+(cm2.srcMon+1)+'/'+cm2.srcYear
+    +' &nbsp;·&nbsp; <span style="font-size:12px;color:var(--txt3);">Edita los valores si es necesario antes de guardar</span></div>'
+    +'<div style="padding:8px 18px 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--txt3);">Antonio Cavero</div>'
+    +editRow('cav-prof','Profesionales',parsedERP.cavProf)
+    +editRow('cav-dist','Distribuidores',parsedERP.cavDist)
+    +editRow('cav-ind','Industria',parsedERP.cavInd)
+    +editRow('cav-baltas','Alta bonos',parsedERP.bonos.c.altas)
+    +editRow('cav-bcons','Consumo bono',parsedERP.bonos.c.consumo)
+    +'<div style="padding:8px 18px 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--txt3);border-top:1px solid var(--bdr);margin-top:4px;">Úrsula Moreno</div>'
+    +editRow('urs-total','Venta total',parsedERP.ursula)
+    +editRow('urs-baltas','Alta bonos',parsedERP.bonos.u.altas)
+    +editRow('urs-bcons','Consumo bono',parsedERP.bonos.u.consumo);
+
+  const hasData=parsedERP.cavProf!==null||parsedERP.ursula!==null;
+  if(hasData){
+    showERPAlert('Análisis completado. Revisa los valores (puedes editarlos) y pulsa "Guardar datos".','success');
+    document.getElementById('erp-save-row').classList.remove('hidden');
+  } else {
+    showERPAlert('No se detectaron datos. Verifica que has copiado desde la fila de cabecera "Vendedor".','warning');
+  }
+}
+
+function saveERPData(){
+  if(!parsedERP)return;
+  const gv=id=>{const el=document.getElementById('ep-'+id);if(!el||el.value==='')return null;const v=parseFloat(el.value);return isNaN(v)?null:Math.round(v*100)/100;};
+  const r={
+    comercialMonth:parsedERP.comercialMonth,
+    cavProf:gv('cav-prof'),cavDist:gv('cav-dist'),cavInd:gv('cav-ind'),
+    ursula:gv('urs-total'),
+    bonos:{c:{altas:gv('cav-baltas'),consumo:gv('cav-bcons')},u:{altas:gv('urs-baltas'),consumo:gv('urs-bcons')}}
+  };
+  const cm=r.comercialMonth; const key=dateKey(cm.year,cm.month);
+  const ls=loadLS();
+  ls.cavero=ls.cavero||{}; ls.cavero.monthly=ls.cavero.monthly||{};
+  ls.cavero.monthly[cm.year]=ls.cavero.monthly[cm.year]||Array(12).fill(null);
+  ls.cavero.industria=ls.cavero.industria||{}; ls.cavero.distribuidores=ls.cavero.distribuidores||{};
+  ls.cavero.bonos=ls.cavero.bonos||{};
+  ls.ursula=ls.ursula||{}; ls.ursula.monthly=ls.ursula.monthly||{};
+  ls.ursula.monthly[cm.year]=ls.ursula.monthly[cm.year]||Array(12).fill(null);
+  ls.ursula.bonos=ls.ursula.bonos||{};
+  const hcC=HC.cavero.monthly[cm.year]?.[cm.month];
+  const hcU=HC.ursula.monthly[cm.year]?.[cm.month];
+  if(r.cavProf!==null&&hcC===null) ls.cavero.monthly[cm.year][cm.month]=r.cavProf;
+  if(r.cavInd!==null)  ls.cavero.industria[key]=r.cavInd;
+  if(r.cavDist!==null) ls.cavero.distribuidores[key]=r.cavDist;
+  if(r.ursula!==null&&hcU===null)  ls.ursula.monthly[cm.year][cm.month]=r.ursula;
+  ls.cavero.bonos[key]=ls.cavero.bonos[key]||{}; ls.ursula.bonos[key]=ls.ursula.bonos[key]||{};
+  if(r.bonos.c.altas!==null)   ls.cavero.bonos[key].altas=r.bonos.c.altas;
+  if(r.bonos.c.consumo!==null) ls.cavero.bonos[key].consumo=r.bonos.c.consumo;
+  if(r.bonos.u.altas!==null)   ls.ursula.bonos[key].altas=r.bonos.u.altas;
+  if(r.bonos.u.consumo!==null) ls.ursula.bonos[key].consumo=r.bonos.u.consumo;
+  const srcDate=new Date(cm.srcYear<100?2000+cm.srcYear:cm.srcYear,cm.srcMon,cm.day,12,0,0);
+  // Guardar en formato local estable (YYYY-MM-DD) para evitar desfases por zona horaria.
+  ls.lastLoadDate = `${srcDate.getFullYear()}-${String(srcDate.getMonth()+1).padStart(2,'0')}-${String(srcDate.getDate()).padStart(2,'0')}`;
+  saveLS(ls); parsedERP=null;
+  document.getElementById('erp-save-row').classList.add('hidden');
+  showERPAlert('Datos de '+MONTHS_ES[cm.month]+' '+cm.year+' guardados correctamente.','success');
+  updateHeaderDate();
+  const detectedKey=dateKey(cm.year,cm.month);
+  const selAct=document.getElementById('active-month-sel');
+  if(selAct&&selAct.querySelector('option[value="'+detectedKey+'"]')){
+    selAct.value=detectedKey;
+    activeCM=getComercialMonthByIndex(cm.year,cm.month);
+  }
+  const data=getMerged();
+  renderPanel('cavero',data,activeCM); renderPanel('ursula',data,activeCM);
+  chartsRendered={cavero:true,ursula:true};
+
+  syncDataJsonToGitHub().then(res=>{
+    if(res.ok){
+      showERPAlert('Datos guardados en el cuadro y sincronizados en data.json de GitHub.','success');
+    } else if(!res.skipped){
+      showERPAlert('Datos guardados en el cuadro, pero no se pudo sincronizar data.json en GitHub.','warning');
+    }
+  }).catch(()=>{
+    showERPAlert('Datos guardados en el cuadro, pero falló la sincronización con GitHub.','warning');
+  });
+}
+
+
+function saveTarjetaManual(){
+  const sel=document.getElementById('tarj-month-sel');
+  const parts=sel.value.split('-'); const yr=parseInt(parts[0]),mon=parseInt(parts[1]); const key=sel.value;
+  const cA=parseFloat(document.getElementById('tarj-c-altas').value)||null;
+  const cC=parseFloat(document.getElementById('tarj-c-consumo').value)||null;
+  const uA=parseFloat(document.getElementById('tarj-u-altas').value)||null;
+  const uC=parseFloat(document.getElementById('tarj-u-consumo').value)||null;
+  if(cA===null&&cC===null&&uA===null&&uC===null){ showTarjAlert('Introduce al menos un valor.','warning'); return; }
+  const ls=loadLS();
+  ls.cavero=ls.cavero||{}; ls.cavero.bonos=ls.cavero.bonos||{};
+  ls.ursula=ls.ursula||{}; ls.ursula.bonos=ls.ursula.bonos||{};
+  ls.cavero.bonos[key]=ls.cavero.bonos[key]||{}; ls.ursula.bonos[key]=ls.ursula.bonos[key]||{};
+  if(cA!==null) ls.cavero.bonos[key].altas=Math.round(cA);
+  if(cC!==null) ls.cavero.bonos[key].consumo=cC;
+  if(uA!==null) ls.ursula.bonos[key].altas=Math.round(uA);
+  if(uC!==null) ls.ursula.bonos[key].consumo=uC;
+  saveLS(ls);
+  showTarjAlert(`Bonos de ${MONTHS_ES[mon-1]} ${yr} guardados.`,'success');
+  const data=getMerged();
+  renderPanel('cavero',data,activeCM); renderPanel('ursula',data,activeCM);
+  chartsRendered={cavero:true,ursula:true};
+
+  syncDataJsonToGitHub().then(res=>{
+    if(res.ok){
+      showTarjAlert(`Bonos de ${MONTHS_ES[mon-1]} ${yr} guardados y sincronizados en data.json.`,'success');
+    } else if(!res.skipped){
+      showTarjAlert(`Bonos guardados, pero no se pudo sincronizar data.json en GitHub.`,'warning');
+    }
+  }).catch(()=>{
+    showTarjAlert(`Bonos guardados, pero falló la sincronización con GitHub.`,'warning');
+  });
+}
+
+function showTarjAlert(msg,type){
+  const el=document.getElementById('tarj-save-alert');
+  el.className='erp-alert '+type; el.textContent=msg;
+  el.classList.remove('hidden'); setTimeout(()=>el.classList.add('hidden'),4000);
+}
+function showERPAlert(msg,type){ document.getElementById('erp-alert-wrap').innerHTML=`<div class="erp-alert ${type}">${msg}</div>`; }
+function clearERP(){
+  document.getElementById('erp-textarea').value='';
+  document.getElementById('erp-alert-wrap').innerHTML='';
+  document.getElementById('erp-preview').classList.add('hidden');
+  document.getElementById('erp-save-row').classList.add('hidden');
+  parsedERP=null;
+}
+function resetLS(){
+  if(!confirm('¿Borrar todos los datos importados? Los hardcodeados NO se borran.'))return;
+  localStorage.removeItem(LS_KEY);
+  updateHeaderDate();
+  initBudgetEditor();
+  const data=getMerged();
+  renderPanel('cavero',data,activeCM); renderPanel('ursula',data,activeCM);
+  chartsRendered={cavero:true,ursula:true};
+  showERPAlert('Datos importados eliminados.','success');
+}
+
+/* ── HEADER DATE: fecha última carga ERP ── */
+function updateHeaderDate(){
+  const ls=loadLS();
+  const el=document.getElementById('header-date');
+  if(ls.lastLoadDate){
+    const d=new Date(ls.lastLoadDate);
+    el.textContent=d.toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'});
+  } else {
+    el.textContent='Sin cargas guardadas';
+    el.style.fontSize='13px';
+  }
+}
+
+/* ── BUDGET EDITOR ── */
+function initBudgetEditor(){
+  const tbody = document.getElementById('budget-tbody');
+  if(!tbody) return;
+  const data = getMerged();
+  tbody.innerHTML = '';
+  let totC=0, totU=0;
+  for(let m=0;m<12;m++){
+    const vC = data.cavero.budget2026[m];
+    const vU = data.ursula.budget2026[m];
+    totC += vC||0; totU += vU||0;
+    // Check if this month has a custom LS value (show indicator)
+    const ls = loadLS();
+    const customC = ls?.cavero?.budget2026?.[m] != null;
+    const customU = ls?.ursula?.budget2026?.[m] != null;
+    const tr = document.createElement('tr');
+    tr.style.cssText = 'border-bottom:1px solid var(--bdr);';
+    tr.innerHTML = `
+      <td style="padding:10px 14px;font-weight:500;">${MONTHS_ES[m]}
+        ${customC||customU ? '<span style="font-size:11px;background:#fef3e0;color:#7a4a05;border-radius:4px;padding:1px 6px;margin-left:6px;">editado</span>' : ''}
+      </td>
+      <td style="padding:8px 14px;text-align:right;">
+        <input type="number" class="field-input budget-input"
+          id="bud-c-${m}" value="${vC}" min="0" step="1"
+          style="width:140px;text-align:right;font-size:15px;"
+          oninput="updateBudgetTotals()">
+      </td>
+      <td style="padding:8px 14px;text-align:right;">
+        <input type="number" class="field-input budget-input"
+          id="bud-u-${m}" value="${vU}" min="0" step="1"
+          style="width:140px;text-align:right;font-size:15px;"
+          oninput="updateBudgetTotals()">
+      </td>`;
+    tbody.appendChild(tr);
+  }
+  updateBudgetTotals();
+}
+
+function updateBudgetTotals(){
+  let totC=0, totU=0;
+  for(let m=0;m<12;m++){
+    totC += parseFloat(document.getElementById('bud-c-'+m)?.value||0)||0;
+    totU += parseFloat(document.getElementById('bud-u-'+m)?.value||0)||0;
+  }
+  const eC=document.getElementById('budget-total-cavero');
+  const eU=document.getElementById('budget-total-ursula');
+  if(eC) eC.textContent = new Intl.NumberFormat('es-ES').format(Math.round(totC))+' €';
+  if(eU) eU.textContent = new Intl.NumberFormat('es-ES').format(Math.round(totU))+' €';
+}
+
+function saveBudgets(){
+  const budC=[], budU=[];
+  for(let m=0;m<12;m++){
+    const vC=parseFloat(document.getElementById('bud-c-'+m)?.value);
+    const vU=parseFloat(document.getElementById('bud-u-'+m)?.value);
+    budC.push(isNaN(vC)?HC.cavero.budget2026[m]:Math.round(vC));
+    budU.push(isNaN(vU)?HC.ursula.budget2026[m]:Math.round(vU));
+  }
+  const ls=loadLS();
+  ls.cavero=ls.cavero||{}; ls.ursula=ls.ursula||{};
+  ls.cavero.budget2026=budC;
+  ls.ursula.budget2026=budU;
+  saveLS(ls);
+  // Re-init editor to show "editado" badges
+  initBudgetEditor();
+  // Refresh panels
+  const data=getMerged();
+  renderPanel('cavero',data,activeCM); renderPanel('ursula',data,activeCM);
+  chartsRendered={cavero:true,ursula:true};
+  showBudgetAlert('Presupuestos guardados correctamente.','success');
+}
+
+function resetBudgets(){
+  if(!confirm('¿Restaurar los presupuestos por defecto? Se perderán los valores editados.')) return;
+  const ls=loadLS();
+  if(ls.cavero) delete ls.cavero.budget2026;
+  if(ls.ursula) delete ls.ursula.budget2026;
+  saveLS(ls);
+  initBudgetEditor();
+  const data=getMerged();
+  renderPanel('cavero',data,activeCM); renderPanel('ursula',data,activeCM);
+  chartsRendered={cavero:true,ursula:true};
+  showBudgetAlert('Presupuestos restaurados a los valores por defecto.','success');
+}
+
+function showBudgetAlert(msg,type){
+  const el=document.getElementById('budget-alert');
+  if(!el) return;
+  el.className='erp-alert '+type; el.textContent=msg;
+  el.classList.remove('hidden'); setTimeout(()=>el.classList.add('hidden'),4000);
+}
+
+/* ── ACTIVE MONTH STATE ── */
+// activeCM is the comercialMonth object used for all KPI rendering
+// By default = current commercial month; can be overridden via selector
+let activeCM = null;
+
+function getComercialMonthByIndex(year, month) {
+  const pY = month===0 ? year-1 : year;
+  const pM = month===0 ? 11 : month-1;
+  const start = new Date(pY, pM, 26, 12,0,0);
+  const end   = new Date(year, month, 25, 12,0,0);
+  const totalDays = countWork(start, end);
+
+  // Usar lastLoadDate (fecha_hasta del Excel) como referencia, parseada como fecha local
+  const ls = loadLS();
+  let refDate;
+  if(ls.lastLoadDate){
+    refDate=parseLastLoadDateLocal(ls.lastLoadDate);
+    if(!refDate){
+      refDate=new Date(TODAY); refDate.setHours(12,0,0,0);
+    }
+  } else {
+    refDate=new Date(TODAY); refDate.setHours(12,0,0,0);
+  }
+  refDate = capRefDateForElapsed(refDate, end, TODAY);
+
+  let elapsedDays;
+  if(refDate < start)    elapsedDays = 0;
+  else if(refDate > end) elapsedDays = totalDays;
+  else                   elapsedDays = countWork(start, refDate);
+  return {year, month, start, end, totalDays, elapsedDays};
+}
+
+function initActiveMonthSel(){
+  const sel = document.getElementById('active-month-sel');
+  if(!sel) return;
+  sel.innerHTML = '';
+  // Populate 2026 months
+  for(let m=0; m<12; m++){
+    const opt = document.createElement('option');
+    opt.value = `2026-${String(m+1).padStart(2,'0')}`;
+    opt.textContent = `${MONTHS_ES[m]} 2026`;
+    sel.appendChild(opt);
+  }
+  // Siempre abrir en el mes comercial en curso (según la fecha de hoy).
+  const cur = getComercialMonth(TODAY);
+  activeCM = cur;
+  sel.value = dateKey(cur.year, cur.month);
+  // Show "current month" label
+  const lbl = document.getElementById('current-month-label');
+  if(lbl) lbl.textContent = `${MONTHS_ES[cur.month]} ${cur.year}`;
+}
+
+function changeActiveMonth(val){
+  const parts = val.split('-');
+  const yr = parseInt(parts[0]), mn = parseInt(parts[1])-1;
+  activeCM = getComercialMonthByIndex(yr, mn);
+  const data = getMerged();
+  renderPanel('cavero', data, activeCM);
+  renderPanel('ursula', data, activeCM);
+  chartsRendered = {cavero:true, ursula:true};
+}
+
+function resetToCurrentMonth(){
+  const cur = getComercialMonth(TODAY);
+  activeCM = cur;
+  const sel = document.getElementById('active-month-sel');
+  if(sel) sel.value = dateKey(cur.year, cur.month);
+  const data = getMerged();
+  renderPanel('cavero', data, activeCM);
+  renderPanel('ursula', data, activeCM);
+  chartsRendered = {cavero:true, ursula:true};
+}
+
+/* ── TABS ── */
+let chartsRendered={cavero:false,ursula:false};
+function showTab(tab){
+  ['cavero','ursula','erp'].forEach(t=>{
+    document.getElementById('panel-'+t).classList.remove('active');
+    document.getElementById('tab-'+t).className='tab-btn';
+  });
+  document.getElementById('panel-'+tab).classList.add('active');
+  document.getElementById('tab-'+tab).className='tab-btn active-'+tab;
+  if((tab==='cavero'||tab==='ursula')&&!chartsRendered[tab]){
+    const data=getMerged();
+    buildChart2026(tab,data,activeCM); buildChartRolling(tab,data,activeCM); buildChartAnnual(tab,data,activeCM);
+    chartsRendered[tab]=true;
+  }
+}
+
+function initMonthSel(){
+  const sel=document.getElementById('tarj-month-sel'); sel.innerHTML='';
+  for(let m=0;m<12;m++){
+    const opt=document.createElement('option');
+    opt.value=`2026-${String(m+1).padStart(2,'0')}`;
+    opt.textContent=`${MONTHS_ES[m]} 2026`;
+    sel.appendChild(opt);
+  }
+  sel.value = dateKey(activeCM.year, activeCM.month);
+}
+
+const TODAY=new Date();
+async function init(){
+  // Try to load data.json generated by Python script (silent if not found)
+  await tryLoadDataJson();
+  updateHeaderDate();
+  initActiveMonthSel();   // sets activeCM after lastLoadDate sync
+  initMonthSel();
+  initBudgetEditor();
+  const data=getMerged();
+  renderPanel('cavero',data,activeCM); renderPanel('ursula',data,activeCM);
+  chartsRendered.cavero=true;
+  showTab('cavero');
+}
+document.addEventListener('DOMContentLoaded',init);
 </script>
-
-<!-- MOBILE BOTTOM NAV -->
-<nav class="mob-nav" id="mob-nav">
-  <div class="mob-nav-item on" onclick="nav('resumen')" data-page="resumen">
-    <span class="mn-ic">📊</span><span>Resumen</span>
-  </div>
-  <div class="mob-nav-item" onclick="nav('mensual')" data-page="mensual">
-    <span class="mn-ic">📅</span><span>Mensual</span>
-  </div>
-  <div class="mob-nav-item" onclick="nav('centros')" data-page="centros">
-    <span class="mn-ic">🏪</span><span>Centros</span>
-  </div>
-  <div class="mob-nav-item" onclick="nav('comerciales')" data-page="comerciales">
-    <span class="mn-ic">👤</span><span>Comercial</span>
-  </div>
-  <div class="mob-nav-item" onclick="nav('historico')" data-page="historico">
-    <span class="mn-ic">📈</span><span>Histórico</span>
-  </div>
-</nav>
-
 </body>
 </html>
