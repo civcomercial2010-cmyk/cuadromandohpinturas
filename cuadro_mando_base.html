@@ -182,7 +182,7 @@ tbody tr:hover:not(.tot):not(.grp) td{background:#f5f7ff}
     box-shadow:0 2px 8px rgba(0,0,0,.2)
   }
   .mob-header-left{display:flex;align-items:center;gap:9px}
-  .mob-header-ic{width:28px;height:28px;background:var(--blue-m);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+  .mob-header-ic{width:28px;height:28px;background:var(--blue-m);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;overflow:hidden}
   .mob-header-title{font-size:13px;font-weight:700;color:#fff;line-height:1.2}
   .mob-header-page{font-size:9px;color:var(--sb-muted);text-transform:uppercase;letter-spacing:.07em}
   .mob-header-right{display:flex;align-items:center;gap:8px}
@@ -241,7 +241,7 @@ tbody tr:hover:not(.tot):not(.grp) td{background:#f5f7ff}
 <!-- MOBILE HEADER -->
 <div class="mob-header" id="mob-header">
   <div class="mob-header-left">
-    <div class="mob-header-ic">🦛</div>
+    <div class="mob-header-ic"><img src="./Huella_HIPOPOTAMO.png" alt="Hipopótamo" width="28" height="28" style="display:block;object-fit:contain"></div>
     <div>
       <div class="mob-header-title">Hipopotamo</div>
       <div class="mob-header-page" id="mob-page-name">Resumen Ejecutivo</div>
@@ -259,7 +259,7 @@ tbody tr:hover:not(.tot):not(.grp) td{background:#f5f7ff}
 <nav class="sb">
   <div class="sb-top">
     <div class="sb-logo">
-      <div class="sb-ic">🦛</div>
+      <div class="sb-ic"><img src="./Huella_HIPOPOTAMO.png" alt="Hipopótamo" width="32" height="32" style="display:block;object-fit:contain"></div>
       <div class="sb-nm"><h1>HIPOPOTAMO<br>PINTURAS</h1><p>Cuadro de Mando</p></div>
     </div>
   </div>
@@ -1593,7 +1593,7 @@ const FESTIVOS = {
          '2025-04-23','2025-05-01','2025-10-12','2025-11-01','2025-12-06',
          '2025-12-08','2025-12-25'],
   2026: ['2026-01-01','2026-01-06','2026-03-05','2026-04-02','2026-04-03',
-         '2026-04-23','2026-05-01','2026-10-12','2026-11-01','2026-12-06',
+         '2026-04-23','2026-05-01','2026-10-12','2026-11-02','2026-12-07',
          '2026-12-08','2026-12-25'],
   2027: ['2027-01-01','2027-01-06','2027-03-05','2027-03-26','2027-03-29',
          '2027-04-23','2027-05-01','2027-10-12','2027-11-01','2027-12-06',
@@ -1602,7 +1602,7 @@ const FESTIVOS = {
 
 function esFestivo(fecha, ano) {
   const lista = FESTIVOS[ano] || [];
-  const str = fecha.toISOString().slice(0,10);
+  const str = `${fecha.getFullYear()}-${String(fecha.getMonth()+1).padStart(2,'0')}-${String(fecha.getDate()).padStart(2,'0')}`;
   return lista.includes(str);
 }
 
