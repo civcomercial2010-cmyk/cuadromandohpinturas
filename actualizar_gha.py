@@ -466,14 +466,15 @@ def main():
         enviar_telegram(cfg, "ERROR: Falló la lectura del Excel.")
         sys.exit(1)
 
-    # Determinar mes desde fecha del ERP (más fiable que fecha del servidor)
+    # Determinar mes desde fecha del ERP (más fiable que fecha del servidor).
+    #
+    # Nota: en algunos ERP el campo "Fecha hasta" puede venir en día 26..N
+    # aunque el corte real que queremos reflejar sea el comercial (hasta día 25).
+    # Para "rescatar" ventas hasta 25/04 inclusive, asignamos el mes por el mes
+    # calendario y dejamos que `dias_mes_comercial()` haga el cap al 25.
     fecha_hasta = datos.get("fechaHasta_date") or datos.get("fechaERP_date")
     if fecha_hasta:
-        if fecha_hasta.day <= 25:
-            mes, ano = fecha_hasta.month, fecha_hasta.year
-        else:
-            mes = fecha_hasta.month + 1 if fecha_hasta.month < 12 else 1
-            ano = fecha_hasta.year if fecha_hasta.month < 12 else fecha_hasta.year + 1
+        mes, ano = fecha_hasta.month, fecha_hasta.year
         logging.info(f"Mes comercial (desde ERP fecha_hasta={fecha_hasta}): {mes}/{ano}")
     else:
         logging.warning("No se leyó fecha del ERP — usando mes por fecha actual")
