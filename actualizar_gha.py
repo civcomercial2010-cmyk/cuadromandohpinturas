@@ -34,7 +34,7 @@ def cargar_config():
         "rutas": {
             "excel_descargado": "/tmp/ventas_por_caja.xlsx",
             "html_salida":      "/tmp/cuadro_mando.html",
-            "html_plantilla":   "cuadro_mando_base.html",
+            "html_plantilla":   "cuadro_mando_v2.html",
         },
         "github": {
             "token":           os.environ["GITHUB_TOKEN_HP"],
@@ -345,28 +345,14 @@ def actualizar_html(cfg, datos, mes, ano, dias, dias_total):
   const d = {mes_js};
   if(!window._autoLoaded){{
     window._autoLoaded=true;
-    window.addEventListener('load',function(){{
-      if(!DM[d.ano])DM[d.ano]={{}};
-      d.diasFromERP=true;
-      DM[d.ano][d.mes]=d;
-      MA={{ano:d.ano,mes:d.mes}};
-      ['mt-1','mt-2','mt-3','mt-4','mt-5','mt-6','mt-7','mt-8',
-       'mt-9','mt-10','mt-11','mt-12'].forEach(id=>{{
-        const el=document.getElementById(id);
-        if(el)el.classList.remove('has','cur');
-      }});
-      const mtEl=document.getElementById('mt-'+d.mes);
-      if(mtEl)mtEl.classList.add('has','cur');
-      document.getElementById('s-mes').value=d.mes;
-      if(d.dias&&document.getElementById('i-d'))
-        document.getElementById('i-d').value=d.dias;
-      if(d.diasT&&document.getElementById('i-dt'))
-        document.getElementById('i-dt').value=d.diasT;
-      updSb();
-      if(typeof setUltimaCarga==='function')setUltimaCarga(d.fechaERP);
-      rResumen();
-      console.log('OK Auto-cargado:',d.mes+'/'+d.ano,'Total:',d.total);
-    }});
+    function run(){{
+      if(typeof applyAutoERPData==='function'){{
+        applyAutoERPData(d);
+        console.log('OK Auto-cargado V2:',d.mes+'/'+d.ano,'Total:',d.total);
+      }}
+    }}
+    if(document.readyState==='complete')run();
+    else window.addEventListener('load',run);
   }}
 }})();
 """
