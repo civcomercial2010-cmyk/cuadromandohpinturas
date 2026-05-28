@@ -252,12 +252,9 @@ textarea:focus{outline:none;border-color:var(--blue)}
 
 <!-- SCORECARD BAR -->
 <div class="sbar">
-  <div class="sc b"   id="sc0"><div class="sc-l">Ventas YTD 2026</div><div class="sc-v" id="s0v">—</div><div class="sc-s" id="s0s">—</div></div>
   <div class="sc"     id="sc1"><div class="sc-l">Proyección Mes Actual</div><div class="sc-v" id="s1v">—</div><div class="sc-s" id="s1s">—</div></div>
-  <div class="sc"     id="sc2"><div class="sc-l">% vs Ppto (proyección)</div><div class="sc-v" id="s2v">—</div><div class="sc-s" id="s2s">—</div></div>
   <div class="sc"     id="sc3"><div class="sc-l">Forecast Cierre Año</div><div class="sc-v" id="s3v">—</div><div class="sc-s" id="s3s">—</div></div>
-  <div class="sc"     id="sc4"><div class="sc-l">GAP vs Ppto Anual</div><div class="sc-v" id="s4v">—</div><div class="sc-s" id="s4s">—</div></div>
-  <div class="sc"     id="sc5"><div class="sc-l">vs Mismo Periodo 2025</div><div class="sc-v" id="s5v">—</div><div class="sc-s" id="s5s">—</div></div>
+  <div class="sc"     id="sc45"><div class="sc-l">Gap + vs Mismo Periodo 2025</div><div class="sc-v" id="s45v">—</div><div class="sc-s" id="s45s">—</div></div>
 </div>
 
 <main class="main">
@@ -303,10 +300,6 @@ textarea:focus{outline:none;border-color:var(--blue)}
   <div class="ch"><div class="ch-t">Facturación acumulada móvil 12 meses · Ene 2020 – actualidad</div>
     <div style="position:relative;height:260px"><canvas id="cRoll"></canvas></div>
     <div class="roll-yoy" id="rollYoY">—</div></div>
-  <div class="sec">Detalle del Mes</div>
-  <div class="msel" id="mselVentas" style="margin-bottom:14px"></div>
-  <div class="ch"><div class="ch-t" id="vTit">—</div>
-    <table class="tbl" id="vTbl"></table></div>
 </div>
 
 <!-- ══ CENTROS ══ -->
@@ -324,6 +317,10 @@ textarea:focus{outline:none;border-color:var(--blue)}
     <div style="position:relative;height:260px"><canvas id="cDeco"></canvas></div></div>
   <div class="sec">Detalle por Centro — Mes a Mes 2026</div>
   <div class="ch" style="overflow-x:auto"><table class="tbl" id="cenTbl"></table></div>
+  <div class="sec">Detalle del Mes</div>
+  <div class="msel" id="mselVentas" style="margin-bottom:14px"></div>
+  <div class="ch"><div class="ch-t" id="vTit">—</div>
+    <table class="tbl" id="vTbl"></table></div>
 </div>
 
 <!-- ══ COMERCIAL ══ -->
@@ -574,6 +571,13 @@ function proy(r,d,dt){
   if(!d||!dt||dt<=0||d>=dt)return null;
   return Math.round(r/d*dt);
 }
+function projOrReal(d,key='t'){
+  if(!d)return null;
+  const real=d[key];
+  if(real==null)return null;
+  const p=proy(real,d.dias,d.diasT);
+  return p??real;
+}
 
 function lastMo(){for(let i=11;i>=0;i--){if(D26[i])return i;}return-1;}
 function ytd(){let s=0,mo=0;for(let i=0;i<12;i++){if(D26[i]){s+=D26[i].t;mo=i+1;}}return{total:s,months:mo};}
@@ -601,7 +605,7 @@ function showPage(id,btn){
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
   document.getElementById('page-'+id).classList.add('on');
   if(btn)btn.classList.add('on');
-  if(id==='centros'){renderCentroCards();renderCentrosCharts();}
+  if(id==='centros'){renderCentroCards();renderCentrosCharts();renderMselVentas();renderVTable();}
   if(id==='comercial')renderComercialPage();
 }
 
@@ -612,32 +616,22 @@ function renderScorecard(){
   const y=ytd();const py=pptYTD(y.months);const lm=lastMo();
   const md=lm>=0?D26[lm]:null;const ap=annPpt();const fc=forecast();
   const gap=fc!=null?fc-ap:null;const yo=yoy();
-
-  document.getElementById('s0v').textContent=fe(y.total,true);
-  document.getElementById('s0s').textContent=(y.months?MF[y.months-1]+' 2026 ('+y.months+' meses)':'—');
-
   const prV=md?proy(md.t,md.dias,md.diasT):null;
-  document.getElementById('s1v').textContent=prV?fe(prV,true):(md?fe(md.t,true)+' ✓':'—');
-  document.getElementById('s1s').textContent=lm>=0?MF[lm]+(prV?' · mes en curso':' · mes cerrado'):'—';
-  document.getElementById('sc1').className='sc '+(prV?'gold':'g');
+  const useM=prV??(md?md.t:null);
+  const mRate=(useM!=null&&md)?useM/PRES.total[lm]:null;
+  document.getElementById('s1v').textContent=useM!=null?`${fe(useM,true)} · ${fp(mRate)}`:'—';
+  document.getElementById('s1s').textContent=lm>=0?`${MF[lm]} · ppto ${fe(PRES.total[lm],true)}`:'—';
+  document.getElementById('sc1').className='sc '+tc(mRate);
 
   const ytdWithProy=lm>=0&&prV?(y.total-(md?.t||0)+prV):y.total;
-  const rate=ytdWithProy/py;
-  document.getElementById('s2v').textContent=fp(rate);
-  document.getElementById('s2s').textContent='Ppto YTD: '+fe(py,true);
-  document.getElementById('sc2').className='sc '+tc(rate);
 
   document.getElementById('s3v').textContent=fc?fe(fc,true):'—';
-  document.getElementById('s3s').textContent='Ppto año: '+fe(ap,true);
+  document.getElementById('s3s').textContent='YTD: '+fe(ytdWithProy,true)+' · Ppto YTD: '+fe(py,true);
   document.getElementById('sc3').className='sc '+(fc?tc(fc/ap):'');
 
-  document.getElementById('s4v').textContent=gap!=null?sgn(gap)+fe(gap,true):'—';
-  document.getElementById('s4s').textContent=gap!=null?(gap>=0?'Por encima del objetivo':'Por debajo del objetivo'):'—';
-  document.getElementById('sc4').className='sc '+(gap!=null?(gap>=0?'g':'r'):'');
-
-  document.getElementById('s5v').textContent=yo!=null?sgn(yo)+(yo*100).toFixed(1)+'%':'—';
-  document.getElementById('s5s').textContent=yo!=null?'vs ene-'+MF[y.months-1]+' 2025':'—';
-  document.getElementById('sc5').className='sc '+(yo!=null?(yo>=0?'g':'r'):'');
+  document.getElementById('s45v').textContent=(gap!=null&&yo!=null)?`${sgn(gap)}${fe(gap,true)} · ${sgn(yo)}${(yo*100).toFixed(1)}%`:'—';
+  document.getElementById('s45s').textContent=yo!=null?'Gap anual y vs ene-'+MF[y.months-1]+' 2025':'—';
+  document.getElementById('sc45').className='sc '+(gap!=null&&gap>=0&&yo!=null&&yo>=0?'g':'r');
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -648,7 +642,11 @@ function renderAlerts(){
   if(!m||!m.sjp){document.getElementById('alertZ').innerHTML='';return;}
   let red=[],amb=[];
   CEN.forEach(c=>{
-    if(m[c.k]!=null){const p=m[c.k]/PRES[c.k][lm];if(p<.7)red.push(c.n);else if(p<.9)amb.push(c.n);}
+    if(m[c.k]!=null){
+      const useV=projOrReal(m,c.k);
+      const p=useV/PRES[c.k][lm];
+      if(p<.7)red.push(c.n);else if(p<.9)amb.push(c.n);
+    }
   });
   let html='';
   if(red.length)html+=`<div class="alert r">⚠ Centros bajo el 70% del objetivo: <strong>${red.join(', ')}</strong></div>`;
@@ -698,9 +696,9 @@ function renderCeoKPIs(){
   const useV=prV??m.t;
   const p=useV/pp;
   const prev=HT[2025][selCeoMo];
-  const yo=(m.t-prev)/prev;
+  const yo=(useV-prev)/prev;
   const prev24=HT[2024][selCeoMo];
-  const yo24=(m.t-prev24)/prev24;
+  const yo24=(useV-prev24)/prev24;
   let ytdVal=0;
   for(let i=0;i<=selCeoMo;i++){if(D26[i])ytdVal+=D26[i].t;}
   const ytdPpt=PRES.total.slice(0,selCeoMo+1).reduce((a,b)=>a+b,0);
@@ -708,20 +706,20 @@ function renderCeoKPIs(){
   document.getElementById('ceoKPIs').innerHTML=`
     <div class="kcard">
       <div class="kl">Ventas ${MF[selCeoMo]} 2026</div>
-      <div class="kv" style="color:var(--blue)">${fe(m.t,true)}</div>
-      ${prV?`<div class="kd" style="color:var(--amber)">▶ Proyección fin mes: ${fe(prV,true)}</div>`:''}
+      <div class="kv" style="color:var(--blue)">${fe(useV,true)}</div>
+      ${prV?`<div class="kd" style="color:var(--amber)">▶ Real a fecha: ${fe(m.t,true)} · Proyección fin mes: ${fe(prV,true)}</div>`:''}
       <div class="kd ${p>=1?'up':'dn'}">${p>=1?'▲':'▼'} ${fp(p)} vs ppto ${fe(pp,true)}</div>
     </div>
     <div class="kcard">
       <div class="kl">vs ${MF[selCeoMo]} 2025</div>
       <div class="kv" style="color:var(--${yo>=0?'green':'red'})">${sgn(yo)}${(yo*100).toFixed(1)}%</div>
-      <div class="kd neu">${MF[selCeoMo]} 2025: ${fe(prev,true)}</div>
+      <div class="kd neu">${MF[selCeoMo]} 2025: ${fe(prev,true)} · Base cálculo: ${prV?'proyección':'real'}</div>
       <div class="kd" style="color:var(--${yo24>=0?'green':'red'})">vs 2024: ${sgn(yo24)}${(yo24*100).toFixed(1)}% (${fe(prev24,true)})</div>
     </div>
     <div class="kcard">
       <div class="kl">Acumulado hasta ${MF[selCeoMo]}</div>
-      <div class="kv" style="color:var(--${tc(ytdVal/ytdPpt)})">${fe(ytdVal,true)}</div>
-      <div class="kd neu">${fp(ytdVal/ytdPpt)} del obj. YTD · ${fe(ytdPpt,true)}</div>
+      <div class="kv" style="color:var(--${tc((ytdVal-(m.t||0)+useV)/ytdPpt)})">${fe(ytdVal-(m.t||0)+useV,true)}</div>
+      <div class="kd neu">${fp((ytdVal-(m.t||0)+useV)/ytdPpt)} del obj. YTD · ${fe(ytdPpt,true)}</div>
     </div>`;
 }
 
@@ -974,11 +972,15 @@ function renderComercialPage(){
     }
     const ytdP=ytdPpt>0?ytdReal/ytdPpt:null;
 
-    let qtHtml='<table class="qtable"><thead><tr><th>Trimestre</th><th>Real</th><th>Ppto</th><th>Dif.</th><th>%</th></tr></thead><tbody>';
+    let qtHtml='<table class="qtable"><thead><tr><th>Trimestre</th><th>Real + Proy</th><th>Ppto</th><th>Dif.</th><th>%</th></tr></thead><tbody>';
     Q.forEach(q=>{
       let qReal=0,qPpt=0,hasData=false;
       q.months.forEach(mi=>{
-        if(D26[mi]&&D26[mi][com.k]!=null){qReal+=D26[mi][com.k];hasData=true;}
+        if(D26[mi]&&D26[mi][com.k]!=null){
+          const dmi=D26[mi];
+          const v=(mi===lm)?(projOrReal(dmi,com.k)??dmi[com.k]):dmi[com.k];
+          qReal+=v;hasData=true;
+        }
         qPpt+=PRES[com.k][mi];
       });
       if(!hasData)return;
@@ -1102,7 +1104,7 @@ function renderVTable(){
     const real=m[c.k];const pp=PRES[c.k][selMoVentas];
     const pr=real!=null?proy(real,m.dias,m.diasT):null;
     const useV=pr??real;const p=useV!=null?useV/pp:null;const delta=useV!=null?useV-pp:null;
-    const a25=HT[2025][selMoVentas]*(pp/PRES.total[selMoVentas]);const yo=real!=null?(real-a25)/a25:null;
+    const a25=HT[2025][selMoVentas]*(pp/PRES.total[selMoVentas]);const yo=useV!=null?(useV-a25)/a25:null;
     html+=`<tr>
       <td><span class="dot ${tc(p)}" style="margin-right:6px"></span>${c.n}</td>
       <td>${real!=null?fe(real):'—'}</td>
@@ -1114,7 +1116,7 @@ function renderVTable(){
     </tr>`;
   });
   const pp0=PRES.total[selMoVentas];const pr0=proy(m.t,m.dias,m.diasT);const useV0=pr0??m.t;
-  const p0=useV0/pp0;const d0=useV0-pp0;const yo0=(m.t-HT[2025][selMoVentas])/HT[2025][selMoVentas];
+  const p0=useV0/pp0;const d0=useV0-pp0;const yo0=(useV0-HT[2025][selMoVentas])/HT[2025][selMoVentas];
   html+=`<tr><td>TOTAL</td><td>${fe(m.t)}</td><td style="color:var(--amber)">${pr0?fe(pr0):'—'}</td>
     <td>${fe(pp0)}</td><td style="color:var(--${d0>=0?'green':'red'})">${sgn(d0)+fe(d0)}</td>
     <td>${badge(p0)}</td><td style="color:var(--${yo0>=0?'green':'red'})">${sgn(yo0)+(yo0*100).toFixed(1)}%</td>
@@ -1132,7 +1134,7 @@ function renderChartComp(){
 function renderChartRoll(){
   const ALL=[];
   for(let y=2019;y<=2025;y++)HT[y].forEach(v=>ALL.push(v));
-  for(let i=0;i<12;i++)ALL.push(D26[i]?D26[i].t:null);
+  for(let i=0;i<12;i++)ALL.push(D26[i]?projOrReal(D26[i],'t'):null);
 
   const rD=[],rL=[],rPy=[];
   for(let i=12;i<ALL.length;i++){
@@ -1329,7 +1331,7 @@ const YCOLS={2019:'#94A3B8',2020:'#7DD3FC',2021:'#6EE7B7',2022:'#FCD34D',2023:'#
 
 function renderChartEstac(){
   const ds=selYears.map(y=>{
-    const data=y===2026?D26.map(d=>d?d.t:null):HT[y];
+    const data=y===2026?D26.map(d=>d?projOrReal(d,'t'):null):HT[y];
     return{label:y+'',data,borderColor:YCOLS[y]||'#94A3B8',backgroundColor:'transparent',
       borderWidth:y>=2024?2.5:1.5,tension:.4,
       pointRadius:y>=2025?3:1,pointBackgroundColor:YCOLS[y]||'#94A3B8'};
@@ -1472,22 +1474,6 @@ function applyAutoERPData(d){
 }
 
 /* AUTO_DATA_INJECT */
-// Datos inyectados automaticamente 27/05/2026 21:06
-(function autoLoad(){
-  const d = {"total": 17063.63, "sjp": 8320.14, "sjd": 0.0, "garp": 1193.47, "gard": 181.81, "alm": 4333.45, "avd": 3034.75, "cavero": 8436.86, "ursula": 3813.03, "prof": 12345.91, "pvp_pin": 2996.07, "pvp_ins": 181.81, "distrib": 1217.92, "ind": 321.91, "dias": 2, "diasT": 23, "mes": 6, "ano": 2026, "diasFromERP": true, "actualizado": "27/05/2026 21:06", "fechaERP": "ERP 27/05/26"};
-  if(!window._autoLoaded){
-    window._autoLoaded=true;
-    function run(){
-      if(typeof applyAutoERPData==='function'){
-        applyAutoERPData(d);
-        console.log('OK Auto-cargado V2:',d.mes+'/'+d.ano,'Total:',d.total);
-      }
-    }
-    if(document.readyState==='complete')run();
-    else window.addEventListener('load',run);
-  }
-})();
-
 
 // ═══════════════════════════════════════════════════════════
 // INIT
