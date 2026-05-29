@@ -311,6 +311,74 @@ def parsear_excel(ruta):
 
 # ─── ACTUALIZAR HTML ─────────────────────────────────────────────────────────
 
+MESES_CONST = {
+    1: "ENE26", 2: "FEB26", 3: "MAR26", 4: "ABR26", 5: "MAY26", 6: "JUN26",
+    7: "JUL26", 8: "AGO26", 9: "SEP26", 10: "OCT26", 11: "NOV26", 12: "DIC26",
+}
+
+REPO_HTML = ("cuadro_mando.html", "cuadro_mando_v2.html", "cuadro_mando_base.html")
+
+
+def limpiar_inyect_previo(html):
+    marker = "/* AUTO_DATA_INJECT */"
+    idx = html.find(marker)
+    if idx == -1:
+        return html
+    tail = html[idx + len(marker):]
+    m = re.search(r"\n// ═+\n// INIT", tail)
+    if not m:
+        return html
+    return html[: idx + len(marker)] + tail[m.start():]
+
+
+def bloque_const_mes(nombre, datos, dias, dias_total):
+    return (
+        f"const {nombre} = {{\n"
+        f"  t:{round(datos['total'])},sjp:{round(datos['sjp'])},sjd:{round(datos['sjd'])},"
+        f"garp:{round(datos['garp'])},gard:{round(datos['gard'])},alm:{round(datos['alm'])},"
+        f"avd:{round(datos['avd'])},\n"
+        f"  cavero:{round(datos['cavero'])},ursula:{round(datos['ursula'])},"
+        f"dias:{dias},diasT:{dias_total},\n"
+        f"  prof:{round(datos['prof'])},pvp:{round(datos['pvp_pin'])},"
+        f"inst:{round(datos['pvp_ins'])},ind:{round(datos['ind'])},"
+        f"dist:{round(datos['distrib'])}\n"
+        f"}};"
+    )
+
+
+def patch_base_d26(html, mes, datos, dias, dias_total):
+    nombre = MESES_CONST.get(mes)
+    if not nombre:
+        return html
+    bloque = bloque_const_mes(nombre, datos, dias, dias_total)
+    pat = rf"const {nombre} = \{{.*?\}};"
+    if re.search(pat, html, flags=re.DOTALL):
+        html = re.sub(pat, bloque, html, count=1, flags=re.DOTALL)
+    else:
+        html = html.replace("const MAY26 = {", bloque + "\n\nconst MAY26 = {", 1)
+
+    fila = f"  {{t:{round(datos['total'])}, ...{nombre}}},"
+    fila_pat = rf"  \{{t:\d+, \.\.\.{nombre}\}},"
+    if re.search(fila_pat, html):
+        html = re.sub(fila_pat, fila, html, count=1)
+    else:
+        html = re.sub(
+            r"(\{t:276749, \.\.\.MAY26\},\s*\n)\s*null,",
+            rf"\1{fila}\n",
+            html,
+            count=1,
+        )
+    return html
+
+
+def guardar_html_repo(html, cfg):
+    salida = Path(cfg["rutas"]["html_salida"])
+    salida.write_text(html, encoding="utf-8")
+    for nombre in REPO_HTML:
+        Path(nombre).write_text(html, encoding="utf-8")
+    logging.info("OK HTML guardado: %s + %s", salida, ", ".join(REPO_HTML))
+
+
 def actualizar_html(cfg, datos, mes, ano, dias, dias_total):
     plantilla = Path(cfg["rutas"]["html_plantilla"])
     salida    = Path(cfg["rutas"]["html_salida"])
@@ -321,6 +389,10 @@ def actualizar_html(cfg, datos, mes, ano, dias, dias_total):
 
     with open(plantilla, encoding="utf-8") as f:
         html = f.read()
+
+    html = limpiar_inyect_previo(html)
+    if ano == 2026:
+        html = patch_base_d26(html, mes, datos, dias, dias_total)
 
     mes_js = json.dumps({
         "total":   datos["total"],   "sjp":     datos["sjp"],
@@ -363,19 +435,16 @@ def actualizar_html(cfg, datos, mes, ano, dias, dias_total):
 
     logging.info("OK Datos inyectados en HTML")
 
-    with open(salida, "w", encoding="utf-8") as f:
-        f.write(html)
-    logging.info(f"OK HTML guardado: {salida}")
+    guardar_html_repo(html, cfg)
     return True
 
 # ─── SUBIR A GITHUB ──────────────────────────────────────────────────────────
 
-def subir_a_github(cfg, ruta_html):
-    gcfg    = cfg["github"]
-    token   = gcfg["token"]
+def subir_archivo_github(cfg, destino, ruta_html, mensaje):
+    gcfg = cfg["github"]
+    token = gcfg["token"]
     usuario = gcfg["usuario"]
-    repo    = gcfg["repositorio"]
-    destino = gcfg["archivo_destino"]
+    repo = gcfg["repositorio"]
     api_url = f"https://api.github.com/repos/{usuario}/{repo}/contents/{destino}"
 
     with open(ruta_html, "rb") as f:
@@ -391,25 +460,32 @@ def subir_a_github(cfg, ruta_html):
     except Exception:
         pass
 
-    payload = {
-        "message": f"Auto {datetime.datetime.now().strftime('%d/%m/%Y %H:%M')}",
-        "content": contenido_b64,
-    }
+    payload = {"message": mensaje, "content": contenido_b64}
     if sha:
         payload["sha"] = sha
 
+    req = urllib.request.Request(
+        api_url,
+        data=json.dumps(payload).encode("utf-8"),
+        method="PUT",
+    )
+    req.add_header("Authorization", f"token {token}")
+    req.add_header("Content-Type", "application/json")
+    req.add_header("User-Agent", "HipopotamoCuadroMando/2.0")
+    with urllib.request.urlopen(req, timeout=30):
+        pass
+    logging.info("OK Subido: %s", destino)
+
+
+def subir_a_github(cfg, ruta_html):
+    mensaje = f"Auto {datetime.datetime.now().strftime('%d/%m/%Y %H:%M')}"
     try:
-        req = urllib.request.Request(
-            api_url,
-            data=json.dumps(payload).encode("utf-8"),
-            method="PUT"
-        )
-        req.add_header("Authorization", f"token {token}")
-        req.add_header("Content-Type", "application/json")
-        req.add_header("User-Agent", "HipopotamoCuadroMando/2.0")
-        with urllib.request.urlopen(req, timeout=30):
-            pass
-        logging.info("OK Subido a GitHub Pages")
+        for nombre in REPO_HTML:
+            path = Path(nombre)
+            if not path.exists():
+                path = Path(ruta_html)
+            subir_archivo_github(cfg, nombre, str(path), mensaje)
+        logging.info("OK GitHub Pages (3 HTML)")
         return True
     except Exception as e:
         logging.warning(f"GitHub error: {e}")
@@ -475,7 +551,7 @@ def main():
         enviar_telegram(cfg, "ERROR: No se pudo generar el HTML.")
         sys.exit(1)
 
-    # Subir a GitHub Pages
+    # Subir a GitHub Pages (cuadro público + plantillas V2)
     subir_a_github(cfg, cfg["rutas"]["html_salida"])
 
     # Notificar OK

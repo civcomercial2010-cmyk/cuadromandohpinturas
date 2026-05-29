@@ -41,7 +41,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 /* SCORECARD BAR */
 .sbar{position:sticky;top:56px;z-index:90;background:var(--bg2);border-bottom:1px solid var(--border);
   padding:10px 24px;display:flex;gap:10px;overflow-x:auto;box-shadow:0 1px 2px rgba(0,0,0,.04)}
-.sc{flex:1;min-width:128px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;cursor:default}
+.sc{flex:1;min-width:118px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;cursor:default}
 .sc-l{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:3px}
 .sc-v{font-size:19px;font-weight:700;line-height:1.2;color:var(--text)}
 .sc-s{font-size:10px;color:var(--text3);margin-top:2px}
@@ -264,7 +264,8 @@ textarea:focus{outline:none;border-color:var(--blue)}
 <div class="sbar">
   <div class="sc"     id="sc1"><div class="sc-l">Ventas Mes · Proyección</div><div class="sc-v" id="s1v">—</div><div class="sc-s" id="s1s">—</div></div>
   <div class="sc"     id="sc3"><div class="sc-l">Forecast Cierre Año</div><div class="sc-v" id="s3v">—</div><div class="sc-s" id="s3s">—</div></div>
-  <div class="sc"     id="sc45"><div class="sc-l">Gap + vs Mismo Periodo 2025</div><div class="sc-v" id="s45v">—</div><div class="sc-s" id="s45s">—</div></div>
+  <div class="sc"     id="scGap"><div class="sc-l">Gap vs Ppto Anual</div><div class="sc-v" id="sGapV">—</div><div class="sc-s" id="sGapS">—</div></div>
+  <div class="sc"     id="scYoY"><div class="sc-l">YTD vs Mismo Periodo 2025</div><div class="sc-v" id="sYoYV">—</div><div class="sc-s" id="sYoYS">—</div></div>
 </div>
 
 <main class="main">
@@ -489,7 +490,14 @@ const MAY26 = {
   prof:136287.97,pvp:23927.66,inst:99046.79,ind:14970.49,dist:2515.63
 };
 
-// Hardcode alineado con cuadro V1 (DM[2026] en cuadro_mando.html) + Mayo desglosado
+// Junio 2026 — mes comercial (ERP 28/05/2026; días laborables al 29/05)
+const JUN26 = {
+  t:24044,sjp:12259,sjd:0,garp:1593,gard:182,alm:5890,avd:4119,
+  cavero:10986,ursula:6396,dias:4,diasT:23,
+  prof:17469,pvp:4685,inst:182,ind:368,dist:1341
+};
+
+// Hardcode ene–jun 2026 (ERP + cierres mensuales)
 const BASE_D26 = [
   {t:124953,sjp:32752,sjd:24257,garp:6445,gard:21892,alm:21945,avd:17662,cavero:41824,ursula:16856,
    prof:54226,pvp:17433,inst:49513,ind:2845,dist:935,dias:20,diasT:20},
@@ -500,7 +508,8 @@ const BASE_D26 = [
   {t:227874,sjp:58419,sjd:44583,garp:15649,gard:37761,alm:39949,avd:31183,cavero:70788,ursula:24296,
    prof:95359,pvp:9202,inst:110133,ind:10105,dist:3074,dias:20,diasT:20},
   {t:276749, ...MAY26},
-  null, null, null, null, null, null, null
+  {t:24044, ...JUN26},
+  null, null, null, null, null, null
 ];
 
 let D26 = Array(12).fill(null);
@@ -610,10 +619,16 @@ function forecast(){
   const y=ytdProyectado();if(!y.months)return null;
   return annPpt()*(y.total/pptYTD(y.months));
 }
-function yoy(){
-  const y=ytd();if(!y.months)return null;
+function periodShort(mo){
+  if(mo<=0)return'';
+  return mo===1?M[0]:M[0]+'–'+M[mo-1];
+}
+function yoyVs2025(){
+  const y=ytdProyectado();if(!y.months)return null;
   const prev=HT[2025].slice(0,y.months).reduce((a,b)=>a+b,0);
-  return(y.total-prev)/prev;
+  if(!prev)return null;
+  const delta=y.total-prev;
+  return{ytd:y.total,prev,delta,pct:delta/prev,months:y.months};
 }
 function getAnnualTotal(yr){
   if(yr===2026){let s=0;D26.forEach(d=>{if(d)s+=d.t;});return s;}
@@ -638,7 +653,7 @@ function showPage(id,btn){
 function renderScorecard(){
   const y=ytd();const py=pptYTD(y.months);const lm=lastMo();
   const md=lm>=0?D26[lm]:null;const ap=annPpt();const fc=forecast();
-  const gap=fc!=null?fc-ap:null;const yo=yoy();
+  const gap=fc!=null?fc-ap:null;const y25=yoyVs2025();
   const prV=md?proy(md.t,md.dias,md.diasT):null;
   const realM=md?md.t:null;
   const useM=prV??realM;
@@ -661,9 +676,20 @@ function renderScorecard(){
   document.getElementById('s3s').textContent='YTD proy.: '+fe(yProj.total,true)+' · Ppto YTD: '+fe(py,true);
   document.getElementById('sc3').className='sc '+(fc?tc(fc/ap):'');
 
-  document.getElementById('s45v').textContent=(gap!=null&&yo!=null)?`${sgn(gap)}${fe(gap,true)} · ${sgn(yo)}${(yo*100).toFixed(1)}%`:'—';
-  document.getElementById('s45s').textContent=yo!=null?'Gap anual y vs ene-'+MF[y.months-1]+' 2025':'—';
-  document.getElementById('sc45').className='sc '+(gap!=null&&gap>=0&&yo!=null&&yo>=0?'g':'r');
+  document.getElementById('sGapV').textContent=gap!=null?`${sgn(gap)}${fe(gap,true)}`:'—';
+  document.getElementById('sGapS').textContent=fc!=null?`Forecast ${fe(fc,true)} · Ppto ${fe(ap,true)}`:'—';
+  document.getElementById('scGap').className='sc '+(gap!=null?(gap>=0?'g':'r'):'');
+
+  if(y25){
+    const ps=periodShort(y25.months);
+    document.getElementById('sYoYV').textContent=`${sgn(y25.pct)}${(y25.pct*100).toFixed(1)}%`;
+    document.getElementById('sYoYS').textContent=`${sgn(y25.delta)}${fe(y25.delta,true)} · ${ps}: ${fe(y25.ytd,true)} vs ${fe(y25.prev,true)}`;
+    document.getElementById('scYoY').className='sc '+(y25.pct>=0?'g':'r');
+  }else{
+    document.getElementById('sYoYV').textContent='—';
+    document.getElementById('sYoYS').textContent='—';
+    document.getElementById('scYoY').className='sc';
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
