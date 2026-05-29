@@ -442,12 +442,12 @@ const HIST_COM = {
 };
 
 const CEN = [
-  {k:'sjp', n:'SJ Pintura',    c:'#4A6FA5', tipo:'pin'},
-  {k:'sjd', n:'SJ Deco',       c:'#6B5B8E', tipo:'deco'},
-  {k:'garp',n:'Gargallo Pin.', c:'#5A8A72', tipo:'pin'},
-  {k:'gard',n:'Gargallo Deco', c:'#8B7355', tipo:'deco'},
-  {k:'alm', n:'Almacén',       c:'#6E8B7A', tipo:'mix'},
-  {k:'avd', n:'Avd. Madrid',   c:'#5B7C8A', tipo:'mix'}
+  {k:'sjp', n:'SJ Pintura',    c:'#456E9B', tipo:'pin'},
+  {k:'sjd', n:'SJ Deco',       c:'#7B6294', tipo:'deco'},
+  {k:'garp',n:'Gargallo Pin.', c:'#4F9168', tipo:'pin'},
+  {k:'gard',n:'Gargallo Deco', c:'#A67D52', tipo:'deco'},
+  {k:'alm', n:'Almacén',       c:'#3D8F8F', tipo:'mix'},
+  {k:'avd', n:'Avd. Madrid',   c:'#8B7289', tipo:'mix'}
 ];
 
 const COM=[
@@ -459,12 +459,12 @@ const QTRS=[[0,1,2],[3,4,5],[6,7,8],[9,10,11]];
 const QN=['Q1','Q2','Q3','Q4'];
 
 const CEN_DET=[
-  {k:'sjp', n:'SJ Pintura',    tp:'Pintura',       c:'#4A6FA5'},
-  {k:'sjd', n:'SJ Deco',       tp:'Instalaciones', c:'#6B5B8E'},
-  {k:'garp',n:'Gargallo Pin.', tp:'Pintura',       c:'#5A8A72'},
-  {k:'gard',n:'Gargallo Deco', tp:'Instalaciones', c:'#8B7355'},
-  {k:'alm', n:'Almacén',       tp:'Central',       c:'#6E8B7A'},
-  {k:'avd', n:'Avd. Madrid',   tp:'Mixto',         c:'#5B7C8A'}
+  {k:'sjp', n:'SJ Pintura',    tp:'Pintura',       c:'#456E9B'},
+  {k:'sjd', n:'SJ Deco',       tp:'Instalaciones', c:'#7B6294'},
+  {k:'garp',n:'Gargallo Pin.', tp:'Pintura',       c:'#4F9168'},
+  {k:'gard',n:'Gargallo Deco', tp:'Instalaciones', c:'#A67D52'},
+  {k:'alm', n:'Almacén',       tp:'Central',       c:'#3D8F8F'},
+  {k:'avd', n:'Avd. Madrid',   tp:'Mixto',         c:'#8B7289'}
 ];
 
 const HIST_COM_ROLL={
@@ -807,15 +807,16 @@ function renderDonuts(){
     {l:'Industria',v:m.ind||0,c:'#B45309'},
     {l:'Distribuidores',v:m.dist||0,c:'#16A34A'}
   ]);
+  const cc=k=>CEN.find(x=>x.k===k)?.c||'#64748B';
   buildDonut('dntPin','legPin',[
-    {l:'SJ Pintura',v:m.sjp||0,c:'#2563EB'},
-    {l:'Gargallo Pin.',v:m.garp||0,c:'#60A5FA'},
-    {l:'Almacén',v:m.alm||0,c:'#16A34A'},
-    {l:'Avd. Madrid',v:m.avd||0,c:'#B45309'}
+    {l:'SJ Pintura',v:m.sjp||0,c:cc('sjp')},
+    {l:'Gargallo Pin.',v:m.garp||0,c:cc('garp')},
+    {l:'Almacén',v:m.alm||0,c:cc('alm')},
+    {l:'Avd. Madrid',v:m.avd||0,c:cc('avd')}
   ]);
   buildDonut('dntIns','legIns',[
-    {l:'SJ Deco',v:m.sjd||0,c:'#7C3AED'},
-    {l:'Gargallo Deco',v:m.gard||0,c:'#A78BFA'}
+    {l:'SJ Deco',v:m.sjd||0,c:cc('sjd')},
+    {l:'Gargallo Deco',v:m.gard||0,c:cc('gard')}
   ]);
 }
 
@@ -1239,10 +1240,10 @@ function getCenHistory(key){
 }
 
 const GRUPOS=[
-  {n:'SAN',keys:['sjp','sjd'],c:'#4A6FA5'},
-  {n:'Madrid',keys:['avd'],c:'#5B7C8A'},
-  {n:'Gargallo',keys:['garp','gard'],c:'#5A8A72'},
-  {n:'Almacén',keys:['alm'],c:'#6E8B7A'}
+  {n:'SAN',keys:['sjp','sjd'],c:'#456E9B'},
+  {n:'Madrid',keys:['avd'],c:'#8B7289'},
+  {n:'Gargallo',keys:['garp','gard'],c:'#4F9168'},
+  {n:'Almacén',keys:['alm'],c:'#3D8F8F'}
 ];
 
 function getGrupoHistory(keys){
@@ -1512,22 +1513,6 @@ function applyAutoERPData(d){
 }
 
 /* AUTO_DATA_INJECT */
-// Datos inyectados automaticamente 28/05/2026 21:17
-(function autoLoad(){
-  const d = {"total": 24043.63, "sjp": 12258.97, "sjd": 0.0, "garp": 1593.41, "gard": 181.81, "alm": 5890.45, "avd": 4118.99, "cavero": 10985.73, "ursula": 6396.34, "prof": 17468.8, "pvp_pin": 4684.91, "pvp_ins": 181.81, "distrib": 1340.5, "ind": 367.61, "dias": 3, "diasT": 23, "mes": 6, "ano": 2026, "diasFromERP": true, "actualizado": "28/05/2026 21:17", "fechaERP": "ERP 28/05/26"};
-  if(!window._autoLoaded){
-    window._autoLoaded=true;
-    function run(){
-      if(typeof applyAutoERPData==='function'){
-        applyAutoERPData(d);
-        console.log('OK Auto-cargado V2:',d.mes+'/'+d.ano,'Total:',d.total);
-      }
-    }
-    if(document.readyState==='complete')run();
-    else window.addEventListener('load',run);
-  }
-})();
-
 
 // ═══════════════════════════════════════════════════════════
 // INIT
