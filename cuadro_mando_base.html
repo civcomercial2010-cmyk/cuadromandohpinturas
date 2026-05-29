@@ -493,8 +493,8 @@ const MAY26 = {
 // Junio 2026 — mes comercial (ERP 28/05/2026; días laborables al 29/05)
 const JUN26 = {
   t:24044,sjp:12259,sjd:0,garp:1593,gard:182,alm:5890,avd:4119,
-  cavero:10986,ursula:6396,dias:4,diasT:23,
-  prof:17469,pvp:4685,inst:182,ind:368,dist:1341
+  cavero:10986,ursula:6396,dias:3,diasT:23,
+  prof:17469,pvp:4685,inst:182,ind:368,dist:1340
 };
 
 // Hardcode ene–jun 2026 (ERP + cierres mensuales)
@@ -1549,6 +1549,21 @@ function applyAutoERPData(d){
 }
 
 /* AUTO_DATA_INJECT */
+// Datos inyectados automaticamente 29/05/2026 12:04
+(function autoLoad(){
+  const d = {"total": 24043.63, "sjp": 12258.97, "sjd": 0.0, "garp": 1593.41, "gard": 181.81, "alm": 5890.45, "avd": 4118.99, "cavero": 10985.73, "ursula": 6396.34, "prof": 17468.8, "pvp_pin": 4684.91, "pvp_ins": 181.81, "distrib": 1340.5, "ind": 367.61, "dias": 3, "diasT": 23, "mes": 6, "ano": 2026, "diasFromERP": true, "actualizado": "29/05/2026 12:04", "fechaERP": "ERP 28/05/26"};
+  if(!window._autoLoaded){
+    window._autoLoaded=true;
+    function run(){
+      if(typeof applyAutoERPData==='function'){
+        applyAutoERPData(d);
+        console.log('OK Auto-cargado V2:',d.mes+'/'+d.ano,'Total:',d.total);
+      }
+    }
+    if(document.readyState==='complete')run();
+    else window.addEventListener('load',run);
+  }
+})();
 
 // ═══════════════════════════════════════════════════════════
 // INIT
