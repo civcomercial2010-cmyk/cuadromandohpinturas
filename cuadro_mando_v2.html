@@ -594,10 +594,20 @@ function isMonthClosed(d){
 
 function lastMo(){for(let i=11;i>=0;i--){if(D26[i])return i;}return-1;}
 function ytd(){let s=0,mo=0;for(let i=0;i<12;i++){if(D26[i]){s+=D26[i].t;mo=i+1;}}return{total:s,months:mo};}
+function ytdProyectado(){
+  const lm=lastMo();
+  let s=0,mo=0;
+  for(let i=0;i<12;i++){
+    if(!D26[i])continue;
+    mo=i+1;
+    s+=(i===lm)?(projOrReal(D26[i],'t')??D26[i].t):D26[i].t;
+  }
+  return{total:s,months:mo};
+}
 function pptYTD(mo){return PRES.total.slice(0,mo).reduce((a,b)=>a+b,0);}
 function annPpt(){return PRES.total.reduce((a,b)=>a+b,0);}
 function forecast(){
-  const y=ytd();if(!y.months)return null;
+  const y=ytdProyectado();if(!y.months)return null;
   return annPpt()*(y.total/pptYTD(y.months));
 }
 function yoy(){
@@ -645,10 +655,10 @@ function renderScorecard(){
   }
   document.getElementById('sc1').className='sc '+tc(mRate);
 
-  const ytdWithProy=lm>=0&&prV?(y.total-(md?.t||0)+prV):y.total;
+  const yProj=ytdProyectado();
 
   document.getElementById('s3v').textContent=fc?fe(fc,true):'—';
-  document.getElementById('s3s').textContent='YTD: '+fe(ytdWithProy,true)+' · Ppto YTD: '+fe(py,true);
+  document.getElementById('s3s').textContent='YTD proy.: '+fe(yProj.total,true)+' · Ppto YTD: '+fe(py,true);
   document.getElementById('sc3').className='sc '+(fc?tc(fc/ap):'');
 
   document.getElementById('s45v').textContent=(gap!=null&&yo!=null)?`${sgn(gap)}${fe(gap,true)} · ${sgn(yo)}${(yo*100).toFixed(1)}%`:'—';
