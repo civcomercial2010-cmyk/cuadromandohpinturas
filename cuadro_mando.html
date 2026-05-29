@@ -149,6 +149,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   color:var(--text3);border-bottom:1px solid var(--border)}
 .qtable th:first-child{text-align:left}
 .qtable td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--bg3);color:var(--text2)}
+.qtable-lg,.qtable-lg th,.qtable-lg td{font-size:14px}
+.qtable-lg td,.qtable-lg th{padding:9px 12px}
+.tbl-lg,.tbl-lg th,.tbl-lg td{font-size:15px}
+.tbl-lg th,.tbl-lg td{padding:12px 14px}
+.stat-row.stat-lg .stat-v{font-size:19px}
+.stat-row.stat-lg .stat-l{font-size:11px}
+.stat-row.stat-lg .stat-s{font-size:12px}
+.comcard .com-n{font-size:18px}
 .qtable td:first-child{text-align:left;font-weight:600;color:var(--text)}
 .qtable tr:last-child td{font-weight:700;background:var(--bg3);color:var(--text)}
 
@@ -175,6 +183,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tbl td:first-child{text-align:left;font-weight:600;color:var(--text)}
 .tbl tr:last-child td{border-bottom:none;font-weight:700;background:var(--bg3);color:var(--text)}
 .tbl tr:not(:last-child):hover td{background:var(--bg3)}
+.tbl td.cell-best{background:var(--gdim);color:var(--green);font-weight:700}
+.tbl td.cell-worst{background:var(--rdim);color:var(--red);font-weight:700}
 .badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700}
 .badge.g{background:var(--gdim);color:var(--green)}
 .badge.a{background:var(--adim);color:var(--amber)}
@@ -252,7 +262,7 @@ textarea:focus{outline:none;border-color:var(--blue)}
 
 <!-- SCORECARD BAR -->
 <div class="sbar">
-  <div class="sc"     id="sc1"><div class="sc-l">Proyección Mes Actual</div><div class="sc-v" id="s1v">—</div><div class="sc-s" id="s1s">—</div></div>
+  <div class="sc"     id="sc1"><div class="sc-l">Ventas Mes · Proyección</div><div class="sc-v" id="s1v">—</div><div class="sc-s" id="s1s">—</div></div>
   <div class="sc"     id="sc3"><div class="sc-l">Forecast Cierre Año</div><div class="sc-v" id="s3v">—</div><div class="sc-s" id="s3s">—</div></div>
   <div class="sc"     id="sc45"><div class="sc-l">Gap + vs Mismo Periodo 2025</div><div class="sc-v" id="s45v">—</div><div class="sc-s" id="s45s">—</div></div>
 </div>
@@ -315,12 +325,12 @@ textarea:focus{outline:none;border-color:var(--blue)}
   <div class="sec">Centros Deco / Instalaciones — SJ Deco · Gargallo Deco</div>
   <div class="ch"><div class="ch-t">Evolución mensual · Jun 2025 – actualidad</div>
     <div style="position:relative;height:260px"><canvas id="cDeco"></canvas></div></div>
-  <div class="sec">Detalle por Centro — Mes a Mes 2026</div>
-  <div class="ch" style="overflow-x:auto"><table class="tbl" id="cenTbl"></table></div>
   <div class="sec">Detalle del Mes</div>
   <div class="msel" id="mselVentas" style="margin-bottom:14px"></div>
   <div class="ch"><div class="ch-t" id="vTit">—</div>
-    <table class="tbl" id="vTbl"></table></div>
+    <table class="tbl tbl-lg" id="vTbl"></table></div>
+  <div class="sec">Detalle por Centro — Mes a Mes 2026</div>
+  <div class="ch" style="overflow-x:auto"><table class="tbl tbl-lg" id="cenTbl"></table></div>
 </div>
 
 <!-- ══ COMERCIAL ══ -->
@@ -432,12 +442,12 @@ const HIST_COM = {
 };
 
 const CEN = [
-  {k:'sjp', n:'SJ Pintura',    c:'#2563EB', tipo:'pin'},
-  {k:'sjd', n:'SJ Deco',       c:'#7C3AED', tipo:'deco'},
-  {k:'garp',n:'Gargallo Pin.', c:'#16A34A', tipo:'pin'},
-  {k:'gard',n:'Gargallo Deco', c:'#B45309', tipo:'deco'},
-  {k:'alm', n:'Almacén',       c:'#EA580C', tipo:'mix'},
-  {k:'avd', n:'Avd. Madrid',   c:'#0891B2', tipo:'mix'}
+  {k:'sjp', n:'SJ Pintura',    c:'#4A6FA5', tipo:'pin'},
+  {k:'sjd', n:'SJ Deco',       c:'#6B5B8E', tipo:'deco'},
+  {k:'garp',n:'Gargallo Pin.', c:'#5A8A72', tipo:'pin'},
+  {k:'gard',n:'Gargallo Deco', c:'#8B7355', tipo:'deco'},
+  {k:'alm', n:'Almacén',       c:'#6E8B7A', tipo:'mix'},
+  {k:'avd', n:'Avd. Madrid',   c:'#5B7C8A', tipo:'mix'}
 ];
 
 const COM=[
@@ -449,12 +459,12 @@ const QTRS=[[0,1,2],[3,4,5],[6,7,8],[9,10,11]];
 const QN=['Q1','Q2','Q3','Q4'];
 
 const CEN_DET=[
-  {k:'sjp', n:'SJ Pintura',    tp:'Pintura',       c:'#2563EB'},
-  {k:'sjd', n:'SJ Deco',       tp:'Instalaciones', c:'#7C3AED'},
-  {k:'garp',n:'Gargallo Pin.', tp:'Pintura',       c:'#3B82F6'},
-  {k:'gard',n:'Gargallo Deco', tp:'Instalaciones', c:'#A78BFA'},
-  {k:'alm', n:'Almacén',       tp:'Central',       c:'#16A34A'},
-  {k:'avd', n:'Avd. Madrid',   tp:'Mixto',         c:'#B45309'}
+  {k:'sjp', n:'SJ Pintura',    tp:'Pintura',       c:'#4A6FA5'},
+  {k:'sjd', n:'SJ Deco',       tp:'Instalaciones', c:'#6B5B8E'},
+  {k:'garp',n:'Gargallo Pin.', tp:'Pintura',       c:'#5A8A72'},
+  {k:'gard',n:'Gargallo Deco', tp:'Instalaciones', c:'#8B7355'},
+  {k:'alm', n:'Almacén',       tp:'Central',       c:'#6E8B7A'},
+  {k:'avd', n:'Avd. Madrid',   tp:'Mixto',         c:'#5B7C8A'}
 ];
 
 const HIST_COM_ROLL={
@@ -578,6 +588,9 @@ function projOrReal(d,key='t'){
   const p=proy(real,d.dias,d.diasT);
   return p??real;
 }
+function isMonthClosed(d){
+  return !!(d&&d.dias&&d.diasT&&d.dias>=d.diasT);
+}
 
 function lastMo(){for(let i=11;i>=0;i--){if(D26[i])return i;}return-1;}
 function ytd(){let s=0,mo=0;for(let i=0;i<12;i++){if(D26[i]){s+=D26[i].t;mo=i+1;}}return{total:s,months:mo};}
@@ -617,10 +630,19 @@ function renderScorecard(){
   const md=lm>=0?D26[lm]:null;const ap=annPpt();const fc=forecast();
   const gap=fc!=null?fc-ap:null;const yo=yoy();
   const prV=md?proy(md.t,md.dias,md.diasT):null;
-  const useM=prV??(md?md.t:null);
+  const realM=md?md.t:null;
+  const useM=prV??realM;
   const mRate=(useM!=null&&md)?useM/PRES.total[lm]:null;
-  document.getElementById('s1v').textContent=useM!=null?`${fe(useM,true)} · ${fp(mRate)}`:'—';
-  document.getElementById('s1s').textContent=lm>=0?`${MF[lm]} · ppto ${fe(PRES.total[lm],true)}`:'—';
+  const gapPpto=useM!=null&&md?PRES.total[lm]-useM:null;
+  if(realM!=null){
+    document.getElementById('s1v').textContent=prV!=null?`${fe(realM,true)} → ${fe(prV,true)}`:`${fe(realM,true)} ✓`;
+    document.getElementById('s1s').textContent=lm>=0
+      ?`${MF[lm]} · ${fp(mRate)} ppto · ${gapPpto!=null&&gapPpto>0?'Faltan '+fe(gapPpto,true)+' p/ ppto':'Superado '+fe(-gapPpto,true)}`
+      :'—';
+  }else{
+    document.getElementById('s1v').textContent='—';
+    document.getElementById('s1s').textContent='—';
+  }
   document.getElementById('sc1').className='sc '+tc(mRate);
 
   const ytdWithProy=lm>=0&&prV?(y.total-(md?.t||0)+prV):y.total;
@@ -703,12 +725,18 @@ function renderCeoKPIs(){
   for(let i=0;i<=selCeoMo;i++){if(D26[i])ytdVal+=D26[i].t;}
   const ytdPpt=PRES.total.slice(0,selCeoMo+1).reduce((a,b)=>a+b,0);
 
+  const gapMes=pp-useV;
+  const gapTxt=gapMes>0
+    ?`<span class="dn">Faltan ${fe(gapMes,true)} desde proyección para ppto</span>`
+    :`<span class="up">Superado en +${fe(-gapMes,true)} vs ppto (proy.)</span>`;
+
   document.getElementById('ceoKPIs').innerHTML=`
     <div class="kcard">
       <div class="kl">Ventas ${MF[selCeoMo]} 2026</div>
-      <div class="kv" style="color:var(--blue)">${fe(useV,true)}</div>
-      ${prV?`<div class="kd" style="color:var(--amber)">▶ Real a fecha: ${fe(m.t,true)} · Proyección fin mes: ${fe(prV,true)}</div>`:''}
+      <div class="kv" style="color:var(--blue)">${fe(m.t,true)}</div>
+      <div class="kd" style="color:var(--amber)">${prV?`★ Proyección fin mes: ${fe(prV,true)}`:'Mes cerrado (sin proyección)'}</div>
       <div class="kd ${p>=1?'up':'dn'}">${p>=1?'▲':'▼'} ${fp(p)} vs ppto ${fe(pp,true)}</div>
+      <div class="kd">${gapTxt}</div>
     </div>
     <div class="kcard">
       <div class="kl">vs ${MF[selCeoMo]} 2025</div>
@@ -874,9 +902,15 @@ function renderHBars(){
 // PESTAÑA COMERCIAL — gráficos fijos + tablas detalle
 // ═══════════════════════════════════════════════════════════
 function renderComMonthly(com){
+  const lm=lastMo();
   const real=D26.map(d=>d?d[com.k]??null:null);
+  const proyMes=D26.map((d,i)=>{
+    if(!d||i!==lm||d[com.k]==null)return null;
+    return proy(d[com.k],d.dias,d.diasT);
+  });
   mkChart('chCom_'+com.k,{type:'bar',data:{labels:M,datasets:[
-    {label:'Real 2026',data:real,backgroundColor:com.c,borderRadius:4,order:1},
+    {label:'Real 2026',data:real,backgroundColor:com.c,borderRadius:4,order:2},
+    {label:'Proyección mes',data:proyMes,backgroundColor:'#F59E0B',borderRadius:4,order:1},
     {label:'Objetivo 2026',data:PRES[com.k],type:'line',borderColor:'#B45309',borderWidth:2,borderDash:[5,4],
       pointRadius:3,pointBackgroundColor:'#B45309',fill:false,tension:0.3,order:0}
   ]},options:{...barOpts(),plugins:{...barOpts().plugins,
@@ -887,30 +921,22 @@ function renderComMonthly(com){
 function renderComRolling(com){
   const hc=HIST_COM_ROLL[com.k];
   if(!hc)return;
-  const lastClosed=lastMo();
+  const lm=lastMo();
   const sAll=[],lAll=[];
   [{yr:2023,d:hc.hist23},{yr:2024,d:hc.hist24},{yr:2025,d:hc.hist25}].forEach(({yr,d})=>{
     d.forEach((v,i)=>{lAll.push(M[i]+" '"+String(yr).slice(2));sAll.push(v);});
   });
-  for(let m=0;m<=lastClosed;m++){
+  for(let m=0;m<=lm;m++){
     if(D26[m]&&D26[m][com.k]!=null){
       lAll.push(M[m]+" '26");
-      sAll.push(D26[m][com.k]);
+      const v=(m===lm)?(projOrReal(D26[m],com.k)??D26[m][com.k]):D26[m][com.k];
+      sAll.push(v);
     }
   }
   const rD=[],rL=[];
-  if(hc.roll26&&hc.roll26.length>0){
-    const lc=lastClosed>=0?lastClosed:0;
-    for(let i=11;i<sAll.length-lc;i++){
-      let s=0;for(let b=0;b<12;b++)s+=sAll[i-b]||0;
-      rD.push(Math.round(s/1000));rL.push(lAll[i]);
-    }
-    hc.roll26.forEach((v,i)=>{rD.push(Math.round(v/1000));rL.push(M[i]+" '26");});
-  }else{
-    for(let i=11;i<sAll.length;i++){
-      let s=0;for(let b=0;b<12;b++)s+=sAll[i-b]||0;
-      rD.push(Math.round(s/1000));rL.push(lAll[i]);
-    }
+  for(let i=11;i<sAll.length;i++){
+    let s=0;for(let b=0;b<12;b++)s+=sAll[i-b]||0;
+    rD.push(Math.round(s/1000));rL.push(lAll[i]);
   }
   if(rD.length<2){rD.push(0);rL.push('?');}
   const N=Math.min(36,rD.length);
@@ -972,7 +998,7 @@ function renderComercialPage(){
     }
     const ytdP=ytdPpt>0?ytdReal/ytdPpt:null;
 
-    let qtHtml='<table class="qtable"><thead><tr><th>Trimestre</th><th>Real + Proy</th><th>Ppto</th><th>Dif.</th><th>%</th></tr></thead><tbody>';
+    let qtHtml='<table class="qtable qtable-lg"><thead><tr><th>Trimestre</th><th>Real + Proy</th><th>Ppto</th><th>Dif.</th><th>%</th></tr></thead><tbody>';
     Q.forEach(q=>{
       let qReal=0,qPpt=0,hasData=false;
       q.months.forEach(mi=>{
@@ -992,7 +1018,7 @@ function renderComercialPage(){
     qtHtml+=`<tr><td>YTD</td><td>${fe(ytdReal,true)}</td><td>${fe(ytdPpt,true)}</td>
       <td style="color:var(--${ytdReal-ytdPpt>=0?'green':'red'})">${sgn(ytdReal-ytdPpt)}${fe(ytdReal-ytdPpt,true)}</td><td>${badge(ytdP)}</td></tr></tbody></table>`;
 
-    let moHtml='<table class="qtable"><thead><tr><th>Mes</th><th>Real</th><th>Proy.</th><th>Ppto</th><th>% cumpl.</th></tr></thead><tbody>';
+    let moHtml='<table class="qtable qtable-lg"><thead><tr><th>Mes</th><th>Real</th><th>Proy.</th><th>Ppto</th><th>% cumpl.</th></tr></thead><tbody>';
     for(let i=0;i<=lm;i++){
       if(!D26[i])continue;
       const mr=D26[i][com.k];if(mr==null)continue;
@@ -1010,7 +1036,7 @@ function renderComercialPage(){
         <div><div class="com-n">${com.n}</div><div class="com-r">${com.r}</div></div>
         ${chip(pM)}
       </div>
-      <div class="stat-row">
+      <div class="stat-row stat-lg">
         <div class="stat-item"><div class="stat-l">Mes (${MF[lm]}) real</div>
           <div class="stat-v" style="color:${com.c}">${real!=null?fe(real,true):'—'}</div>
           <div class="stat-s">Ppto mes: ${pp!=null?fe(pp,true):'—'}</div></div>
@@ -1213,10 +1239,10 @@ function getCenHistory(key){
 }
 
 const GRUPOS=[
-  {n:'SAN',keys:['sjp','sjd'],c:'#2563EB'},
-  {n:'Madrid',keys:['avd'],c:'#0891B2'},
-  {n:'Gargallo',keys:['garp','gard'],c:'#16A34A'},
-  {n:'Almacén',keys:['alm'],c:'#EA580C'}
+  {n:'SAN',keys:['sjp','sjd'],c:'#4A6FA5'},
+  {n:'Madrid',keys:['avd'],c:'#5B7C8A'},
+  {n:'Gargallo',keys:['garp','gard'],c:'#5A8A72'},
+  {n:'Almacén',keys:['alm'],c:'#6E8B7A'}
 ];
 
 function getGrupoHistory(keys){
@@ -1248,27 +1274,39 @@ function renderCentrosCharts(){
 
   const sjp=getCenHistory('sjp');const garp=getCenHistory('garp');
   mkChart('cPin',{type:'bar',data:{labels:sjp.lbl,datasets:[
-    {label:'SJ Pintura',data:sjp.data,backgroundColor:'#2563EB',borderRadius:4},
-    {label:'Gargallo Pin.',data:garp.data,backgroundColor:'#16A34A',borderRadius:4}
+    {label:'SJ Pintura',data:sjp.data,backgroundColor:CEN[0].c,borderRadius:4},
+    {label:'Gargallo Pin.',data:garp.data,backgroundColor:CEN[2].c,borderRadius:4}
   ]},options:{...barOpts(),interaction:{mode:'index',intersect:false}}});
 
   const sjd=getCenHistory('sjd');const gard=getCenHistory('gard');
   mkChart('cDeco',{type:'bar',data:{labels:sjd.lbl,datasets:[
-    {label:'SJ Deco',data:sjd.data,backgroundColor:'#7C3AED',borderRadius:4},
-    {label:'Gargallo Deco',data:gard.data,backgroundColor:'#B45309',borderRadius:4}
+    {label:'SJ Deco',data:sjd.data,backgroundColor:CEN[1].c,borderRadius:4},
+    {label:'Gargallo Deco',data:gard.data,backgroundColor:CEN[3].c,borderRadius:4}
   ]},options:{...barOpts(),interaction:{mode:'index',intersect:false}}});
 
   let html='<thead><tr><th>Centro</th>';
   M.forEach((_,i)=>{if(D26[i])html+=`<th>${M[i]}</th>`;});
   html+='<th>Total 2026</th></tr></thead><tbody>';
   CEN.forEach(c=>{
+    let bestMi=-1,worstMi=-1,bestV=-Infinity,worstV=Infinity;
+    D26.forEach((d,i)=>{
+      if(!d||!isMonthClosed(d))return;
+      const v=d[c.k];if(v==null)return;
+      if(v>bestV){bestV=v;bestMi=i;}
+      if(v<worstV){worstV=v;worstMi=i;}
+    });
     html+=`<tr><td><span class="dot" style="background:${c.c};margin-right:6px"></span>${c.n}</td>`;
     let tot=0;
     D26.forEach((d,i)=>{
       if(!d)return;
       const v=d[c.k];const est=+(d.t*PRES[c.k][i]/PRES.total[i]).toFixed(0);
       const show=v!=null?v:est;tot+=show;
-      html+=`<td style="${v==null?'color:var(--text3);font-style:italic':''}">${fe(show,true)}</td>`;
+      let cls='';
+      if(v!=null&&isMonthClosed(d)){
+        if(i===bestMi&&bestMi>=0)cls=' class="cell-best"';
+        else if(i===worstMi&&worstMi!==bestMi)cls=' class="cell-worst"';
+      }
+      html+=`<td${cls} style="${v==null?'color:var(--text3);font-style:italic':''}">${fe(show,true)}</td>`;
     });
     html+=`<td style="font-weight:700">${fe(tot,true)}</td></tr>`;
   });
@@ -1327,7 +1365,7 @@ function renderChartAnual(){
   }});
 }
 
-const YCOLS={2019:'#94A3B8',2020:'#7DD3FC',2021:'#6EE7B7',2022:'#FCD34D',2023:'#F9A8D4',2024:'#86EFAC',2025:'#FCA5A5',2026:'#2563EB'};
+const YCOLS={2019:'#64748B',2020:'#7DD3FC',2021:'#A78BFA',2022:'#FCD34D',2023:'#F9A8D4',2024:'#CBD5E1',2025:'#94A3B8',2026:'#2563EB'};
 
 function renderChartEstac(){
   const ds=selYears.map(y=>{
