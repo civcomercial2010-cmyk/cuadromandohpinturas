@@ -36,3 +36,8 @@ jobs:
           GITHUB_USUARIO:   civcomercial2010-cmyk
           GITHUB_REPO:      cuadromandohpinturas
         run: python actualizar_gha.py
+
+      - name: Comprobar que el cuadro publicado es V2
+        run: |
+          grep -q 'id="page-ceo"' cuadro_mando.html || (echo "ERROR: cuadro_mando.html no es V2" && exit 1)
+          grep -q 'Cuadro de Mando V2' cuadro_mando.html || (echo "ERROR: falta marca V2" && exit 1)

@@ -478,14 +478,20 @@ def subir_archivo_github(cfg, destino, ruta_html, mensaje):
 
 
 def subir_a_github(cfg, ruta_html):
+    """Sube siempre el HTML recién generado (plantilla V2 + ERP), no archivos viejos del checkout."""
     mensaje = f"Auto {datetime.datetime.now().strftime('%d/%m/%Y %H:%M')}"
+    origen = Path(ruta_html)
+    if not origen.exists():
+        logging.error("No existe HTML generado: %s", origen)
+        return False
+    html = origen.read_text(encoding="utf-8")
+    if "page-ceo" not in html or "applyAutoERPData" not in html:
+        logging.error("El HTML generado no es V2 (falta page-ceo / applyAutoERPData). No se sube.")
+        return False
     try:
         for nombre in REPO_HTML:
-            path = Path(nombre)
-            if not path.exists():
-                path = Path(ruta_html)
-            subir_archivo_github(cfg, nombre, str(path), mensaje)
-        logging.info("OK GitHub Pages (3 HTML)")
+            subir_archivo_github(cfg, nombre, str(origen), mensaje)
+        logging.info("OK GitHub Pages (3 HTML, origen unico V2)")
         return True
     except Exception as e:
         logging.warning(f"GitHub error: {e}")
