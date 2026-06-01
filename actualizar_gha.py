@@ -310,8 +310,8 @@ def parsear_excel(ruta):
     return r
 
 def fecha_datos_excel(datos):
-    """Fecha de corte del informe ERP (prioridad: Fecha hasta, luego Fecha del informe)."""
-    fd = datos.get("fechaHasta_date") or datos.get("fechaERP_date")
+    """Fecha del informe ERP (prioridad: Fecha del extracto, no el fin de mes comercial)."""
+    fd = datos.get("fechaERP_date") or datos.get("fechaHasta_date")
     if fd:
         return fd.strftime("%d/%m/%Y")
     txt = datos.get("fechaERP") or ""
