@@ -309,6 +309,23 @@ def parsear_excel(ruta):
     logging.info(f"Cavero (PROF): {r['cavero']:,.0f} | Ursula: {r['ursula']:,.0f}")
     return r
 
+def fecha_datos_excel(datos):
+    """Fecha de corte del informe ERP (prioridad: Fecha hasta, luego Fecha del informe)."""
+    fd = datos.get("fechaHasta_date") or datos.get("fechaERP_date")
+    if fd:
+        return fd.strftime("%d/%m/%Y")
+    txt = datos.get("fechaERP") or ""
+    m = re.search(r"(\d{1,2}/\d{1,2}/\d{2,4})", txt)
+    if not m:
+        return None
+    try:
+        dd, mm, yy = m.group(1).split("/")
+        yy = int(yy)
+        yy = 2000 + yy if yy < 100 else yy
+        return datetime.date(yy, int(mm), int(dd)).strftime("%d/%m/%Y")
+    except Exception:
+        return None
+
 # ─── ACTUALIZAR HTML ─────────────────────────────────────────────────────────
 
 MESES_CONST = {
@@ -407,6 +424,7 @@ def actualizar_html(cfg, datos, mes, ano, dias, dias_total):
         "actualizado": datetime.datetime.now().strftime("%d/%m/%Y %H:%M"),
         "fechaERP": datos.get("fechaERP",
                     datetime.datetime.now().strftime("ERP %d/%m/%y %H:%M")),
+        "datosFecha": fecha_datos_excel(datos) or "",
     })
 
     MARKER = "/* AUTO_DATA_INJECT */"

@@ -36,7 +36,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   cursor:pointer;font-size:13px;font-weight:500;transition:all .15s}
 .nb:hover{background:var(--bg3);color:var(--text)}
 .nb.on{background:var(--bdim);color:var(--blue);font-weight:600}
-.hdr-r{font-size:11px;color:var(--text3);white-space:nowrap}
+.hdr-r{font-size:12px;font-weight:600;color:var(--text2);white-space:nowrap;text-align:right;line-height:1.35}
 
 /* SCORECARD BAR */
 .sbar{position:sticky;top:56px;z-index:90;background:var(--bg2);border-bottom:1px solid var(--border);
@@ -257,7 +257,7 @@ textarea:focus{outline:none;border-color:var(--blue)}
     <button class="nb"     onclick="showPage('historico',this)">Histórico</button>
     <button class="nb"     onclick="showPage('config',this)">⚙ Config</button>
   </nav>
-  <div class="hdr-r" id="uLbl">—</div>
+  <div class="hdr-r" id="uLbl">Datos a fecha: —</div>
 </header>
 
 <!-- SCORECARD BAR -->
@@ -564,6 +564,31 @@ function loadStorage(){
   BASE_D26.forEach((b,i)=>{if(b)D26[i]={...b};});
   try{mergeYearFromStorage(localStorage.getItem('hipopotamo_dm'));}catch(e){}
   try{mergeYearFromStorage(localStorage.getItem('hipoDM'));}catch(e){}
+  loadDatosFechaFromStorage();
+}
+
+let DATOS_FECHA=null;
+
+function guardarDatosFecha(f){
+  const s=String(f||'').trim();
+  if(!s)return;
+  DATOS_FECHA=s;
+  try{localStorage.setItem('hipoDatosFecha',s);}catch(e){}
+  renderHdrDatosFecha();
+}
+
+function loadDatosFechaFromStorage(){
+  try{
+    const s=localStorage.getItem('hipoDatosFecha');
+    if(s)DATOS_FECHA=s;
+  }catch(e){}
+}
+
+function renderHdrDatosFecha(){
+  const el=document.getElementById('uLbl');
+  if(!el)return;
+  const f=DATOS_FECHA||'';
+  el.textContent=f?`Datos a fecha: ${f}`:'Datos a fecha: —';
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1540,9 +1565,8 @@ function applyAutoERPData(d){
   BASE_D26[i]={...row};
   selCeoMo=i;
   selMoVentas=i;
-  const lbl=d.fechaERP||d.actualizado||'';
-  const u=document.getElementById('uLbl');
-  if(u)u.textContent=`Actualizado ${lbl} · ${MF[i]} ${d.ano}`;
+  if(d.datosFecha)guardarDatosFecha(d.datosFecha);
+  else renderHdrDatosFecha();
   refreshAfterPresChange();
   renderMselCeo();
   renderMselVentas();
@@ -1561,8 +1585,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   selCeoMo=lm>=0?lm:0;
   selMoVentas=lm>=0?lm:0;
 
-  document.getElementById('uLbl').textContent=
-    lm>=0?`Datos hasta ${MF[lm]} 2026 · hipoDM / hipoPres2`:'Sin datos 2026 (carga V1 o ERP)';
+  renderHdrDatosFecha();
 
   renderScorecard();
   renderAlerts();
