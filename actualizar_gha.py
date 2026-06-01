@@ -348,6 +348,46 @@ def limpiar_inyect_previo(html):
     return html[: idx + len(marker)] + tail[m.start():]
 
 
+def cargar_presupuesto_json_paths(cfg=None):
+    rutas = []
+    if cfg:
+        p = cfg.get("rutas", {}).get("pres_json")
+        if p:
+            rutas.append(Path(p))
+    rutas.extend([
+        Path("presupuesto_2026.json"),
+        Path("C:/Hipopotamo/presupuesto_2026.json"),
+        Path("C:/hipopotamo/presupuesto_2026.json"),
+    ])
+    for ruta in rutas:
+        if ruta and ruta.exists():
+            try:
+                with open(ruta, encoding="utf-8") as f:
+                    data = json.load(f)
+                logging.info("OK Presupuesto desde %s", ruta)
+                return data
+            except Exception as e:
+                logging.warning("No se pudo leer %s: %s", ruta, e)
+    return None
+
+
+def patch_presupuesto_html(html, cfg=None):
+    data = cargar_presupuesto_json_paths(cfg)
+    if not data:
+        return html
+    bloque = "window.__PRES_CUSTOM__=" + json.dumps(data, ensure_ascii=False) + ";"
+    marker = "/* PRES_CUSTOM_INJECT */"
+    html = re.sub(
+        r"/\* PRES_CUSTOM_INJECT \*/\s*(window\.__PRES_CUSTOM__[^;]*;\s*)?",
+        marker + "\n",
+        html,
+        count=1,
+    )
+    if marker in html and "__PRES_CUSTOM__" not in html.split(marker, 1)[1][:120]:
+        html = html.replace(marker, marker + "\n" + bloque + "\n", 1)
+    return html
+
+
 def bloque_const_mes(nombre, datos, dias, dias_total):
     return (
         f"const {nombre} = {{\n"
@@ -393,6 +433,14 @@ def guardar_html_repo(html, cfg):
     salida.write_text(html, encoding="utf-8")
     for nombre in REPO_HTML:
         Path(nombre).write_text(html, encoding="utf-8")
+    pres = cargar_presupuesto_json_paths(cfg)
+    if pres:
+        for dest in (Path("presupuesto_2026.json"), Path("C:/Hipopotamo/presupuesto_2026.json")):
+            try:
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                dest.write_text(json.dumps(pres, ensure_ascii=False, indent=2), encoding="utf-8")
+            except Exception as e:
+                logging.warning("No se pudo copiar presupuesto a %s: %s", dest, e)
     logging.info("OK HTML guardado: %s + %s", salida, ", ".join(REPO_HTML))
 
 
@@ -408,6 +456,7 @@ def actualizar_html(cfg, datos, mes, ano, dias, dias_total):
         html = f.read()
 
     html = limpiar_inyect_previo(html)
+    html = patch_presupuesto_html(html, cfg)
     if ano == 2026:
         html = patch_base_d26(html, mes, datos, dias, dias_total)
 

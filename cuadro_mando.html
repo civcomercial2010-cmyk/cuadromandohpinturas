@@ -383,9 +383,11 @@ textarea:focus{outline:none;border-color:var(--blue)}
   </div>
   <div class="sec">Presupuesto 2026 por Centro y Comercial</div>
   <div class="ch" style="overflow-x:auto">
-    <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:12px">
+    <div style="display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:8px;margin-bottom:12px">
+      <span id="pptSaveInfo" style="font-size:11px;color:var(--text3);margin-right:auto;max-width:52%">Se guarda en este navegador (localStorage) y en <code style="font-size:10px">presupuesto_2026.json</code> al pulsar Guardar.</span>
+      <button type="button" class="btn bs" onclick="exportarPresupuesto()">Exportar JSON</button>
       <button type="button" class="btn bp" onclick="guardarPresupuesto()">Guardar presupuesto</button>
-      <span id="pptSaveMsg" style="font-size:12px;color:var(--text3);align-self:center"></span>
+      <span id="pptSaveMsg" style="font-size:12px;color:var(--green);font-weight:600;align-self:center"></span>
     </div>
     <table class="tbl" id="pptTbl"></table>
   </div>
@@ -415,6 +417,8 @@ const _PRES0={
   ursula:[31500,26000,31500,26000,31500,26000,26000,31500,26000,31500,26000,31500]
 };
 let PRES=JSON.parse(JSON.stringify(_PRES0));
+const PRES_KEYS=['total','sjp','sjd','garp','gard','alm','avd','cavero','ursula'];
+let presFormDirty=false;
 
 const HT = {
   2019:[146619,175663,225062,191599,210522,262530,257762,143820,210003,192621,216841,166621],
@@ -515,17 +519,58 @@ const BASE_D26 = [
 let D26 = Array(12).fill(null);
 
 // ═══════════════════════════════════════════════════════════
-// CARGA localStorage — hipoPres2 + hipoDM (V1) + hipopotamo_dm (V2)
+// CARGA presupuesto: _PRES0 → presupuesto_2026.json / __PRES_CUSTOM__ → localStorage (hipoPres2)
 // ═══════════════════════════════════════════════════════════
+function applyPresObject(p){
+  if(!p)return;
+  PRES_KEYS.forEach(k=>{
+    if(p[k]&&Array.isArray(p[k])&&p[k].length===12)PRES[k]=p[k].map(v=>Math.round(+v||0));
+  });
+}
+function snapshotPres(){
+  const o={};
+  PRES_KEYS.forEach(k=>{o[k]=PRES[k].slice();});
+  return o;
+}
 function loadPresFromStorage(){
   try{
     const s=localStorage.getItem('hipoPres2');
-    if(!s)return;
-    const p=JSON.parse(s);
-    Object.keys(PRES).forEach(k=>{
-      if(p[k]&&Array.isArray(p[k])&&p[k].length===12)PRES[k]=p[k].map(v=>Math.round(+v||0));
-    });
+    if(!s)return false;
+    applyPresObject(JSON.parse(s));
+    return true;
+  }catch(e){return false;}
+}
+async function initPresBudget(){
+  PRES=JSON.parse(JSON.stringify(_PRES0));
+  if(window.__PRES_CUSTOM__)applyPresObject(window.__PRES_CUSTOM__);
+  try{
+    const r=await fetch('presupuesto_2026.json?'+Date.now(),{cache:'no-store'});
+    if(r.ok)applyPresObject(await r.json());
   }catch(e){}
+  const hadLocal=loadPresFromStorage();
+  updatePptSaveInfo(hadLocal);
+}
+function updatePptSaveInfo(fromLocal){
+  const el=document.getElementById('pptSaveInfo');
+  if(!el)return;
+  let meta=null;
+  try{meta=JSON.parse(localStorage.getItem('hipoPres2_meta')||'null');}catch(e){}
+  if(meta&&meta.savedAt){
+    const d=new Date(meta.savedAt);
+    const when=isNaN(d)?meta.savedAt:d.toLocaleString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    el.textContent='Último guardado en este navegador: '+when+(meta.origin?' · '+shortUrl(meta.origin):'');
+  }else if(fromLocal){
+    el.textContent='Presupuesto cargado desde este navegador (sin fecha de guardado).';
+  }else{
+    el.textContent='Valores por defecto del cuadro. Pulsa Guardar para fijarlos en este navegador y exportar JSON.';
+  }
+}
+function shortUrl(u){
+  try{
+    if(u.startsWith('file:'))return 'archivo local';
+    const x=new URL(u);
+    return x.hostname||'web';
+  }catch(e){return '';}
 }
 function mergeYearFromStorage(raw){
   if(!raw)return;
@@ -559,7 +604,6 @@ function mergeYearFromStorage(raw){
   });
 }
 function loadStorage(){
-  loadPresFromStorage();
   D26=Array(12).fill(null);
   BASE_D26.forEach((b,i)=>{if(b)D26[i]={...b};});
   try{mergeYearFromStorage(localStorage.getItem('hipopotamo_dm'));}catch(e){}
@@ -670,6 +714,7 @@ function showPage(id,btn){
   if(btn)btn.classList.add('on');
   if(id==='centros'){renderCentroCards();renderCentrosCharts();renderMselVentas();renderVTable();}
   if(id==='comercial')renderComercialPage();
+  if(id==='config')renderPptTable();
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1512,16 +1557,16 @@ function renderPptTable(){
     const tot=PRES[r.k].reduce((a,b)=>a+b,0);
     html+=`<tr><td>${r.n}</td>`;
     PRES[r.k].forEach((v,mi)=>{
-      html+=`<td><input type="text" class="ppt-inp" data-k="${r.k}" data-i="${mi}" value="${f(v,0)}" aria-label="${r.n} ${M[mi]}"/></td>`;
+      html+=`<td><input type="text" class="ppt-inp" data-k="${r.k}" data-i="${mi}" value="${f(v,0)}" aria-label="${r.n} ${M[mi]}" oninput="presFormDirty=true"/></td>`;
     });
     html+=`<td style="font-weight:700" id="pptTot-${r.k}">${f(tot,0)}</td></tr>`;
   });
   html+='</tbody>';
   document.getElementById('pptTbl').innerHTML=html;
+  presFormDirty=false;
 }
-function guardarPresupuesto(){
-  const keys=['total','sjp','sjd','garp','gard','alm','avd','cavero','ursula'];
-  keys.forEach(k=>{
+function leerPresDesdeInputs(){
+  PRES_KEYS.forEach(k=>{
     for(let mi=0;mi<12;mi++){
       const inp=document.querySelector('.ppt-inp[data-k="'+k+'"][data-i="'+mi+'"]');
       if(!inp)continue;
@@ -1529,10 +1574,36 @@ function guardarPresupuesto(){
       if(!isNaN(v)&&v>=0)PRES[k][mi]=Math.round(v);
     }
   });
-  try{localStorage.setItem('hipoPres2',JSON.stringify(PRES));}catch(e){}
+}
+function exportarPresupuesto(){
+  if(document.querySelector('.ppt-inp'))leerPresDesdeInputs();
+  const snap=snapshotPres();
+  const blob=new Blob([JSON.stringify(snap,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='presupuesto_2026.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+function guardarPresupuesto(){
+  leerPresDesdeInputs();
+  const snap=snapshotPres();
+  const meta={savedAt:new Date().toISOString(),origin:location.href};
+  try{
+    localStorage.setItem('hipoPres2',JSON.stringify(snap));
+    localStorage.setItem('hipoPres2_meta',JSON.stringify(meta));
+  }catch(e){
+    alert('No se pudo guardar en el navegador (localStorage bloqueado). Usa Exportar JSON.');
+    return;
+  }
+  presFormDirty=false;
+  exportarPresupuesto();
+  updatePptSaveInfo(true);
   const msg=document.getElementById('pptSaveMsg');
-  if(msg){msg.textContent='Guardado (compatible con V1) · '+new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
-    setTimeout(()=>{msg.textContent='';},5000);}
+  if(msg){
+    msg.textContent='Guardado correctamente';
+    setTimeout(()=>{msg.textContent='';},8000);
+  }
   refreshAfterPresChange();
 }
 function refreshAfterPresChange(){
@@ -1541,7 +1612,7 @@ function refreshAfterPresChange(){
   renderChartMonthly();renderDonuts();
   renderMselVentas();renderVTable();renderChartComp();renderChartRoll();
   renderCentroCards();renderCentrosCharts();renderChartAnual();renderChartEstac();renderHistTable();
-  renderPptTable();
+  if(!presFormDirty)renderPptTable();
   if(document.getElementById('page-comercial').classList.contains('on'))renderComercialPage();
 }
 
@@ -1572,6 +1643,7 @@ function applyAutoERPData(d){
   renderMselVentas();
 }
 
+/* PRES_CUSTOM_INJECT */
 /* AUTO_DATA_INJECT */
 // Datos inyectados automaticamente 01/06/2026 20:25
 (function autoLoad(){
@@ -1592,9 +1664,10 @@ function applyAutoERPData(d){
 // ═══════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════
-document.addEventListener('DOMContentLoaded',()=>{
+document.addEventListener('DOMContentLoaded',async()=>{
   Chart.register(ChartDataLabels);
 
+  await initPresBudget();
   loadStorage();
   const lm=lastMo();
   selCeoMo=lm>=0?lm:0;
