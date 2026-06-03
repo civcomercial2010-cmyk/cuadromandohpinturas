@@ -316,10 +316,6 @@ textarea:focus{outline:none;border-color:var(--blue)}
 <!-- ══ CENTROS ══ -->
 <div class="page" id="page-centros">
   <div class="sec">Centros de Venta · Pintura e Instalaciones · <span id="cenPageLbl">—</span></div>
-  <div class="sec">Detalle del Mes</div>
-  <div class="msel" id="mselVentas" style="margin-bottom:14px"></div>
-  <div class="ch"><div class="ch-t" id="vTit">—</div>
-    <table class="tbl tbl-lg" id="vTbl"></table></div>
   <div class="g2" id="cenCardsGrid"></div>
   <div class="sec">Agrupación comercial · SAN · Madrid · Gargallo · Almacén</div>
   <div class="ch"><div class="ch-t">Ventas por grupo (Pin.+Deco) · Jun 2025 – actualidad</div>
@@ -330,6 +326,10 @@ textarea:focus{outline:none;border-color:var(--blue)}
   <div class="sec">Centros Deco / Instalaciones — SJ Deco · Gargallo Deco</div>
   <div class="ch"><div class="ch-t">Evolución mensual · Jun 2025 – actualidad</div>
     <div style="position:relative;height:260px"><canvas id="cDeco"></canvas></div></div>
+  <div class="sec">Detalle del Mes</div>
+  <div class="msel" id="mselVentas" style="margin-bottom:14px"></div>
+  <div class="ch"><div class="ch-t" id="vTit">—</div>
+    <table class="tbl tbl-lg" id="vTbl"></table></div>
   <div class="sec">Detalle por Centro — Mes a Mes 2026</div>
   <div class="ch" style="overflow-x:auto"><table class="tbl tbl-lg" id="cenTbl"></table></div>
 </div>
@@ -496,9 +496,9 @@ const MAY26 = {
 
 // Junio 2026 — mes comercial (ERP 28/05/2026; días laborables al 29/05)
 const JUN26 = {
-  t:51094,sjp:22804,sjd:3347,garp:8452,gard:417,alm:8036,avd:8037,
-  cavero:26139,ursula:10978,dias:6,diasT:23,
-  prof:37182,pvp:7668,inst:4379,ind:424,dist:1440
+  t:65666,sjp:24784,sjd:5695,garp:9200,gard:2785,alm:14074,avd:9127,
+  cavero:32405,ursula:11687,dias:7,diasT:23,
+  prof:44157,pvp:9206,inst:9095,ind:1432,dist:1775
 };
 
 // Hardcode ene–jun 2026 (ERP + cierres mensuales)
@@ -512,7 +512,7 @@ const BASE_D26 = [
   {t:227874,sjp:58419,sjd:44583,garp:15649,gard:37761,alm:39949,avd:31183,cavero:70788,ursula:24296,
    prof:95359,pvp:9202,inst:110133,ind:10105,dist:3074,dias:20,diasT:20},
   {t:276749, ...MAY26},
-  {t:51094, ...JUN26},
+  {t:65666, ...JUN26},
   null, null, null, null, null, null
 ];
 
@@ -1231,28 +1231,13 @@ function selectVentasMes(i){selMoVentas=i;renderMselVentas();renderVTable();}
 function renderVTable(){
   const m=D26[selMoVentas];
   document.getElementById('vTit').textContent='Detalle '+MF[selMoVentas]+' 2026';
-  if(!m){document.getElementById('vTbl').innerHTML='<tbody><tr><td colspan="11" style="text-align:center;color:var(--text3);padding:20px">Sin datos para este mes.</td></tr></tbody>';return;}
-  const qStart=Math.floor(selMoVentas/3)*3;
-  const qMonths=[qStart,qStart+1,qStart+2];
-  let html=`<thead><tr><th>Centro</th><th>Real</th><th>Proyección</th><th>Presupuesto</th><th>Diferencia</th><th>Cumplimiento</th><th>vs ${MF[selMoVentas]} 2025</th><th>Acumulado Trimestre</th><th>Presupuesto Trimestre</th><th>Diferencia Trimestre</th><th>Dif. Trim (Real+Proy)</th></tr></thead><tbody>`;
+  if(!m){document.getElementById('vTbl').innerHTML='<tbody><tr><td colspan="7" style="text-align:center;color:var(--text3);padding:20px">Sin datos para este mes.</td></tr></tbody>';return;}
+  let html=`<thead><tr><th>Centro</th><th>Real</th><th>Proyección</th><th>Presupuesto</th><th>Diferencia</th><th>Cumplimiento</th><th>vs ${MF[selMoVentas]} 2025</th></tr></thead><tbody>`;
   CEN.forEach(c=>{
     const real=m[c.k];const pp=PRES[c.k][selMoVentas];
     const pr=real!=null?proy(real,m.dias,m.diasT):null;
     const useV=pr??real;const p=useV!=null?useV/pp:null;const delta=useV!=null?useV-pp:null;
     const a25=HT[2025][selMoVentas]*(pp/PRES.total[selMoVentas]);const yo=useV!=null?(useV-a25)/a25:null;
-    let qAcc=0,qMix=0,qPpt=0;
-    qMonths.forEach(mi=>{
-      const dm=D26[mi];
-      if(dm){
-        const vReal=dm[c.k];
-        if(vReal!=null)qAcc+=vReal;
-        const vMix=projOrReal(dm,c.k);
-        if(vMix!=null)qMix+=vMix;
-      }
-      qPpt+=PRES[c.k][mi];
-    });
-    const qDiff=qAcc-qPpt;
-    const qDiffMix=qMix-qPpt;
     html+=`<tr>
       <td><span class="dot ${tc(p)}" style="margin-right:6px"></span>${c.n}</td>
       <td>${real!=null?fe(real):'—'}</td>
@@ -1261,30 +1246,13 @@ function renderVTable(){
       <td style="color:var(--${delta!=null&&delta>=0?'green':'red'})">${delta!=null?sgn(delta)+fe(delta):'—'}</td>
       <td>${badge(p)}</td>
       <td style="color:var(--${yo!=null&&yo>=0?'green':'red'})">${yo!=null?sgn(yo)+(yo*100).toFixed(1)+'%':'—'}</td>
-      <td>${fe(qAcc)}</td>
-      <td>${fe(qPpt)}</td>
-      <td style="color:var(--${qDiff>=0?'green':'red'})">${sgn(qDiff)+fe(qDiff)}</td>
-      <td style="color:var(--${qDiffMix>=0?'green':'red'})">${sgn(qDiffMix)+fe(qDiffMix)}</td>
     </tr>`;
   });
   const pp0=PRES.total[selMoVentas];const pr0=proy(m.t,m.dias,m.diasT);const useV0=pr0??m.t;
   const p0=useV0/pp0;const d0=useV0-pp0;const yo0=(useV0-HT[2025][selMoVentas])/HT[2025][selMoVentas];
-  let qAcc0=0,qMix0=0,qPpt0=0;
-  qMonths.forEach(mi=>{
-    const dm=D26[mi];
-    if(dm){
-      const vReal=dm.t;
-      if(vReal!=null)qAcc0+=vReal;
-      const vMix=projOrReal(dm,'t');
-      if(vMix!=null)qMix0+=vMix;
-    }
-    qPpt0+=PRES.total[mi];
-  });
-  const qDiff0=qAcc0-qPpt0;
-  const qDiffMix0=qMix0-qPpt0;
   html+=`<tr><td>TOTAL</td><td>${fe(m.t)}</td><td style="color:var(--amber)">${pr0?fe(pr0):'—'}</td>
     <td>${fe(pp0)}</td><td style="color:var(--${d0>=0?'green':'red'})">${sgn(d0)+fe(d0)}</td>
-    <td>${badge(p0)}</td><td style="color:var(--${yo0>=0?'green':'red'})">${sgn(yo0)+(yo0*100).toFixed(1)}%</td><td>${fe(qAcc0)}</td><td>${fe(qPpt0)}</td><td style="color:var(--${qDiff0>=0?'green':'red'})">${sgn(qDiff0)+fe(qDiff0)}</td><td style="color:var(--${qDiffMix0>=0?'green':'red'})">${sgn(qDiffMix0)+fe(qDiffMix0)}</td>
+    <td>${badge(p0)}</td><td style="color:var(--${yo0>=0?'green':'red'})">${sgn(yo0)+(yo0*100).toFixed(1)}%</td>
   </tr></tbody>`;
   document.getElementById('vTbl').innerHTML=html;
 }
@@ -1677,9 +1645,9 @@ function applyAutoERPData(d){
 
 /* PRES_CUSTOM_INJECT */
 /* AUTO_DATA_INJECT */
-// Datos inyectados automaticamente 02/06/2026 22:01
+// Datos inyectados automaticamente 03/06/2026 20:10
 (function autoLoad(){
-  const d = {"total": 51093.61, "sjp": 22804.43, "sjd": 3347.37, "garp": 8451.61, "gard": 416.52, "alm": 8036.41, "avd": 8037.27, "cavero": 26138.9, "ursula": 10977.68, "prof": 37181.9, "pvp_pin": 7668.49, "pvp_ins": 4378.8, "distrib": 1440.46, "ind": 423.96, "dias": 6, "diasT": 23, "mes": 6, "ano": 2026, "diasFromERP": true, "actualizado": "02/06/2026 22:01", "fechaERP": "ERP 02/06/26", "datosFecha": "02/06/2026"};
+  const d = {"total": 65665.63, "sjp": 24784.12, "sjd": 5695.03, "garp": 9199.92, "gard": 2785.46, "alm": 14074.2, "avd": 9126.9, "cavero": 32405.41, "ursula": 11686.64, "prof": 44157.37, "pvp_pin": 9206.33, "pvp_ins": 9095.4, "distrib": 1774.82, "ind": 1431.71, "dias": 7, "diasT": 23, "mes": 6, "ano": 2026, "diasFromERP": true, "actualizado": "03/06/2026 20:10", "fechaERP": "ERP 03/06/26 20:00", "datosFecha": "03/06/2026"};
   if(!window._autoLoaded){
     window._autoLoaded=true;
     function run(){
