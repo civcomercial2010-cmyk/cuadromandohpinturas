@@ -2,11 +2,13 @@ name: Actualizar Cuadro de Mando
 
 on:
   schedule:
-    # 19:10 UTC = 20:10 Madrid (invierno CET)
-    # 18:10 UTC = 20:10 Madrid (verano CEST)
-    # Ponemos dos horarios para cubrir ambos:
-    - cron: '10 18 * * *'   # verano (CEST, abril-octubre)
-    - cron: '10 19 * * *'   # invierno (CET, octubre-abril)
+    # Objetivo: 20:10 Madrid. 18:10 UTC = verano (CEST) · 19:10 UTC = invierno (CET).
+    - cron: '10 18 * * *'   # actualización principal (verano)
+    - cron: '10 19 * * *'   # actualización principal (invierno)
+    # Reintento +30 min por si el cron principal se salta o falla.
+    # Solo actúa si hoy aún no se ha actualizado (evita duplicar la publicación).
+    - cron: '40 18 * * *'   # reintento (verano)
+    - cron: '40 19 * * *'   # reintento (invierno)
   workflow_dispatch:         # permite ejecución manual desde GitHub
 
 jobs:
@@ -17,16 +19,41 @@ jobs:
     steps:
       - name: Checkout repositorio
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 30
 
-      - name: Instalar Python y dependencias
+      - name: Decidir si ejecutar (los reintentos se omiten si ya hay actualización de hoy)
+        id: guard
+        run: |
+          SCHED="${{ github.event.schedule }}"
+          if [[ "$SCHED" == "40 "* ]]; then
+            HOY=$(date -u +%d/%m/%Y)
+            if git log -30 --pretty=%s | grep -q "Auto $HOY"; then
+              echo "Ya hay actualización de hoy ($HOY); el reintento se omite."
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "No hay actualización de hoy ($HOY); se ejecuta el reintento."
+              echo "skip=false" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Instalar Python
+        if: steps.guard.outputs.skip != 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: Instalar librerías
+        if: steps.guard.outputs.skip != 'true'
         run: pip install openpyxl
 
       - name: Ejecutar script de actualización
+        if: steps.guard.outputs.skip != 'true'
+        # Los errores se avisan por Telegram; no se marca el run como fallido para evitar
+        # los correos de error que GitHub envía cuando un workflow falla.
+        continue-on-error: true
         env:
           GMAIL_EMAIL:      ${{ secrets.GMAIL_EMAIL }}
           GMAIL_PASSWORD:   ${{ secrets.GMAIL_PASSWORD }}
@@ -38,6 +65,8 @@ jobs:
         run: python actualizar_gha.py
 
       - name: Comprobar que el cuadro publicado es V2
+        if: steps.guard.outputs.skip != 'true'
+        continue-on-error: true
         run: |
           grep -q 'id="page-ceo"' cuadro_mando.html || (echo "ERROR: cuadro_mando.html no es V2" && exit 1)
           grep -q 'Cuadro de Mando V2' cuadro_mando.html || (echo "ERROR: falta marca V2" && exit 1)
