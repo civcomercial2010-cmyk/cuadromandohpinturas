@@ -496,9 +496,9 @@ const MAY26 = {
 
 // Junio 2026 — mes comercial (ERP 28/05/2026; días laborables al 29/05)
 const JUN26 = {
-  t:91964,sjp:30966,sjd:5695,garp:10592,gard:10230,alm:17387,avd:17093,
-  cavero:38569,ursula:15895,dias:9,diasT:23,
-  prof:54529,pvp:12387,inst:21822,ind:1432,dist:1794
+  t:97360,sjp:33579,sjd:5695,garp:10766,gard:10244,alm:19385,avd:17691,
+  cavero:42108,ursula:16501,dias:10,diasT:23,
+  prof:58674,pvp:13251,inst:21836,ind:1500,dist:2100
 };
 
 // Hardcode ene–jun 2026 (ERP + cierres mensuales)
@@ -512,7 +512,7 @@ const BASE_D26 = [
   {t:227874,sjp:58419,sjd:44583,garp:15649,gard:37761,alm:39949,avd:31183,cavero:70788,ursula:24296,
    prof:95359,pvp:9202,inst:110133,ind:10105,dist:3074,dias:20,diasT:20},
   {t:276749, ...MAY26},
-  {t:91964, ...JUN26},
+  {t:97360, ...JUN26},
   null, null, null, null, null, null
 ];
 
@@ -1677,9 +1677,9 @@ function applyAutoERPData(d){
 
 /* PRES_CUSTOM_INJECT */
 /* AUTO_DATA_INJECT */
-// Datos inyectados automaticamente 07/06/2026 20:21
+// Datos inyectados automaticamente 08/06/2026 19:16
 (function autoLoad(){
-  const d = {"total": 91963.62, "sjp": 30966.45, "sjd": 5695.04, "garp": 10591.98, "gard": 10230.08, "alm": 17386.91, "avd": 17093.17, "cavero": 38568.91, "ursula": 15894.61, "prof": 54528.84, "pvp_pin": 12387.43, "pvp_ins": 21821.84, "distrib": 1793.8, "ind": 1431.71, "dias": 9, "diasT": 23, "mes": 6, "ano": 2026, "diasFromERP": true, "actualizado": "07/06/2026 20:21", "fechaERP": "ERP 07/06/26", "datosFecha": "07/06/2026"};
+  const d = {"total": 97360.12, "sjp": 33578.57, "sjd": 5695.04, "garp": 10766.32, "gard": 10243.81, "alm": 19385.04, "avd": 17691.34, "cavero": 42107.67, "ursula": 16500.52, "prof": 58673.51, "pvp_pin": 13251.17, "pvp_ins": 21835.57, "distrib": 2099.8, "ind": 1500.07, "dias": 10, "diasT": 23, "mes": 6, "ano": 2026, "diasFromERP": true, "actualizado": "08/06/2026 19:16", "fechaERP": "ERP 08/06/26", "datosFecha": "08/06/2026"};
   if(!window._autoLoaded){
     window._autoLoaded=true;
     function run(){
