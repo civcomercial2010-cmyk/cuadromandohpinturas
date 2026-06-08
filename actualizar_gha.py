@@ -5,10 +5,12 @@ HIPOPOTAMO PINTURAS — Actualizador automático (GitHub Actions)
 Lee configuración desde variables de entorno en lugar de config.json.
 """
 
-import imaplib, email, email.header, os, sys, json, logging, re
-import datetime, time, base64
-import urllib.request, urllib.parse
+import imaplib, email, email.header, os, sys, json, logging, re, io
+import datetime, time, base64, smtplib
+import urllib.request, urllib.parse, urllib.error
+from email.mime.text import MIMEText
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 try:
     import openpyxl
@@ -47,8 +49,10 @@ def cargar_config():
             "chat_id":   os.environ.get("TELEGRAM_CHAT_ID", ""),
         },
         "opciones": {
-            "reintentos_gmail":         1,
-            "minutos_entre_reintentos": 5,
+            "reintentos_gmail":         6,
+            "minutos_entre_reintentos": 3,
+            "reintentos_github":        4,
+            "espera_max_minutos":       25,
         },
     }
     return cfg
@@ -78,6 +82,31 @@ def enviar_telegram(cfg, texto):
         logging.info("OK Telegram enviado")
     except Exception as e:
         logging.warning(f"Telegram error: {e}")
+
+
+def enviar_aviso(cfg, asunto, cuerpo):
+    """Telegram + correo (mismo Gmail de secrets) para no depender de un solo canal."""
+    enviar_telegram(cfg, f"{asunto}\n{cuerpo}")
+    gcfg = cfg.get("gmail", {})
+    remitente = gcfg.get("email", "")
+    password = gcfg.get("password_app", "")
+    if not remitente or not password:
+        return
+    try:
+        msg = MIMEText(cuerpo, "plain", "utf-8")
+        msg["Subject"] = asunto
+        msg["From"] = remitente
+        msg["To"] = remitente
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=20) as smtp:
+            smtp.login(remitente, password)
+            smtp.send_message(msg)
+        logging.info("OK Aviso por correo enviado")
+    except Exception as e:
+        logging.warning(f"Correo de aviso error: {e}")
+
+
+def hoy_madrid() -> datetime.date:
+    return datetime.datetime.now(ZoneInfo("Europe/Madrid")).date()
 
 # ─── MES COMERCIAL ───────────────────────────────────────────────────────────
 
@@ -120,8 +149,66 @@ def dias_mes_comercial(mes, ano, fecha_ref=None):
 
 # ─── DESCARGAR EXCEL ─────────────────────────────────────────────────────────
 
+def _decode_filename(fn_raw):
+    decoded = email.header.decode_header(fn_raw)
+    return "".join(
+        t.decode(enc or "utf-8") if isinstance(t, bytes) else t
+        for t, enc in decoded
+    ).strip()
+
+
+def _parse_generacion_desde_bytes(payload: bytes) -> datetime.datetime | None:
+    """Lee fecha/hora de generación del informe ERP dentro del adjunto."""
+    pat = re.compile(
+        r"Fecha[: \t]+(\d{1,2})[/\-](\d{1,2})[/\-](\d{2,4})(?:\s+Hora:\s*(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?)?",
+        re.IGNORECASE,
+    )
+    try:
+        wb = openpyxl.load_workbook(io.BytesIO(payload), read_only=True, data_only=True)
+        ws = wb["VENTAS"] if "VENTAS" in wb.sheetnames else wb.active
+        for row in ws.iter_rows(min_row=2, max_row=15, values_only=True):
+            for cell in row:
+                if cell is None:
+                    continue
+                if isinstance(cell, datetime.datetime):
+                    return cell.replace(tzinfo=None)
+                if isinstance(cell, datetime.date):
+                    return datetime.datetime(cell.year, cell.month, cell.day)
+                m = pat.search(str(cell))
+                if m:
+                    d, mo, y = int(m.group(1)), int(m.group(2)), int(m.group(3))
+                    y = 2000 + y if y < 100 else y
+                    return datetime.datetime(
+                        y, mo, d,
+                        int(m.group(4) or 0), int(m.group(5) or 0), int(m.group(6) or 0),
+                    )
+        wb.close()
+    except Exception as e:
+        logging.warning(f"No se pudo leer fecha del Excel en memoria: {e}")
+    return None
+
+
+def _extraer_adjunto_ventas(msg, nombre_buscado: str):
+    for parte in msg.walk():
+        if parte.get_content_maintype() == "multipart":
+            continue
+        fn = parte.get_filename()
+        if not fn:
+            continue
+        fn_dec = _decode_filename(fn)
+        ext = fn_dec.lower().replace(".xlmx", ".xlsx")
+        if not (ext.endswith(".xlsx") or ext.endswith(".xlsm")):
+            continue
+        if nombre_buscado and nombre_buscado not in ext:
+            continue
+        payload = parte.get_payload(decode=True)
+        if payload:
+            return fn_dec, payload
+    return None, None
+
+
 def descargar_excel_gmail(cfg, intento=1):
-    gcfg    = cfg["gmail"]
+    gcfg = cfg["gmail"]
     destino = Path(cfg["rutas"]["excel_descargado"])
     destino.parent.mkdir(parents=True, exist_ok=True)
     logging.info(f"Conectando a Gmail ({gcfg['email']})... [intento {intento}]")
@@ -132,15 +219,16 @@ def descargar_excel_gmail(cfg, intento=1):
         logging.error(f"Error Gmail login: {e}")
         return False
 
-    mail.select(gcfg.get("carpeta_busqueda", "INBOX"))
-    desde = (datetime.datetime.now() -
-             datetime.timedelta(hours=gcfg.get("buscar_ultimas_horas", 26))).strftime("%d-%b-%Y")
+    mail.select(gcfg.get("carpeta_busqueda", "INBOX"), readonly=True)
+    horas = int(gcfg.get("buscar_ultimas_horas", 26))
+    desde = (datetime.datetime.now(datetime.timezone.utc) -
+             datetime.timedelta(hours=horas + 48)).strftime("%d-%b-%Y")
     criterios = []
     if gcfg.get("remitente_contiene"):
         criterios.append(f'FROM "{gcfg["remitente_contiene"]}"')
     if gcfg.get("asunto_contiene"):
         criterios.append(f'SUBJECT "{gcfg["asunto_contiene"]}"')
-    criterios.append(f'SINCE "{desde}"')
+    criterios.append(f'SINCE {desde}')
 
     _, mensajes = mail.search(None, " ".join(criterios))
     ids = mensajes[0].split()
@@ -150,37 +238,63 @@ def descargar_excel_gmail(cfg, intento=1):
         return False
 
     nombre_buscado = gcfg["nombre_adjunto"].lower()
-    encontrado = False
-    for msg_id in reversed(ids):
+    hoy = hoy_madrid()
+    mejor_uid = None
+    mejor_gen: datetime.datetime | None = None
+    mejor_payload = None
+    mejor_nombre = None
+
+    for msg_id in ids:
         _, data = mail.fetch(msg_id, "(RFC822)")
         msg = email.message_from_bytes(data[0][1])
-        logging.info(f"Revisando: {msg['Subject']} ({msg['Date']})")
-        for parte in msg.walk():
-            if parte.get_content_maintype() == "multipart":
-                continue
-            fn = parte.get_filename()
-            if not fn:
-                continue
-            decoded = email.header.decode_header(fn)
-            fn_dec = "".join(
-                t.decode(enc or "utf-8") if isinstance(t, bytes) else t
-                for t, enc in decoded
-            )
-            logging.info(f"  Adjunto: {fn_dec}")
-            ext = fn_dec.lower()
-            if (nombre_buscado in ext or
-                    ext.endswith(".xlsx") or ext.endswith(".xlsm") or ext.endswith(".xlmx")):
-                payload = parte.get_payload(decode=True)
-                with open(destino, "wb") as f:
-                    f.write(payload)
-                logging.info(f"OK Excel descargado: {destino} ({len(payload):,} bytes)")
-                encontrado = True
-                break
-        if encontrado:
-            break
+        fn_dec, payload = _extraer_adjunto_ventas(msg, nombre_buscado)
+        if not payload:
+            continue
+        gen_dt = _parse_generacion_desde_bytes(payload)
+        logging.info(f"  UID {msg_id.decode()}: {msg.get('Subject')} gen={gen_dt}")
+        if gen_dt and gen_dt.date() > hoy:
+            continue
+        uidn = int(msg_id.decode())
+        if (
+            mejor_gen is None
+            or (gen_dt and gen_dt > mejor_gen)
+            or (gen_dt and gen_dt == mejor_gen and mejor_uid is not None and uidn > int(mejor_uid.decode()))
+            or (gen_dt is None and mejor_gen is None and mejor_uid is not None and uidn > int(mejor_uid.decode()))
+        ):
+            mejor_uid = msg_id
+            mejor_gen = gen_dt
+            mejor_payload = payload
+            mejor_nombre = fn_dec
 
     mail.logout()
-    return encontrado
+    if mejor_payload is None:
+        logging.warning("Ningún adjunto válido encontrado.")
+        return False
+
+    with open(destino, "wb") as f:
+        f.write(mejor_payload)
+    logging.info(
+        f"OK Excel descargado: {destino} ({len(mejor_payload):,} bytes) "
+        f"desde {mejor_nombre} gen={mejor_gen}"
+    )
+    return True
+
+
+def esperar_y_descargar_excel(cfg):
+    """Espera al correo ERP (llega ~20:00) con reintentos acotados."""
+    max_ret = int(cfg["opciones"]["reintentos_gmail"])
+    mins_ret = int(cfg["opciones"]["minutos_entre_reintentos"])
+    limite = time.time() + int(cfg["opciones"]["espera_max_minutos"]) * 60
+    intento = 0
+    while time.time() < limite:
+        intento += 1
+        if descargar_excel_gmail(cfg, intento):
+            return True
+        if intento > max_ret:
+            break
+        logging.warning(f"Correo aún no disponible; reintento en {mins_ret} min...")
+        time.sleep(mins_ret * 60)
+    return False
 
 # ─── PARSEAR EXCEL ───────────────────────────────────────────────────────────
 
@@ -507,7 +621,18 @@ def actualizar_html(cfg, datos, mes, ano, dias, dias_total):
 
 # ─── SUBIR A GITHUB ──────────────────────────────────────────────────────────
 
-def subir_archivo_github(cfg, destino, ruta_html, mensaje):
+def _github_api_request(url, token, method="GET", data=None, timeout=30):
+    req = urllib.request.Request(url, data=data, method=method)
+    req.add_header("Authorization", f"token {token}")
+    req.add_header("User-Agent", "HipopotamoCuadroMando/2.1")
+    if data is not None:
+        req.add_header("Content-Type", "application/json")
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        body = resp.read().decode()
+        return json.loads(body) if body else {}
+
+
+def subir_archivo_github(cfg, destino, ruta_html, mensaje, intentos=4):
     gcfg = cfg["github"]
     token = gcfg["token"]
     usuario = gcfg["usuario"]
@@ -517,31 +642,37 @@ def subir_archivo_github(cfg, destino, ruta_html, mensaje):
     with open(ruta_html, "rb") as f:
         contenido_b64 = base64.b64encode(f.read()).decode("utf-8")
 
-    sha = None
-    try:
-        req = urllib.request.Request(api_url)
-        req.add_header("Authorization", f"token {token}")
-        req.add_header("User-Agent", "HipopotamoCuadroMando/2.0")
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            sha = json.loads(resp.read().decode()).get("sha")
-    except Exception:
-        pass
+    ultimo_error = None
+    for intento in range(1, intentos + 1):
+        sha = None
+        try:
+            meta = _github_api_request(api_url, token, method="GET", timeout=20)
+            sha = meta.get("sha")
+        except urllib.error.HTTPError as e:
+            if e.code != 404:
+                ultimo_error = e
+        except Exception as e:
+            ultimo_error = e
 
-    payload = {"message": mensaje, "content": contenido_b64}
-    if sha:
-        payload["sha"] = sha
+        payload = {"message": mensaje, "content": contenido_b64}
+        if sha:
+            payload["sha"] = sha
+        try:
+            _github_api_request(
+                api_url, token,
+                method="PUT",
+                data=json.dumps(payload).encode("utf-8"),
+                timeout=45,
+            )
+            logging.info("OK Subido: %s (intento %s)", destino, intento)
+            return True
+        except Exception as e:
+            ultimo_error = e
+            espera = min(30, 2 ** intento)
+            logging.warning("Fallo subida %s intento %s: %s — reintento en %ss", destino, intento, e, espera)
+            time.sleep(espera)
 
-    req = urllib.request.Request(
-        api_url,
-        data=json.dumps(payload).encode("utf-8"),
-        method="PUT",
-    )
-    req.add_header("Authorization", f"token {token}")
-    req.add_header("Content-Type", "application/json")
-    req.add_header("User-Agent", "HipopotamoCuadroMando/2.0")
-    with urllib.request.urlopen(req, timeout=30):
-        pass
-    logging.info("OK Subido: %s", destino)
+    raise RuntimeError(f"No se pudo subir {destino}: {ultimo_error}")
 
 
 def subir_a_github(cfg, ruta_html):
@@ -555,14 +686,11 @@ def subir_a_github(cfg, ruta_html):
     if "page-ceo" not in html or "applyAutoERPData" not in html:
         logging.error("El HTML generado no es V2 (falta page-ceo / applyAutoERPData). No se sube.")
         return False
-    try:
-        for nombre in REPO_HTML:
-            subir_archivo_github(cfg, nombre, str(origen), mensaje)
-        logging.info("OK GitHub Pages (3 HTML, origen unico V2)")
-        return True
-    except Exception as e:
-        logging.warning(f"GitHub error: {e}")
-        return False
+    reintentos = int(cfg.get("opciones", {}).get("reintentos_github", 4))
+    for nombre in REPO_HTML:
+        subir_archivo_github(cfg, nombre, str(origen), mensaje, intentos=reintentos)
+    logging.info("OK GitHub Pages (3 HTML, origen unico V2)")
+    return True
 
 # ─── MAIN ────────────────────────────────────────────────────────────────────
 
@@ -576,29 +704,18 @@ def main():
     mes, ano = mes_comercial_actual()
     logging.info(f"Mes comercial inicial: {mes}/{ano}")
 
-    # Descargar Excel
-    max_ret  = cfg["opciones"]["reintentos_gmail"]
-    mins_ret = cfg["opciones"]["minutos_entre_reintentos"]
-    excel_ok = False
-    for intento in range(1, max_ret + 2):
-        excel_ok = descargar_excel_gmail(cfg, intento)
-        if excel_ok:
-            break
-        if intento <= max_ret:
-            logging.warning(f"Reintentando en {mins_ret} min...")
-            enviar_telegram(cfg, f"No se encontró el Excel (intento {intento}). Reintentando...")
-            time.sleep(mins_ret * 60)
-
     excel_path = Path(cfg["rutas"]["excel_descargado"])
-    if not excel_ok:
-        logging.error("No hay Excel. Abortando.")
-        enviar_telegram(cfg, "ERROR: No hay Excel disponible. Cuadro NO actualizado.")
+    if not esperar_y_descargar_excel(cfg):
+        msg = "ERROR Pinturas: no hay Excel ERP en Gmail tras reintentos. Cuadro NO actualizado."
+        logging.error(msg)
+        enviar_aviso(cfg, "Cuadro Pinturas — sin Excel", msg)
         sys.exit(1)
 
     datos = parsear_excel(excel_path)
     if datos is None:
-        logging.error("Error parseando Excel.")
-        enviar_telegram(cfg, "ERROR: Falló la lectura del Excel.")
+        msg = "ERROR Pinturas: falló la lectura del Excel ERP."
+        logging.error(msg)
+        enviar_aviso(cfg, "Cuadro Pinturas — Excel ilegible", msg)
         sys.exit(1)
 
     # Determinar mes desde fecha del ERP (más fiable que fecha del servidor).
@@ -620,19 +737,26 @@ def main():
 
     # Generar HTML
     if not actualizar_html(cfg, datos, mes, ano, dias, dias_total):
-        logging.error("Error generando HTML.")
-        enviar_telegram(cfg, "ERROR: No se pudo generar el HTML.")
+        msg = "ERROR Pinturas: no se pudo generar el HTML del cuadro."
+        logging.error(msg)
+        enviar_aviso(cfg, "Cuadro Pinturas — HTML", msg)
         sys.exit(1)
 
-    # Subir a GitHub Pages (cuadro público + plantillas V2)
-    subir_a_github(cfg, cfg["rutas"]["html_salida"])
+    try:
+        subir_a_github(cfg, cfg["rutas"]["html_salida"])
+    except Exception as e:
+        msg = f"ERROR Pinturas: falló la publicación en GitHub Pages: {e}"
+        logging.error(msg)
+        enviar_aviso(cfg, "Cuadro Pinturas — GitHub", msg)
+        sys.exit(1)
 
-    # Notificar OK
     total_fmt = f"{datos['total']:,.0f}".replace(",", ".")
-    enviar_telegram(cfg,
-        f"✓ Hipopotamo actualizado — {mes}/{ano}\n"
+    enviar_aviso(
+        cfg,
+        f"✓ Cuadro Pinturas actualizado {mes}/{ano}",
         f"Total: {total_fmt} € | Días: {dias}/{dias_total}\n"
-        f"Cavero (PROF): {datos['cavero']:,.0f} € | Úrsula: {datos['ursula']:,.0f} €"
+        f"Cavero: {datos['cavero']:,.0f} € | Úrsula: {datos['ursula']:,.0f} €\n"
+        f"https://civcomercial2010-cmyk.github.io/cuadromandohpinturas/cuadro_mando.html",
     )
 
     logging.info("=" * 60)
