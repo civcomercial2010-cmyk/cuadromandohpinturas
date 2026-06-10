@@ -496,9 +496,9 @@ const MAY26 = {
 
 // Junio 2026 — mes comercial (ERP 28/05/2026; días laborables al 29/05)
 const JUN26 = {
-  t:100606,sjp:33603,sjd:5970,garp:11105,gard:10244,alm:21326,avd:18357,
-  cavero:42688,ursula:18006,dias:11,diasT:23,
-  prof:60760,pvp:14117,inst:22110,ind:1500,dist:2119
+  t:148896,sjp:36069,sjd:31134,garp:11790,gard:23174,alm:24434,avd:22295,
+  cavero:45707,ursula:19647,dias:12,diasT:23,
+  prof:65419,pvp:15820,inst:63263,ind:1510,dist:2883
 };
 
 // Hardcode ene–jun 2026 (ERP + cierres mensuales)
@@ -512,7 +512,7 @@ const BASE_D26 = [
   {t:227874,sjp:58419,sjd:44583,garp:15649,gard:37761,alm:39949,avd:31183,cavero:70788,ursula:24296,
    prof:95359,pvp:9202,inst:110133,ind:10105,dist:3074,dias:20,diasT:20},
   {t:276749, ...MAY26},
-  {t:100606, ...JUN26},
+  {t:148896, ...JUN26},
   null, null, null, null, null, null
 ];
 
@@ -1677,9 +1677,9 @@ function applyAutoERPData(d){
 
 /* PRES_CUSTOM_INJECT */
 /* AUTO_DATA_INJECT */
-// Datos inyectados automaticamente 09/06/2026 22:19
+// Datos inyectados automaticamente 10/06/2026 22:42
 (function autoLoad(){
-  const d = {"total": 100605.76, "sjp": 33603.46, "sjd": 5969.79, "garp": 11104.8, "gard": 10243.81, "alm": 21326.47, "avd": 18357.43, "cavero": 42688.22, "ursula": 18006.16, "prof": 60759.7, "pvp_pin": 14117.06, "pvp_ins": 22110.32, "distrib": 2118.6, "ind": 1500.07, "dias": 11, "diasT": 23, "mes": 6, "ano": 2026, "diasFromERP": true, "actualizado": "09/06/2026 22:19", "fechaERP": "ERP 09/06/26", "datosFecha": "09/06/2026"};
+  const d = {"total": 148895.5, "sjp": 36069.0, "sjd": 31134.26, "garp": 11790.22, "gard": 23173.75, "alm": 24433.72, "avd": 22294.55, "cavero": 45706.8, "ursula": 19647.27, "prof": 65419.39, "pvp_pin": 15820.39, "pvp_ins": 63262.58, "distrib": 2882.66, "ind": 1510.48, "dias": 12, "diasT": 23, "mes": 6, "ano": 2026, "diasFromERP": true, "actualizado": "10/06/2026 22:42", "fechaERP": "ERP 10/06/26", "datosFecha": "10/06/2026"};
   if(!window._autoLoaded){
     window._autoLoaded=true;
     function run(){
