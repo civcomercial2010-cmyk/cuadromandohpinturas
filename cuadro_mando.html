@@ -496,9 +496,9 @@ const MAY26 = {
 
 // Junio 2026 — mes comercial (ERP 28/05/2026; días laborables al 29/05)
 const JUN26 = {
-  t:157824,sjp:38952,sjd:33515,garp:12265,gard:23174,alm:27038,avd:22880,
-  cavero:49387,ursula:21908,dias:13,diasT:23,
-  prof:71326,pvp:16393,inst:65644,ind:1510,dist:2950
+  t:175256,sjp:40918,sjd:44565,garp:12918,gard:23174,alm:29774,avd:23908,
+  cavero:52590,ursula:23569,dias:14,diasT:23,
+  prof:76190,pvp:17885,inst:76693,ind:1537,dist:2950
 };
 
 // Hardcode ene–jun 2026 (ERP + cierres mensuales)
@@ -512,7 +512,7 @@ const BASE_D26 = [
   {t:227874,sjp:58419,sjd:44583,garp:15649,gard:37761,alm:39949,avd:31183,cavero:70788,ursula:24296,
    prof:95359,pvp:9202,inst:110133,ind:10105,dist:3074,dias:20,diasT:20},
   {t:276749, ...MAY26},
-  {t:157824, ...JUN26},
+  {t:175256, ...JUN26},
   null, null, null, null, null, null
 ];
 
@@ -1677,9 +1677,9 @@ function applyAutoERPData(d){
 
 /* PRES_CUSTOM_INJECT */
 /* AUTO_DATA_INJECT */
-// Datos inyectados automaticamente 11/06/2026 22:30
+// Datos inyectados automaticamente 12/06/2026 22:22
 (function autoLoad(){
-  const d = {"total": 157823.6, "sjp": 38952.26, "sjd": 33515.25, "garp": 12264.87, "gard": 23173.75, "alm": 27037.9, "avd": 22879.58, "cavero": 49386.71, "ursula": 21908.5, "prof": 71326.2, "pvp_pin": 16393.01, "pvp_ins": 65643.57, "distrib": 2950.34, "ind": 1510.48, "dias": 13, "diasT": 23, "mes": 6, "ano": 2026, "diasFromERP": true, "actualizado": "11/06/2026 22:30", "fechaERP": "ERP 11/06/26", "datosFecha": "11/06/2026"};
+  const d = {"total": 175255.53, "sjp": 40918.03, "sjd": 44564.85, "garp": 12917.5, "gard": 23173.75, "alm": 29773.58, "avd": 23907.82, "cavero": 52590.15, "ursula": 23568.68, "prof": 76189.82, "pvp_pin": 17885.05, "pvp_ins": 76693.17, "distrib": 2950.34, "ind": 1537.14, "dias": 14, "diasT": 23, "mes": 6, "ano": 2026, "diasFromERP": true, "actualizado": "12/06/2026 22:22", "fechaERP": "ERP 12/06/26", "datosFecha": "12/06/2026"};
   if(!window._autoLoaded){
     window._autoLoaded=true;
     function run(){
