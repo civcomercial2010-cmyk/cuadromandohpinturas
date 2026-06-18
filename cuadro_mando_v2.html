@@ -258,6 +258,7 @@ textarea:focus{outline:none;border-color:var(--blue)}
     <button class="nb"     onclick="showPage('config',this)">⚙ Config</button>
   </nav>
   <div class="hdr-r" id="uLbl">Datos a fecha: —</div>
+  <button type="button" class="btn bs" id="btnForceUpdateHdr" onclick="forceDataUpdate()" title="Forzar actualización desde Gmail (GitHub Actions)" style="margin-left:10px;font-size:12px;padding:6px 12px;white-space:nowrap">↻ Actualizar</button>
 </header>
 
 <!-- SCORECARD BAR -->
@@ -369,6 +370,16 @@ textarea:focus{outline:none;border-color:var(--blue)}
 
 <!-- ══ CONFIG ══ -->
 <div class="page" id="page-config">
+  <div class="sec">Actualización automática</div>
+  <div class="ch" style="margin-bottom:24px">
+    <p style="color:var(--text2);font-size:13px;margin-bottom:12px">El cuadro se actualiza cada día ~20:05 (Madrid) leyendo el Excel del correo ERP. Si no ves datos de hoy, fuerza una nueva extracción. La primera vez pedirá un token de GitHub con permiso <strong>Actions: Read and write</strong> (o un PAT clásico con <code>repo</code>).</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <button type="button" class="btn bp" id="btnForceUpdate" onclick="forceDataUpdate()">Forzar actualización</button>
+      <button type="button" class="btn bs" onclick="reloadCuadro()">Recargar cuadro (sin caché)</button>
+      <button type="button" class="btn bs" onclick="clearActionsToken()">Borrar token GitHub</button>
+      <span id="forceUpdateStatus" style="font-size:12px;color:var(--text3);flex:1;min-width:200px"></span>
+    </div>
+  </div>
   <div class="sec">Carga Manual ERP (Fallback)</div>
   <div class="ch" style="margin-bottom:24px">
     <p style="color:var(--text2);font-size:13px;margin-bottom:12px">La actualización es automática cada día vía extracción del correo. Usa este panel solo si la automatización falla. Los datos procesados se guardan en localStorage y quedan disponibles automáticamente en este cuadro V2.</p>
@@ -1650,6 +1661,93 @@ function refreshAfterPresChange(){
 
 function processERP(){
   alert('Los datos se actualizan automáticamente cada noche al llegar el email del ERP (GitHub Actions).');
+}
+
+const GH_ACTIONS={
+  owner:'civcomercial2010-cmyk',
+  repo:'cuadromandohpinturas',
+  workflow:'actualizar.yml',
+  tokenKey:'hipo_gh_token_actions'
+};
+
+function currentActualizadoStamp(){
+  const m=document.documentElement.innerHTML.match(/"actualizado"\s*:\s*"([^"]+)"/);
+  return m?m[1]:'';
+}
+
+async function getActionsToken(){
+  let t=localStorage.getItem(GH_ACTIONS.tokenKey);
+  if(t)return t.trim();
+  t=prompt('Pega un token de GitHub con permiso Actions: Read and write (o PAT clásico con repo):');
+  if(!t)return null;
+  t=t.trim();
+  if(!t)return null;
+  localStorage.setItem(GH_ACTIONS.tokenKey,t);
+  return t;
+}
+
+function clearActionsToken(){
+  localStorage.removeItem(GH_ACTIONS.tokenKey);
+  const st=document.getElementById('forceUpdateStatus');
+  if(st){st.textContent='Token eliminado.';st.style.color='var(--text3)';}
+}
+
+function reloadCuadro(){
+  const u=new URL(location.href);
+  u.searchParams.set('_',Date.now());
+  location.replace(u.toString());
+}
+
+function setForceUpdateStatus(msg,ok){
+  const st=document.getElementById('forceUpdateStatus');
+  if(!st)return;
+  st.textContent=msg;
+  st.style.color=ok?'var(--green)':'var(--red)';
+}
+
+async function forceDataUpdate(){
+  const btns=[document.getElementById('btnForceUpdate'),document.getElementById('btnForceUpdateHdr')];
+  const token=await getActionsToken();
+  if(!token){setForceUpdateStatus('Se necesita token de GitHub.',false);return;}
+  btns.forEach(b=>{if(b)b.disabled=true;});
+  const stampBefore=currentActualizadoStamp();
+  setForceUpdateStatus('Disparando GitHub Actions…',true);
+  try{
+    const resp=await fetch(`https://api.github.com/repos/${GH_ACTIONS.owner}/${GH_ACTIONS.repo}/actions/workflows/${GH_ACTIONS.workflow}/dispatches`,{
+      method:'POST',
+      headers:{
+        'Authorization':`Bearer ${token}`,
+        'Accept':'application/vnd.github+json',
+        'X-GitHub-Api-Version':'2022-11-28',
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({ref:'main'})
+    });
+    if(resp.status===401||resp.status===403){
+      localStorage.removeItem(GH_ACTIONS.tokenKey);
+      throw new Error('Token sin permisos (Actions: write). Configúralo de nuevo.');
+    }
+    if(!resp.ok)throw new Error('GitHub respondió '+resp.status);
+    setForceUpdateStatus('Actualización en curso (1–3 min). Esperando datos nuevos…',true);
+    for(let i=0;i<24;i++){
+      await new Promise(r=>setTimeout(r,10000));
+      try{
+        const html=await fetch(location.pathname+'?_poll='+Date.now(),{cache:'no-store'}).then(r=>r.text());
+        const m=html.match(/"actualizado"\s*:\s*"([^"]+)"/);
+        if(m&&m[1]&&m[1]!==stampBefore){
+          setForceUpdateStatus('Datos actualizados ('+m[1]+'). Recargando…',true);
+          setTimeout(reloadCuadro,1500);
+          return;
+        }
+      }catch(e){}
+      setForceUpdateStatus('Esperando GitHub Actions… ('+((i+1)*10)+'s)',true);
+    }
+    setForceUpdateStatus('Tiempo de espera agotado. Prueba «Recargar cuadro» en unos minutos.',false);
+  }catch(e){
+    setForceUpdateStatus(e.message||String(e),false);
+  }finally{
+    btns.forEach(b=>{if(b)b.disabled=false;});
+  }
 }
 
 function applyAutoERPData(d){

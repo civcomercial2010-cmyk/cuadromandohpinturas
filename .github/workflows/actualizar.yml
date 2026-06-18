@@ -33,7 +33,7 @@ jobs:
         with:
           fetch-depth: 40
 
-      - name: Omitir si ya se publicó hoy (idempotencia)
+      - name: Omitir si ya se publicó hoy en ventana vespertina (idempotencia)
         id: guard
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
@@ -41,12 +41,23 @@ jobs:
             echo "Ejecución manual: siempre corre."
             exit 0
           fi
-          HOY=$(TZ=Europe/Madrid date +%d/%m/%Y)
-          if git log -40 --pretty=%s | grep -q "Auto $HOY"; then
-            echo "Ya publicado hoy ($HOY). Se omite este disparo programado."
+          HOY=$(TZ=Europe/Madrid date +%Y-%m-%d)
+          HOY_TXT=$(TZ=Europe/Madrid date +%d/%m/%Y)
+          YA=no
+          while IFS='|' read -r subj ts; do
+            [[ "$subj" != Auto\ * ]] && continue
+            madrid_date=$(TZ=Europe/Madrid date -d "$ts" +%Y-%m-%d)
+            madrid_hour=$(TZ=Europe/Madrid date -d "$ts" +%H)
+            if [[ "$madrid_date" == "$HOY" && "$madrid_hour" -ge 18 ]]; then
+              YA=yes
+              break
+            fi
+          done < <(git log -40 --pretty=format:'%s|%cI')
+          if [[ "$YA" == "yes" ]]; then
+            echo "Ya publicado hoy en ventana vespertina ($HOY_TXT). Se omite este disparo programado."
             echo "skip=true" >> "$GITHUB_OUTPUT"
           else
-            echo "Sin publicación de hoy ($HOY). Se ejecuta actualización."
+            echo "Sin publicación vespertina de hoy ($HOY_TXT). Se ejecuta actualización."
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 

@@ -108,6 +108,10 @@ def enviar_aviso(cfg, asunto, cuerpo):
 def hoy_madrid() -> datetime.date:
     return datetime.datetime.now(ZoneInfo("Europe/Madrid")).date()
 
+
+def ahora_madrid() -> datetime.datetime:
+    return datetime.datetime.now(ZoneInfo("Europe/Madrid"))
+
 # ─── MES COMERCIAL ───────────────────────────────────────────────────────────
 
 def mes_comercial_actual():
@@ -584,14 +588,14 @@ def actualizar_html(cfg, datos, mes, ano, dias, dias_total):
         "distrib": datos["distrib"], "ind":     datos["ind"],
         "dias": dias, "diasT": dias_total, "mes": mes, "ano": ano,
         "diasFromERP": True,
-        "actualizado": datetime.datetime.now().strftime("%d/%m/%Y %H:%M"),
+        "actualizado": ahora_madrid().strftime("%d/%m/%Y %H:%M"),
         "fechaERP": datos.get("fechaERP",
-                    datetime.datetime.now().strftime("ERP %d/%m/%y %H:%M")),
+                    ahora_madrid().strftime("ERP %d/%m/%y %H:%M")),
         "datosFecha": fecha_datos_excel(datos) or "",
     })
 
     MARKER = "/* AUTO_DATA_INJECT */"
-    ts     = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
+    ts     = ahora_madrid().strftime("%d/%m/%Y %H:%M")
     inject = f"""
 // Datos inyectados automaticamente {ts}
 (function autoLoad(){{
@@ -677,7 +681,7 @@ def subir_archivo_github(cfg, destino, ruta_html, mensaje, intentos=4):
 
 def subir_a_github(cfg, ruta_html):
     """Sube siempre el HTML recién generado (plantilla V2 + ERP), no archivos viejos del checkout."""
-    mensaje = f"Auto {datetime.datetime.now().strftime('%d/%m/%Y %H:%M')}"
+    mensaje = f"Auto {ahora_madrid().strftime('%d/%m/%Y %H:%M')}"
     origen = Path(ruta_html)
     if not origen.exists():
         logging.error("No existe HTML generado: %s", origen)
