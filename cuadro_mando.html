@@ -507,9 +507,9 @@ const MAY26 = {
 
 // Junio 2026 — mes comercial (ERP 28/05/2026; días laborables al 29/05)
 const JUN26 = {
-  t:234142,sjp:52947,sjd:59472,garp:22682,gard:27198,alm:40828,avd:31015,
-  cavero:75089,ursula:27431,dias:19,diasT:23,
-  prof:102524,pvp:26984,inst:97281,ind:3622,dist:3731
+  t:234939,sjp:53153,sjd:59472,garp:23031,gard:27198,alm:40828,avd:31258,
+  cavero:75089,ursula:27643,dias:19,diasT:23,
+  prof:102736,pvp:27569,inst:97281,ind:3622,dist:3731
 };
 
 // Hardcode ene–jun 2026 (ERP + cierres mensuales)
@@ -523,7 +523,7 @@ const BASE_D26 = [
   {t:227874,sjp:58419,sjd:44583,garp:15649,gard:37761,alm:39949,avd:31183,cavero:70788,ursula:24296,
    prof:95359,pvp:9202,inst:110133,ind:10105,dist:3074,dias:20,diasT:20},
   {t:276749, ...MAY26},
-  {t:234142, ...JUN26},
+  {t:234939, ...JUN26},
   null, null, null, null, null, null
 ];
 
@@ -1775,9 +1775,9 @@ function applyAutoERPData(d){
 
 /* PRES_CUSTOM_INJECT */
 /* AUTO_DATA_INJECT */
-// Datos inyectados automaticamente 19/06/2026 22:00
+// Datos inyectados automaticamente 20/06/2026 21:50
 (function autoLoad(){
-  const d = {"total": 234141.71, "sjp": 52946.98, "sjd": 59472.36, "garp": 22682.34, "gard": 27197.6, "alm": 40827.52, "avd": 31014.91, "cavero": 75088.9, "ursula": 27430.9, "prof": 102523.65, "pvp_pin": 26983.71, "pvp_ins": 97281.23, "distrib": 3731.03, "ind": 3622.09, "dias": 19, "diasT": 23, "mes": 6, "ano": 2026, "diasFromERP": true, "actualizado": "19/06/2026 22:00", "fechaERP": "ERP 19/06/26", "datosFecha": "19/06/2026"};
+  const d = {"total": 234939.05, "sjp": 53152.75, "sjd": 59472.36, "garp": 23031.23, "gard": 27197.6, "alm": 40827.52, "avd": 31257.59, "cavero": 75088.9, "ursula": 27642.94, "prof": 102735.69, "pvp_pin": 27569.01, "pvp_ins": 97281.23, "distrib": 3731.03, "ind": 3622.09, "dias": 19, "diasT": 23, "mes": 6, "ano": 2026, "diasFromERP": true, "actualizado": "20/06/2026 21:50", "fechaERP": "ERP 20/06/26", "datosFecha": "20/06/2026"};
   if(!window._autoLoaded){
     window._autoLoaded=true;
     function run(){
