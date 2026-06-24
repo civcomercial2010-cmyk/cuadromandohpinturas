@@ -507,9 +507,9 @@ const MAY26 = {
 
 // Junio 2026 — mes comercial (ERP 28/05/2026; días laborables al 29/05)
 const JUN26 = {
-  t:259589,sjp:57914,sjd:59472,garp:24052,gard:37101,alm:47469,avd:33581,
-  cavero:83557,ursula:31716,dias:21,diasT:23,
-  prof:115444,pvp:29416,inst:107288,ind:3674,dist:3767
+  t:282258,sjp:62744,sjd:59472,garp:25456,gard:43415,alm:56871,avd:34300,
+  cavero:97566,ursula:33044,dias:22,diasT:23,
+  prof:130782,pvp:30434,inst:113602,ind:3674,dist:3767
 };
 
 // Hardcode ene–jun 2026 (ERP + cierres mensuales)
@@ -523,7 +523,7 @@ const BASE_D26 = [
   {t:227874,sjp:58419,sjd:44583,garp:15649,gard:37761,alm:39949,avd:31183,cavero:70788,ursula:24296,
    prof:95359,pvp:9202,inst:110133,ind:10105,dist:3074,dias:20,diasT:20},
   {t:276749, ...MAY26},
-  {t:259589, ...JUN26},
+  {t:282258, ...JUN26},
   null, null, null, null, null, null
 ];
 
@@ -1775,9 +1775,9 @@ function applyAutoERPData(d){
 
 /* PRES_CUSTOM_INJECT */
 /* AUTO_DATA_INJECT */
-// Datos inyectados automaticamente 23/06/2026 22:18
+// Datos inyectados automaticamente 24/06/2026 22:00
 (function autoLoad(){
-  const d = {"total": 259589.3, "sjp": 57913.82, "sjd": 59472.36, "garp": 24052.19, "gard": 37100.59, "alm": 47469.35, "avd": 33580.99, "cavero": 83557.29, "ursula": 31715.54, "prof": 115444.11, "pvp_pin": 29416.49, "pvp_ins": 107288.36, "distrib": 3766.59, "ind": 3673.75, "dias": 21, "diasT": 23, "mes": 6, "ano": 2026, "diasFromERP": true, "actualizado": "23/06/2026 22:18", "fechaERP": "ERP 23/06/26", "datosFecha": "23/06/2026"};
+  const d = {"total": 282258.25, "sjp": 62743.56, "sjd": 59472.37, "garp": 25456.01, "gard": 43414.64, "alm": 56871.34, "avd": 34300.32, "cavero": 97566.12, "ursula": 33044.42, "prof": 130781.83, "pvp_pin": 30433.66, "pvp_ins": 113602.42, "distrib": 3766.59, "ind": 3673.75, "dias": 22, "diasT": 23, "mes": 6, "ano": 2026, "diasFromERP": true, "actualizado": "24/06/2026 22:00", "fechaERP": "ERP 24/06/26", "datosFecha": "24/06/2026"};
   if(!window._autoLoaded){
     window._autoLoaded=true;
     function run(){
