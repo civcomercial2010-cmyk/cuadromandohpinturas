@@ -498,13 +498,14 @@ const HIST_COM_ROLL={
   }
 };
 
-// Dato base Mayo 2026 (desglose completo)
+// Julio 2026 - mes comercial cerrado (ERP 26/07/2026, 21/21 dias)
 const JUL26 = {
   t:275215,sjp:55067,sjd:52770,garp:12376,gard:47770,alm:78097,avd:29135,
   cavero:99843,ursula:35662,dias:21,diasT:21,
   prof:134836,pvp:20121,inst:111084,ind:8202,dist:971
 };
 
+// Agosto 2026 - mes en curso
 const AGO26 = {
   t:19658,sjp:5778,sjd:0,garp:733,gard:43,alm:10619,avd:2486,
   cavero:10400,ursula:5744,dias:2,diasT:22,
@@ -536,7 +537,9 @@ const BASE_D26 = [
    prof:95359,pvp:9202,inst:110133,ind:10105,dist:3074,dias:20,diasT:20},
   {t:276749, ...MAY26},
   {t:288743, ...JUN26},
-  null, null, null, null, null, null
+  {t:275215, ...JUL26},
+  {t:19658, ...AGO26},
+  null, null, null, null
 ];
 
 let D26 = Array(12).fill(null);

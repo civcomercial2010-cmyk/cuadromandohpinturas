@@ -521,28 +521,73 @@ def bloque_const_mes(nombre, datos, dias, dias_total):
     )
 
 
+def _split_elementos_array(cuerpo):
+    """Divide el cuerpo de BASE_D26 en sus elementos de primer nivel."""
+    elems, depth, cur = [], 0, ""
+    for ch in cuerpo:
+        if ch in "{[":
+            depth += 1
+        elif ch in "}]":
+            depth -= 1
+        if ch == "," and depth == 0:
+            elems.append(cur.strip())
+            cur = ""
+        else:
+            cur += ch
+    if cur.strip():
+        elems.append(cur.strip())
+    return elems
+
+
+def _reconstruir_base_d26(elems):
+    """Reescribe el array con 12 posiciones; agrupa los null finales en una linea."""
+    elems = (elems + ["null"] * 12)[:12]
+    ultimo = -1
+    for i, e in enumerate(elems):
+        if e != "null":
+            ultimo = i
+    lineas = ["  " + e + "," for e in elems[: ultimo + 1]]
+    restantes = 12 - (ultimo + 1)
+    if restantes > 0:
+        lineas.append("  " + ", ".join(["null"] * restantes))
+    else:
+        if lineas:
+            lineas[-1] = lineas[-1].rstrip(",")
+    return "const BASE_D26 = [\n" + "\n".join(lineas) + "\n];"
+
+
 def patch_base_d26(html, mes, datos, dias, dias_total):
+    """Fija la constante del mes y la enlaza en BASE_D26 en su posicion (mes-1).
+
+    Antes se insertaba la fila buscando el primer `null` tras MAY26; en cuanto el
+    array dejo de terminar en MAY26 ese ancla dejo de coincidir y los meses nuevos
+    quedaban como `null` en el array (el mes solo se veia mientras era el mes en
+    curso inyectado por applyAutoERPData, y desaparecia al cambiar de mes).
+    """
     nombre = MESES_CONST.get(mes)
     if not nombre:
         return html
+
     bloque = bloque_const_mes(nombre, datos, dias, dias_total)
     pat = rf"const {nombre} = \{{.*?\}};"
     if re.search(pat, html, flags=re.DOTALL):
         html = re.sub(pat, bloque, html, count=1, flags=re.DOTALL)
+    elif "const BASE_D26 = [" in html:
+        html = html.replace("const BASE_D26 = [", bloque + "\n\nconst BASE_D26 = [", 1)
     else:
-        html = html.replace("const MAY26 = {", bloque + "\n\nconst MAY26 = {", 1)
+        logging.error("No se encuentra BASE_D26 en el HTML: no se puede fijar %s", nombre)
+        return html
 
-    fila = f"  {{t:{round(datos['total'])}, ...{nombre}}},"
-    fila_pat = rf"  \{{t:\d+, \.\.\.{nombre}\}},"
-    if re.search(fila_pat, html):
-        html = re.sub(fila_pat, fila, html, count=1)
-    else:
-        html = re.sub(
-            r"(\{t:276749, \.\.\.MAY26\},\s*\n)\s*null,",
-            rf"\1{fila}\n",
-            html,
-            count=1,
-        )
+    m = re.search(r"const BASE_D26 = \[(.*?)\n\];", html, flags=re.DOTALL)
+    if not m:
+        logging.error("No se puede parsear BASE_D26: %s no queda enlazado en el array", nombre)
+        return html
+
+    elems = _split_elementos_array(m.group(1))
+    elems = (elems + ["null"] * 12)[:12]
+    elems[mes - 1] = f"{{t:{round(datos['total'])}, ...{nombre}}}"
+    html = html[: m.start()] + _reconstruir_base_d26(elems) + html[m.end():]
+    logging.info("OK %s enlazado en BASE_D26 (posicion %s)", nombre, mes - 1)
     return html
 
 
