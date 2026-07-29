@@ -5,16 +5,18 @@ env:
 
 on:
   schedule:
-    # Objetivo: ~20:05 Madrid. GitHub cron es UTC fijo → dos slots (CEST/CET).
-    - cron: '05 18 * * *'   # 20:05 CEST (mar–oct)
-    - cron: '05 19 * * *'   # 20:05 CET  (oct–mar)
+    # Objetivo: 20:30 Madrid. GitHub cron es UTC fijo → dos slots (CEST/CET).
+    - cron: '30 18 * * *'   # 20:30 CEST (mar–oct)
+    - cron: '30 19 * * *'   # 20:30 CET  (oct–mar)
     # Reintentos escalonados si el correo ERP llega tarde o GitHub retrasa el cron.
-    - cron: '20 18 * * *'   # +15 min (verano)
-    - cron: '20 19 * * *'   # +15 min (invierno)
-    - cron: '35 18 * * *'   # +30 min (verano)
-    - cron: '35 19 * * *'   # +30 min (invierno)
-    - cron: '50 18 * * *'   # +45 min (verano)
-    - cron: '50 19 * * *'   # +45 min (invierno)
+    - cron: '45 18 * * *'   # 20:45 verano
+    - cron: '45 19 * * *'   # 20:45 invierno
+    - cron: '00 19 * * *'   # 21:00 verano
+    - cron: '00 20 * * *'   # 21:00 invierno
+    - cron: '15 19 * * *'   # 21:15 verano
+    - cron: '15 20 * * *'   # 21:15 invierno
+    # El slot del huso contrario cae fuera de hora (p. ej. '30 18' = 19:30 en
+    # invierno); el guard de hora minima lo descarta.
   workflow_dispatch:
 
 jobs:
@@ -33,12 +35,21 @@ jobs:
         with:
           fetch-depth: 40
 
-      - name: Omitir si ya se publicó hoy en ventana vespertina (idempotencia)
+      - name: Omitir si es pronto o si ya se publicó hoy (hora Madrid + idempotencia)
         id: guard
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             echo "skip=false" >> "$GITHUB_OUTPUT"
             echo "Ejecución manual: siempre corre."
+            exit 0
+          fi
+          # Hora minima 20:30 Madrid: descarta el slot UTC del huso contrario,
+          # que en invierno/verano caeria una hora antes de lo previsto.
+          AHORA_MIN=$(( 10#$(TZ=Europe/Madrid date +%H) * 60 + 10#$(TZ=Europe/Madrid date +%M) ))
+          INICIO_MIN=$(( 20 * 60 + 30 ))
+          if (( AHORA_MIN < INICIO_MIN )); then
+            echo "Son las $(TZ=Europe/Madrid date +%H:%M) en Madrid, antes de las 20:30. Se omite."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           HOY=$(TZ=Europe/Madrid date +%Y-%m-%d)

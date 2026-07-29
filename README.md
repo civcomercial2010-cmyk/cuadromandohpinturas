@@ -17,7 +17,7 @@ Cuadro de mando **V2** Hipopotamo Pinturas (Vista CEO, Centros, Comercial, Hist�
 | `actualizar_gha.py` | Workflow nocturno (Gmail → ERP → HTML) |
 | `gas/DESACTIVAR_APPS_SCRIPT.md` | Cómo apagar el Apps Script legacy que provoca rate limit en Drive |
 
-**Actualización automática:** GitHub Actions ~20:05 (Madrid), con reintentos hasta ~20:50. Ejecución manual: Actions → *Actualizar Cuadro de Mando* → *Run workflow*.
+**Actualización automática:** GitHub Actions a las 20:30 (Madrid), con reintentos hasta ~21:15. Ejecución manual: Actions → *Actualizar Cuadro de Mando* → *Run workflow*.
 
 **Importante:** Si recibes correos «Error al actualizar Google Sheets», desactiva el Apps Script según `gas/DESACTIVAR_APPS_SCRIPT.md`. Ese flujo ya no alimenta el cuadro público.
 
