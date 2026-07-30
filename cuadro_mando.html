@@ -1713,55 +1713,139 @@ function reloadCuadro(){
   location.replace(u.toString());
 }
 
-function setForceUpdateStatus(msg,ok){
-  const st=document.getElementById('forceUpdateStatus');
-  if(!st)return;
-  st.textContent=msg;
-  st.style.color=ok?'var(--green)':'var(--red)';
+function fuToastHide(){
+  const t=document.getElementById('fuToast');
+  if(t)t.classList.remove('on');
 }
 
+function fuToastShow(msg,kind,url){
+  const t=document.getElementById('fuToast');
+  if(!t)return;
+  const m=document.getElementById('fuToastMsg'),l=document.getElementById('fuToastLink');
+  if(m)m.textContent=msg;
+  t.classList.remove('fu-run','fu-ok','fu-err');
+  t.classList.add('fu-'+(kind||'run'));
+  if(url&&l){l.href=url;t.classList.add('has-link');}
+  else t.classList.remove('has-link');
+  t.classList.add('on');
+  clearTimeout(t._fuHide);
+  if(kind==='ok'||kind==='err')t._fuHide=setTimeout(fuToastHide,25000);
+}
+
+function setForceUpdateStatus(msg,ok,kind,url){
+  const st=document.getElementById('forceUpdateStatus');
+  if(st){st.textContent=msg;st.style.color=ok?'var(--green)':'var(--red)';}
+  fuToastShow(msg,kind||(ok?'run':'err'),url);
+}
+
+function fuSetBusy(on){
+  [document.getElementById('btnForceUpdate'),document.getElementById('btnForceUpdateHdr')].forEach(b=>{
+    if(!b)return;
+    if(on){
+      if(!b.dataset.fuLabel)b.dataset.fuLabel=b.textContent;
+      b.disabled=true;b.textContent='\u23F3 Actualizando\u2026';
+    }else{
+      b.disabled=false;
+      if(b.dataset.fuLabel)b.textContent=b.dataset.fuLabel;
+    }
+  });
+}
+
+function ghFetch(path,token,init){
+  const o=init?Object.assign({},init):{};
+  o.headers=Object.assign({
+    'Authorization':'Bearer '+token,
+    'Accept':'application/vnd.github+json',
+    'X-GitHub-Api-Version':'2022-11-28',
+    'Content-Type':'application/json'
+  },o.headers||{});
+  return fetch('https://api.github.com'+path,o);
+}
+
+const fuWait=ms=>new Promise(r=>setTimeout(r,ms));
+
 async function forceDataUpdate(){
-  const btns=[document.getElementById('btnForceUpdate'),document.getElementById('btnForceUpdateHdr')];
+  const base='/repos/'+GH_ACTIONS.owner+'/'+GH_ACTIONS.repo;
+  const actionsUrl='https://github.com/'+GH_ACTIONS.owner+'/'+GH_ACTIONS.repo+'/actions';
   const token=await getActionsToken();
-  if(!token){setForceUpdateStatus('Se necesita token de GitHub.',false);return;}
-  btns.forEach(b=>{if(b)b.disabled=true;});
-  const stampBefore=currentActualizadoStamp();
-  setForceUpdateStatus('Disparando GitHub Actions…',true);
+  if(!token){
+    setForceUpdateStatus('Hace falta un token de GitHub para forzar la actualizacion.',false,'err');
+    return;
+  }
+  fuSetBusy(true);
+  const desde=Date.now()-90000;
+  const selloAntes=currentActualizadoStamp();
   try{
-    const resp=await fetch(`https://api.github.com/repos/${GH_ACTIONS.owner}/${GH_ACTIONS.repo}/actions/workflows/${GH_ACTIONS.workflow}/dispatches`,{
-      method:'POST',
-      headers:{
-        'Authorization':`Bearer ${token}`,
-        'Accept':'application/vnd.github+json',
-        'X-GitHub-Api-Version':'2022-11-28',
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify({ref:'main'})
+    setForceUpdateStatus('Disparando la actualizacion en GitHub\u2026',true,'run');
+    const resp=await ghFetch(base+'/actions/workflows/'+GH_ACTIONS.workflow+'/dispatches',token,{
+      method:'POST',body:JSON.stringify({ref:'main'})
     });
-    if(resp.status===401||resp.status===403){
+    if(resp.status===401){
       localStorage.removeItem(GH_ACTIONS.tokenKey);
-      throw new Error('Token sin permisos (Actions: write). Configúralo de nuevo.');
+      throw new Error('Token no valido o caducado. Vuelve a pulsar para introducir otro.');
     }
-    if(!resp.ok)throw new Error('GitHub respondió '+resp.status);
-    setForceUpdateStatus('Actualización en curso (1–3 min). Esperando datos nuevos…',true);
-    for(let i=0;i<24;i++){
-      await new Promise(r=>setTimeout(r,10000));
+    if(resp.status===403){
+      localStorage.removeItem(GH_ACTIONS.tokenKey);
+      throw new Error('El token no tiene permiso Actions: Read and write (o scope repo).');
+    }
+    if(resp.status===404)throw new Error('No se encuentra el workflow '+GH_ACTIONS.workflow+' en el repositorio.');
+    if(!resp.ok)throw new Error('GitHub respondio '+resp.status+' al disparar el workflow.');
+
+    let run=null;
+    for(let i=0;i<10&&!run;i++){
+      await fuWait(3000);
       try{
-        const html=await fetch(location.pathname+'?_poll='+Date.now(),{cache:'no-store'}).then(r=>r.text());
-        const m=html.match(/"actualizado"\s*:\s*"([^"]+)"/);
-        if(m&&m[1]&&m[1]!==stampBefore){
-          setForceUpdateStatus('Datos actualizados ('+m[1]+'). Recargando…',true);
-          setTimeout(reloadCuadro,1500);
-          return;
-        }
+        const j=await ghFetch(base+'/actions/workflows/'+GH_ACTIONS.workflow+
+          '/runs?event=workflow_dispatch&per_page=5',token).then(r=>r.json());
+        run=(j.workflow_runs||[]).find(r=>new Date(r.created_at).getTime()>=desde)||null;
       }catch(e){}
-      setForceUpdateStatus('Esperando GitHub Actions… ('+((i+1)*10)+'s)',true);
+      if(!run)setForceUpdateStatus('Actualizacion encolada en GitHub\u2026',true,'run',actionsUrl);
     }
-    setForceUpdateStatus('Tiempo de espera agotado. Prueba «Recargar cuadro» en unos minutos.',false);
+    if(!run){
+      setForceUpdateStatus('Se lanzo la actualizacion, pero no se puede seguir su estado. Recarga en 2-3 minutos.',true,'ok',actionsUrl);
+      return;
+    }
+
+    setForceUpdateStatus('Actualizacion en curso (1-3 min)\u2026',true,'run',run.html_url);
+    let ultimo=run;
+    for(let i=0;i<96;i++){
+      await fuWait(5000);
+      let j=null;
+      try{j=await ghFetch(base+'/actions/runs/'+run.id,token).then(r=>r.json());}catch(e){}
+      if(!j||!j.status)continue;
+      ultimo=j;
+      if(j.status!=='completed'){
+        setForceUpdateStatus(j.status==='queued'
+          ?'En cola en GitHub\u2026'
+          :'Leyendo el correo del ERP y regenerando el cuadro\u2026 ('+((i+1)*5)+'s)',
+          true,'run',j.html_url);
+        continue;
+      }
+      if(j.conclusion!=='success')
+        throw new Error('La actualizacion fallo en GitHub ('+j.conclusion+'). Revisa el log del run.');
+
+      setForceUpdateStatus('Actualizacion terminada. Publicando en la web\u2026',true,'run',j.html_url);
+      for(let k=0;k<20;k++){
+        try{
+          const html=await fetch(location.pathname+'?_poll='+Date.now(),{cache:'no-store'}).then(r=>r.text());
+          const m=html.match(/"actualizado"\s*:\s*"([^"]+)"/);
+          if(m&&m[1]&&m[1]!==selloAntes){
+            setForceUpdateStatus('Datos actualizados ('+m[1]+'). Recargando\u2026',true,'ok');
+            setTimeout(reloadCuadro,1200);
+            return;
+          }
+        }catch(e){}
+        await fuWait(6000);
+      }
+      setForceUpdateStatus('GitHub termino bien, pero el ERP no traia datos nuevos. Recargando igualmente\u2026',true,'ok',j.html_url);
+      setTimeout(reloadCuadro,2500);
+      return;
+    }
+    setForceUpdateStatus('La actualizacion sigue en marcha en GitHub. Consulta el detalle y recarga luego.',true,'ok',ultimo.html_url);
   }catch(e){
-    setForceUpdateStatus(e.message||String(e),false);
+    setForceUpdateStatus(e.message||String(e),false,'err',actionsUrl);
   }finally{
-    btns.forEach(b=>{if(b)b.disabled=false;});
+    fuSetBusy(false);
   }
 }
 
@@ -1851,5 +1935,30 @@ document.addEventListener('DOMContentLoaded',async()=>{
   renderPptTable();
 });
 </script>
+
+<!-- Aviso flotante de la actualizacion forzada -->
+<style>
+#fuToast{position:fixed;left:50%;bottom:24px;z-index:9999;display:none;align-items:center;gap:10px;
+  max-width:min(92vw,560px);padding:12px 14px;border-radius:12px;font-size:13px;line-height:1.35;
+  background:#111827;color:#f9fafb;border:1px solid #374151;box-shadow:0 10px 30px rgba(0,0,0,.35);
+  opacity:0;transform:translateX(-50%) translateY(20px);transition:opacity .2s,transform .2s}
+#fuToast.on{display:flex;opacity:1;transform:translateX(-50%) translateY(0)}
+#fuToastDot{flex:0 0 auto;width:9px;height:9px;border-radius:50%;background:#60a5fa}
+#fuToast.fu-run #fuToastDot{animation:fuPulse 1s ease-in-out infinite}
+#fuToast.fu-ok #fuToastDot{background:#34d399}
+#fuToast.fu-err #fuToastDot{background:#f87171}
+#fuToast.fu-err{border-color:#7f1d1d}
+#fuToastMsg{flex:1 1 auto}
+#fuToastLink{flex:0 0 auto;display:none;color:#93c5fd;text-decoration:underline;white-space:nowrap}
+#fuToast.has-link #fuToastLink{display:inline}
+#fuToastX{flex:0 0 auto;background:none;border:0;color:#9ca3af;font-size:18px;line-height:1;cursor:pointer;padding:0 2px}
+@keyframes fuPulse{0%,100%{opacity:1}50%{opacity:.25}}
+</style>
+<div id="fuToast" role="status" aria-live="polite">
+  <span id="fuToastDot"></span>
+  <span id="fuToastMsg"></span>
+  <a id="fuToastLink" href="#" target="_blank" rel="noopener">ver detalle</a>
+  <button type="button" id="fuToastX" onclick="fuToastHide()" aria-label="Cerrar">&times;</button>
+</div>
 </body>
 </html>
