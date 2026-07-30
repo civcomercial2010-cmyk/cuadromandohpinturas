@@ -105,6 +105,11 @@ def enviar_aviso(cfg, asunto, cuerpo):
         logging.warning(f"Correo de aviso error: {e}")
 
 
+def aviso_siempre() -> bool:
+    """Permite forzar el correo aunque los datos no hayan cambiado (depuración)."""
+    return os.environ.get("AVISO_SIEMPRE", "").strip().lower() in ("1", "true", "si", "sí", "yes")
+
+
 def hoy_madrid() -> datetime.date:
     return datetime.datetime.now(ZoneInfo("Europe/Madrid")).date()
 
@@ -613,7 +618,7 @@ def actualizar_html(cfg, datos, mes, ano, dias, dias_total):
 
     if not plantilla.exists():
         logging.error(f"No se encuentra la plantilla: {plantilla}")
-        return False
+        return None
 
     with open(plantilla, encoding="utf-8") as f:
         html = f.read()
@@ -623,7 +628,7 @@ def actualizar_html(cfg, datos, mes, ano, dias, dias_total):
     if ano == 2026:
         html = patch_base_d26(html, mes, datos, dias, dias_total)
 
-    mes_js = json.dumps({
+    datos_iny = {
         "total":   datos["total"],   "sjp":     datos["sjp"],
         "sjd":     datos["sjd"],     "garp":    datos["garp"],
         "gard":    datos["gard"],    "alm":     datos["alm"],
@@ -637,7 +642,8 @@ def actualizar_html(cfg, datos, mes, ano, dias, dias_total):
         "fechaERP": datos.get("fechaERP",
                     ahora_madrid().strftime("ERP %d/%m/%y %H:%M")),
         "datosFecha": fecha_datos_excel(datos) or "",
-    })
+    }
+    mes_js = json.dumps(datos_iny)
 
     MARKER = "/* AUTO_DATA_INJECT */"
     ts     = ahora_madrid().strftime("%d/%m/%Y %H:%M")
@@ -666,7 +672,7 @@ def actualizar_html(cfg, datos, mes, ano, dias, dias_total):
     logging.info("OK Datos inyectados en HTML")
 
     guardar_html_repo(html, cfg)
-    return True
+    return datos_iny
 
 # ─── SUBIR A GITHUB ──────────────────────────────────────────────────────────
 
@@ -679,6 +685,42 @@ def _github_api_request(url, token, method="GET", data=None, timeout=30):
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         body = resp.read().decode()
         return json.loads(body) if body else {}
+
+
+# Campos que cambian en cada ejecución aunque el ERP traiga los mismos datos.
+CLAVES_VOLATILES = ("actualizado", "fechaERP")
+
+
+def firma_datos(d):
+    """Huella comparable de los datos publicados, sin sellos de tiempo."""
+    if not isinstance(d, dict):
+        return None
+    return {k: v for k, v in sorted(d.items()) if k not in CLAVES_VOLATILES}
+
+
+def firma_desde_html(html):
+    m = re.search(r"function autoLoad\(\)\{\s*const d = (\{.*?\});", html, flags=re.DOTALL)
+    if not m:
+        return None
+    try:
+        return firma_datos(json.loads(m.group(1)))
+    except Exception as e:
+        logging.warning("No se pudo interpretar los datos del cuadro publicado: %s", e)
+        return None
+
+
+def firma_publicada(cfg):
+    """Datos que ya están publicados en GitHub, para no avisar dos veces de lo mismo."""
+    gcfg = cfg["github"]
+    url = (f"https://api.github.com/repos/{gcfg['usuario']}/{gcfg['repositorio']}"
+           f"/contents/{gcfg['archivo_destino']}")
+    try:
+        meta = _github_api_request(url, gcfg["token"], timeout=20)
+        contenido = base64.b64decode(meta.get("content", "")).decode("utf-8", "replace")
+        return firma_desde_html(contenido)
+    except Exception as e:
+        logging.warning("No se pudo leer el cuadro publicado para comparar: %s", e)
+        return None
 
 
 def subir_archivo_github(cfg, destino, ruta_html, mensaje, intentos=4):
@@ -784,8 +826,12 @@ def main():
     dias, dias_total = dias_mes_comercial(mes, ano, fecha_ref)
     logging.info(f"Días: {dias}/{dias_total} (ref: {fecha_ref})")
 
+    # Huella de lo ya publicado, antes de sobrescribirlo.
+    firma_previa = firma_publicada(cfg)
+
     # Generar HTML
-    if not actualizar_html(cfg, datos, mes, ano, dias, dias_total):
+    datos_iny = actualizar_html(cfg, datos, mes, ano, dias, dias_total)
+    if not datos_iny:
         msg = "ERROR Pinturas: no se pudo generar el HTML del cuadro."
         logging.error(msg)
         enviar_aviso(cfg, "Cuadro Pinturas — HTML", msg)
@@ -799,14 +845,20 @@ def main():
         enviar_aviso(cfg, "Cuadro Pinturas — GitHub", msg)
         sys.exit(1)
 
-    total_fmt = f"{datos['total']:,.0f}".replace(",", ".")
-    enviar_aviso(
-        cfg,
-        f"✓ Cuadro Pinturas actualizado {mes}/{ano}",
-        f"Total: {total_fmt} € | Días: {dias}/{dias_total}\n"
-        f"Cavero: {datos['cavero']:,.0f} € | Úrsula: {datos['ursula']:,.0f} €\n"
-        f"https://civcomercial2010-cmyk.github.io/cuadromandohpinturas/cuadro_mando.html",
-    )
+    # Un disparo repetido (doble clic en «Forzar actualización», reintento del cron)
+    # republica los mismos datos: se actualiza el cuadro, pero no se avisa otra vez.
+    firma_nueva = firma_datos(datos_iny)
+    if firma_previa is not None and firma_nueva == firma_previa and not aviso_siempre():
+        logging.info("Datos idénticos a los ya publicados: no se envía aviso (evita duplicados).")
+    else:
+        total_fmt = f"{datos['total']:,.0f}".replace(",", ".")
+        enviar_aviso(
+            cfg,
+            f"✓ Cuadro Pinturas actualizado {mes}/{ano}",
+            f"Total: {total_fmt} € | Días: {dias}/{dias_total}\n"
+            f"Cavero: {datos['cavero']:,.0f} € | Úrsula: {datos['ursula']:,.0f} €\n"
+            f"https://civcomercial2010-cmyk.github.io/cuadromandohpinturas/cuadro_mando.html",
+        )
 
     logging.info("=" * 60)
     logging.info(f"COMPLETADO {datetime.datetime.now().strftime('%d/%m/%Y %H:%M')}")

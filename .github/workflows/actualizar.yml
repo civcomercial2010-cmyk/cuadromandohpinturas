@@ -18,6 +18,11 @@ on:
     # El slot del huso contrario cae fuera de hora (p. ej. '30 18' = 19:30 en
     # invierno); el guard de hora minima lo descarta.
   workflow_dispatch:
+    inputs:
+      avisar_siempre:
+        description: 'Enviar correo/Telegram aunque los datos no hayan cambiado'
+        type: boolean
+        default: false
 
 jobs:
   actualizar:
@@ -93,6 +98,7 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           GITHUB_USUARIO:   civcomercial2010-cmyk
           GITHUB_REPO:      cuadromandohpinturas
+          AVISO_SIEMPRE:    ${{ inputs.avisar_siempre && '1' || '' }}
         run: python actualizar_gha.py
 
       - name: Comprobar que el cuadro publicado es V2
